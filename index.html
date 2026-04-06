@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Best Case Year · AKQ</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f2ffd5'/><text y='54' x='50' text-anchor='middle' font-size='52' fill='%23EA258D' font-family='serif'>✦</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f2ffd5'/><text y='54' x='50' text-anchor='middle' font-size='52' fill='%23EA258D' font-family='serif'>✦</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --hot: #EA258D;
+      --pink: #F37EB3;
+      --blush: #F1BCD7;
+      --orange: #ffc5a8;
+      --lavender: #D9AED0;
+      --mist: #CACBDF;
+      --ink: #111111;
+      --white: #FFFFFF;
+      --off: #FBF8FC;
+      --row-border: rgba(0,0,0,0.09);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: auto; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .fs-btn {
+      position: fixed; top: 14px; right: 16px; z-index: 8000;
+      background: none; border: none; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .fs-btn:hover { opacity: 1; }
+    .fs-btn svg { width: 16px; height: 16px; fill: none; stroke: var(--orange); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    .band { width: 100%; }
+    .pad { padding: 28px 22px; }
+    .pad-sm { padding: 20px 22px; }
+    .pad-lg { padding: 36px 22px; }
+
+    .eyebrow { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; display: block; }
+    .eyebrow-white  { color: rgba(255,255,255,0.65); }
+    .eyebrow-hot    { color: var(--hot); }
+    .eyebrow-ink    { color: var(--ink); opacity: 0.45; }
+
+    .mix-head { line-height: 0.95; margin-bottom: 22px; }
+    .mix-sans { display: block; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 32px; text-transform: uppercase; letter-spacing: -0.01em; }
+    .mix-serif { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 32px; }
+    .mix-ink .mix-sans  { color: var(--ink); }
+    .mix-ink .mix-serif { color: var(--hot); }
+    .mix-pink .mix-sans  { color: var(--ink); }
+    .mix-pink .mix-serif { color: var(--hot); }
+    .mix-lav .mix-sans  { color: var(--ink); }
+    .mix-lav .mix-serif { color: #7A4A6A; }
+
+    /* ── HERO ── */
+    .hero-week-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 72px; color: var(--ink); line-height: 0.85; letter-spacing: -0.02em; display: block; }
+    .hero-phase { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 26px; color: var(--hot); display: block; margin-top: 6px; margin-bottom: 14px; cursor: pointer; }
+    .hero-phase-input { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 26px; color: var(--hot); background: rgba(255,255,255,0.7); border: 1.5px solid var(--hot); border-radius: 8px; padding: 4px 10px; outline: none; display: none; width: 100%; max-width: 280px; }
+    .hero-dates { font-size: 11px; color: rgba(0,0,0,0.45); letter-spacing: 0.1em; }
+    .hero-done-pill { display: inline-block; background: var(--orange); color: var(--blush); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-top: 16px; margin-right: 44px; }
+
+    /* ── PROGRESS ── */
+    .progress-row { display: flex; align-items: center; gap: 20px; }
+    .ring-wrap { flex-shrink: 0; position: relative; width: 76px; height: 76px; }
+    .ring-wrap svg { transform: rotate(-90deg); width: 76px; height: 76px; }
+    .ring-bg   { fill: none; stroke: var(--blush); stroke-width: 6; }
+    .ring-fill { fill: none; stroke: var(--hot); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 207; stroke-dashoffset: 207; transition: stroke-dashoffset 0.7s cubic-bezier(.4,0,.2,1); }
+    .ring-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+    .ring-n { font-size: 22px; font-weight: 800; color: var(--ink); display: block; line-height: 1; }
+    .ring-d { font-size: 10px; color: #9a6a7a; }
+    .progress-text h2 { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 18px; color: var(--ink); line-height: 1.2; }
+    .progress-text p { font-size: 12px; color: #7a5566; margin-top: 3px; line-height: 1.4; }
+
+    /* ── ENCOURAGEMENT ── */
+    .enc-inner { display: flex; align-items: flex-start; gap: 14px; border-left: 3px solid var(--orange); padding-left: 14px; }
+    .enc-icon  { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .enc-text  { flex: 1; }
+    .enc-title { font-weight: 800; font-size: 15px; color: var(--ink); display: block; margin-bottom: 3px; }
+    .enc-body  { font-size: 13px; color: rgba(0,0,0,0.65); line-height: 1.5; }
+    .enc-refresh { background: none; border: none; color: rgba(0,0,0,0.35); font-size: 20px; cursor: pointer; flex-shrink: 0; padding: 0; transition: color 0.2s; }
+    .enc-refresh:active { color: var(--ink); }
+
+    /* ── TASK ROWS ── */
+    .row-list { list-style: none; }
+    .task-row { display: flex; align-items: flex-start; gap: 14px; padding: 15px 22px; border-bottom: 1px solid var(--row-border); transition: background 0.12s; -webkit-user-select: none; user-select: none; }
+    .task-row:last-child { border-bottom: none; }
+    .task-cb { width: 22px; height: 22px; border: 2px solid var(--blush); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.18s; background: white; }
+    .task-row.done .task-cb { background: var(--hot); border-color: var(--hot); }
+    .cb-check { color: white; font-size: 12px; font-weight: 800; opacity: 0; transition: opacity 0.15s; }
+    .task-row.done .cb-check { opacity: 1; }
+    .task-body { flex: 1; min-width: 0; }
+    .task-label { font-size: 14px; color: var(--ink); line-height: 1.4; transition: color 0.15s; }
+    .task-row.done .task-label { color: var(--lavender); text-decoration: line-through; text-decoration-color: var(--pink); }
+    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: var(--blush); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
+    .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
+    .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
+    .origin-badge { display: inline-block; background: var(--orange); color: var(--blush); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+
+    /* Task action controls */
+    .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .task-carry-btn { background: none; border: 1.5px solid var(--orange); color: var(--orange); border-radius: 8px; padding: 3px 7px; font-size: 10px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .task-carry-btn:active { background: var(--orange); color: var(--blush); }
+    .task-mgmt-btn { background: none; border: none; color: rgba(0,0,0,0.3); font-size: 20px; cursor: pointer; padding: 2px 4px; border-radius: 6px; line-height: 1; }
+    .task-mgmt-btn:active { color: var(--ink); }
+
+    /* ── ADD TASK ── */
+    .add-row { display: flex; gap: 8px; padding: 14px 22px; border-top: 1.5px solid var(--blush); background: var(--off); }
+    .add-input { flex: 1; border: 1.5px solid var(--blush); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; }
+    .add-input:focus { border-color: var(--hot); }
+    .add-input::placeholder { color: var(--lavender); }
+    .add-btn { background: var(--pink); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .add-btn:active { background: #d9689f; }
+
+    /* ── PRACTICES ── */
+    .practice-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 22px; border-bottom: 1px solid rgba(234,37,141,0.1); }
+    .practice-row:last-child { border-bottom: none; }
+    .pr-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 7px; }
+    .pr-text { font-size: 14px; color: #5a3348; line-height: 1.5; }
+
+    /* ── QUOTE ── */
+    .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 18px; color: #7A4A6A; line-height: 1.6; margin-bottom: 14px; }
+    .quote-attr { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,0,0,0.35); font-weight: 600; }
+
+    /* ── PROMPT BUILDER — single area ── */
+    .prompt-note { font-size: 12px; color: #7a5566; margin-bottom: 16px; line-height: 1.5; padding: 10px 12px; background: var(--blush); border-radius: 8px; }
+    .prompt-note strong { color: var(--hot); }
+    .prompt-opt-list { list-style: none; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .prompt-opt { display: flex; align-items: center; padding: 7px 12px; border: 1.5px solid var(--row-border); border-radius: 20px; cursor: pointer; transition: all 0.15s; background: var(--off); font-size: 12px; color: var(--ink); }
+    .prompt-opt.selected { border-color: var(--hot); background: var(--blush); color: var(--hot); font-weight: 700; }
+    .prompt-custom { width: 100%; border: 1.5px solid var(--blush); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; resize: none; margin-bottom: 14px; transition: border-color 0.2s; }
+    .prompt-custom:focus { border-color: var(--hot); }
+    .prompt-custom::placeholder { color: var(--lavender); }
+    .gen-btn { width: 100%; background: var(--orange); color: white; border: none; border-radius: 12px; padding: 16px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .gen-btn:active { background: #d47a1f; }
+
+    /* ── DATA ── */
+    .data-row { display: flex; gap: 10px; }
+    .data-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 12px; border-radius: 12px; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .data-btn-export { background: var(--pink); color: white; }
+    .data-btn-export:active { background: #d9689f; }
+    .data-btn-import { background: white; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.12); }
+    .data-btn-import:active { background: var(--off); }
+    .data-note { font-size: 11px; color: #7a5a6a; margin-top: 12px; line-height: 1.6; }
+    .data-note strong { color: var(--ink); }
+    #importInput { display: none; }
+    .import-success { display: none; background: var(--hot); color: white; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; text-align: center; margin-top: 10px; }
+
+    /* ── TIMELINE ── */
+    .tl-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .tl-scroll::-webkit-scrollbar { display: none; }
+    .tl-chip { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; border: 1.5px solid rgba(0,0,0,0.1); background: white; cursor: pointer; text-align: center; transition: all 0.15s; }
+    .tl-chip.active { background: var(--hot); border-color: var(--hot); }
+    .tl-chip.past  { background: var(--blush); border-color: var(--pink); }
+    .tl-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; display: block; }
+    .tl-chip.active .tl-name { color: white; }
+    .tl-chip.past  .tl-name  { color: var(--hot); }
+    .tl-wk { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; display: block; margin-top: 2px; }
+    .tl-chip.active .tl-wk { color: rgba(255,255,255,0.65); }
+
+    /* ── YOU DID THAT button band ── */
+    .ydt-band { background: #f2ffd5; padding: 16px 22px; }
+    .ydt-band-btn { width: 100%; background: var(--orange); color: var(--hot); border: none; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
+    .ydt-band-btn:active { opacity: 0.85; }
+
+    /* ── MODALS ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end; backdrop-filter: blur(3px); }
+    .overlay.open { display: flex; }
+    .modal { background: white; border-radius: 20px 20px 0 0; padding: 24px 22px 44px; width: 100%; max-height: 90vh; overflow-y: auto; animation: up 0.28s cubic-bezier(.4,0,.2,1); }
+    @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 36px; height: 4px; background: var(--mist); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px; color: var(--ink); margin-bottom: 4px; }
+    .modal-sub { font-size: 13px; color: #888; margin-bottom: 20px; font-style: italic; line-height: 1.4; }
+    .modal-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hot); margin-bottom: 8px; display: block; }
+    .modal-ta { width: 100%; border: 1.5px solid var(--blush); border-radius: 12px; padding: 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); resize: none; outline: none; margin-bottom: 16px; min-height: 100px; transition: border-color 0.2s; line-height: 1.5; }
+    .modal-ta:focus { border-color: var(--hot); }
+    .modal-ta::placeholder { color: var(--lavender); }
+    .modal-input { width: 100%; border: 1.5px solid var(--blush); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; transition: border-color 0.2s; margin-bottom: 14px; }
+    .modal-input:focus { border-color: var(--hot); }
+    .modal-select { width: 100%; border: 1.5px solid var(--blush); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; cursor: pointer; margin-bottom: 14px; }
+    .modal-acts { display: flex; flex-direction: column; gap: 8px; }
+    .modal-row-btns { display: flex; gap: 8px; }
+    .modal-row-btns button { flex: 1; }
+    .modal-divider { height: 1px; background: var(--blush); margin: 14px 0; }
+    .mbtn-primary   { background: var(--pink); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-primary:active { background: #d9689f; }
+    .mbtn-secondary { background: #7A4A6A; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-orange    { background: var(--orange); color: var(--blush); border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-outline   { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-danger    { background: none; color: #c0392b; border: 1.5px solid #c0392b; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-danger:active { background: #c0392b; color: white; }
+    .mbtn-ghost     { background: none; color: var(--lavender); border: none; padding: 10px; font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .prompt-display { background: var(--off); border: 1.5px solid var(--blush); border-radius: 12px; padding: 16px; font-size: 13px; color: var(--ink); line-height: 1.7; white-space: pre-wrap; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
+    .mgmt-reorder { display: flex; gap: 8px; margin-bottom: 10px; }
+    .mgmt-reorder button { flex: 1; background: var(--off); border: 1.5px solid var(--row-border); border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+
+    /* ── YOU DID THAT overlay ── */
+    .ydt-overlay { display: none; position: fixed; inset: 0; background: #f2ffd5; z-index: 300; overflow-y: auto; }
+    .ydt-overlay.open { display: block; }
+    .ydt-inner { padding: 36px 22px 60px; }
+    .ydt-back { background: none; border: none; color: var(--hot); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; padding: 0; margin-bottom: 28px; display: flex; align-items: center; gap: 6px; }
+    .ydt-heading { margin-bottom: 32px; }
+    .ydt-eyebrow { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.35); display: block; margin-bottom: 8px; }
+    .ydt-title-sans { display: block; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 44px; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); line-height: 0.9; }
+    .ydt-title-serif { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 44px; color: var(--hot); line-height: 0.9; margin-bottom: 14px; }
+    .ydt-count-badge { display: inline-block; background: var(--orange); color: var(--blush); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .ydt-week-group { margin-bottom: 28px; }
+    .ydt-week-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: var(--hot); display: block; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px solid var(--blush); }
+    .ydt-task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .ydt-task-item:last-child { border-bottom: none; }
+    .ydt-check { width: 18px; height: 18px; background: var(--hot); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 800; margin-top: 2px; }
+    .ydt-task-text { font-size: 13px; color: var(--ink); line-height: 1.4; }
+    .ydt-empty { text-align: center; padding: 50px 20px; }
+    .ydt-empty-serif { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #7A4A6A; line-height: 1.6; }
+
+    /* ── DONE BANNER ── */
+    .done-banner { display: none; background: var(--hot); color: white; text-align: center; padding: 14px 22px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; font-weight: 700; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--blush); }
+
+    /* ── GOOD MORNING ── */
+    .gm-band { background: #F37EB3; border-bottom: 2px solid rgba(255,255,255,0.3); padding: 18px 22px; }
+    .gm-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #F8A96C; display: block; margin-bottom: 14px; }
+    .gm-items { display: flex; flex-direction: column; gap: 0; }
+    .gm-item { cursor: pointer; user-select: none; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.35); }
+    .gm-item:last-child { border-bottom: none; }
+    .gm-check-row { display: flex; align-items: flex-start; gap: 10px; }
+    .gm-box { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.7); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
+    .gm-box.checked { background: #fff; border-color: #fff; }
+    .gm-box.checked::after { content: '✓'; color: #F37EB3; font-size: 11px; font-weight: 900; }
+    .gm-label { font-size: 13px; font-weight: 800; color: #eefbd1; text-transform: uppercase; letter-spacing: 0.07em; }
+    .gm-label.checked { color: rgba(238,251,209,0.4); text-decoration: line-through; }
+    .gm-reminder { font-size: 12px; color: #fff; font-style: italic; line-height: 1.5; margin-top: 8px; padding-left: 30px; display: none; opacity: 0.9; }
+    .gm-reminder.show { display: block; }
+    .gm-all-done { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #fff; margin-top: 14px; display: none; text-align: center; }
+    .gm-all-done.show { display: block; }
+
+    /* ── IDEA BANK ── */
+    .ib-overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 5000; overflow-y: auto; }
+    .ib-overlay.open { display: block; }
+    .ib-inner { padding: 36px 22px 80px; }
+    .ib-back { background: none; border: none; color: var(--hot); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; padding: 0; margin-bottom: 28px; display: flex; align-items: center; gap: 6px; }
+    .ib-eyebrow { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.35); display: block; margin-bottom: 8px; }
+    .ib-title-sans { display: block; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 42px; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); line-height: 0.9; }
+    .ib-title-serif { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 42px; color: var(--hot); line-height: 0.9; margin-bottom: 20px; }
+    .ib-capture { background: var(--off); border-radius: 14px; padding: 18px; margin-bottom: 24px; border: 1.5px solid var(--blush); }
+    .ib-input { width: 100%; border: none; background: transparent; font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: var(--ink); resize: none; outline: none; line-height: 1.5; }
+    .ib-input::placeholder { color: rgba(0,0,0,0.25); }
+    .ib-tags { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+    .ib-tag-btn { border: 1.5px solid; background: transparent; border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; padding: 5px 12px; font-family: 'DM Sans', sans-serif; transition: background 0.15s, color 0.15s; }
+    .ib-tag-btn[data-tag="Stand Up"]        { border-color: var(--hot);      color: var(--hot); }
+    .ib-tag-btn[data-tag="TV / Pilot"]      { border-color: #b2c0f9;         color: #3b4a8c; }
+    .ib-tag-btn[data-tag="Film"]            { border-color: var(--pink);     color: var(--hot); }
+    .ib-tag-btn[data-tag="Podcast"]         { border-color: var(--lavender); color: #7a5a8c; }
+    .ib-tag-btn[data-tag="Music"]           { border-color: var(--orange);   color: #b06030; }
+    .ib-tag-btn[data-tag="Business"]        { border-color: var(--mist);     color: #555; }
+    .ib-tag-btn[data-tag="Online / Social"] { border-color: #a8d8a0;         color: #3a7a3a; }
+    .ib-tag-btn[data-tag="Other"]           { border-color: #ccc;            color: #888; }
+    .ib-tag-btn[data-tag="Stand Up"].active        { background: var(--hot);      color: #fff; }
+    .ib-tag-btn[data-tag="TV / Pilot"].active      { background: #b2c0f9;         color: #3b4a8c; }
+    .ib-tag-btn[data-tag="Film"].active            { background: var(--pink);     color: #fff; }
+    .ib-tag-btn[data-tag="Podcast"].active         { background: var(--lavender); color: var(--ink); }
+    .ib-tag-btn[data-tag="Music"].active           { background: var(--orange);   color: #b06030; }
+    .ib-tag-btn[data-tag="Business"].active        { background: var(--mist);     color: var(--ink); }
+    .ib-tag-btn[data-tag="Online / Social"].active { background: #a8d8a0;         color: #3a7a3a; }
+    .ib-tag-btn[data-tag="Other"].active           { background: #ccc;            color: var(--ink); }
+    .ib-save-btn { width: 100%; padding: 16px; background: var(--hot); color: #fff; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; margin-top: 4px; }
+    .ib-save-btn:active { opacity: 0.85; }
+    .ib-list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .ib-list-eyebrow { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.35); }
+    .ib-send-all-btn { background: transparent; border: 1.5px solid var(--hot); color: var(--hot); border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .ib-notion-row { margin-bottom: 16px; }
+    .ib-notion-input { width: 100%; border: 1px solid var(--blush); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--ink); font-family: 'DM Sans', sans-serif; outline: none; }
+    .ib-card { background: #fff; border-left: 4px solid; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .ib-card-text { font-size: 14px; color: var(--ink); line-height: 1.5; margin-bottom: 8px; }
+    .ib-card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .ib-tag-badge { font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+    .ib-ts { font-size: 10px; color: rgba(0,0,0,0.4); }
+    .ib-sent { font-size: 10px; color: #7a7; font-weight: 700; }
+    .ib-card-acts { display: flex; gap: 8px; }
+    .ib-notion-btn { background: var(--ink); color: #fff; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 6px 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .ib-del-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 6px; font-size: 12px; color: rgba(0,0,0,0.4); cursor: pointer; padding: 6px 10px; }
+    .ib-empty { text-align: center; padding: 40px 20px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: rgba(0,0,0,0.3); }
+    .ib-band { background: transparent; padding: 8px 22px 16px; }
+    .ib-band-btn { background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; display: inline-block; }
+
+    /* ── TOAST ── */
+    .bcy-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--hot); color: white; padding: 12px 24px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 8px 24px rgba(234,37,141,0.3); transition: transform 0.35s cubic-bezier(0.23,1,0.32,1); z-index: 9998; pointer-events: none; white-space: nowrap; }
+    .bcy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── GLITTER ── */
+    @keyframes glitter-fly { 0% { transform: translate(0,0) scale(1.2); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+    .glitter-particle { position: fixed; pointer-events: none; z-index: 9999; animation: glitter-fly 0.95s ease-out forwards; font-style: normal; line-height: 1; }
+  </style>
+</head>
+<body>
+
+<!-- FULLSCREEN BUTTON -->
+<button class="fs-btn" id="fsBtn" onclick="toggleFS()" title="Fullscreen">
+  <svg id="fsIcon" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+</button>
+
+<!-- 0. GOOD MORNING RITUAL -->
+<section class="gm-band" id="gmBand">
+  <span class="gm-title">Good Morning ✨</span>
+  <div class="gm-items" id="gmItems">
+    <div class="gm-item" data-id="phone" onclick="toggleMorningItem('phone')">
+      <div class="gm-check-row"><div class="gm-box" id="gmBox_phone"></div><span class="gm-label" id="gmLabel_phone">No phone first</span></div>
+      <div class="gm-reminder" id="gmReminder_phone">Your first thought of the day belongs to you. Not anyone&#39;s DM or news feed. That choice compounds.</div>
+    </div>
+    <div class="gm-item" data-id="movement" onclick="toggleMorningItem('movement')">
+      <div class="gm-check-row"><div class="gm-box" id="gmBox_movement"></div><span class="gm-label" id="gmLabel_movement">Movement</span></div>
+      <div class="gm-reminder" id="gmReminder_movement">Your nervous system just reset. The writing session tonight runs on what you did this morning.</div>
+    </div>
+    <div class="gm-item" data-id="meds" onclick="toggleMorningItem('meds')">
+      <div class="gm-check-row"><div class="gm-box" id="gmBox_meds"></div><span class="gm-label" id="gmLabel_meds">Meds</span></div>
+      <div class="gm-reminder" id="gmReminder_meds">This is infrastructure. Your brain at full capacity is your most valuable creative asset.</div>
+    </div>
+    <div class="gm-item" data-id="spirit" onclick="toggleMorningItem('spirit')">
+      <div class="gm-check-row"><div class="gm-box" id="gmBox_spirit"></div><span class="gm-label" id="gmLabel_spirit">Bible study or morning pages</span></div>
+      <div class="gm-reminder" id="gmReminder_spirit">You just fed the well. The ideas that come today, the instincts you trust — they&#39;re built from mornings like this.</div>
+    </div>
+    <div class="gm-item" data-id="breakfast" onclick="toggleMorningItem('breakfast')">
+      <div class="gm-check-row"><div class="gm-box" id="gmBox_breakfast"></div><span class="gm-label" id="gmLabel_breakfast">Breakfast</span></div>
+      <div class="gm-reminder" id="gmReminder_breakfast">You&#39;re taking care of the person who does the work. The Vogue-cover version of you eats breakfast.</div>
+    </div>
+  </div>
+  <div class="gm-all-done" id="gmAllDone">The morning is done. The rest of the day answers to you now.</div>
+</section>
+
+<!-- 1. HERO -->
+<div class="band pad" style="background:#f1bcd7;">
+  <span class="eyebrow eyebrow-hot">Best Case Scenario · Week by Week</span>
+  <span class="hero-week-num" id="heroNum">1</span>
+  <span class="hero-phase" id="heroPhase" onclick="startEditTheme()" title="Tap to rename">The Floor</span>
+  <input class="hero-phase-input" id="heroPhaseInput" onblur="saveEditTheme()" onkeydown="themeKeydown(event)">
+  <div class="hero-dates" id="heroDates">Mar 31 – Apr 6</div>
+  <div class="hero-done-pill" id="heroPill">0 of 0 done</div>
+</div>
+
+<!-- DONE BANNER -->
+<div class="done-banner" id="doneBanner">✦ All done. The work is getting made. ✦</div>
+
+<!-- 2. PROGRESS -->
+<div class="band band pad-sm" style="background:white;">
+  <div class="progress-row">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 76 76">
+        <circle class="ring-bg" cx="38" cy="38" r="33"/>
+        <circle class="ring-fill" id="ringFill" cx="38" cy="38" r="33"/>
+      </svg>
+      <div class="ring-label">
+        <span class="ring-n" id="ringN">0</span>
+        <span class="ring-d" id="ringD">of 0</span>
+      </div>
+    </div>
+    <div class="progress-text">
+      <h2 id="progHead">Let's get into it.</h2>
+      <p id="progSub">Tap any task to mark it done.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 3. ENCOURAGEMENT -->
+<div class="band pad-sm" style="background:#b2c0f9;">
+  <div class="enc-inner">
+    <div class="enc-icon" id="encIcon">✦</div>
+    <div class="enc-text">
+      <strong class="enc-title" id="encTitle">Loading...</strong>
+      <span class="enc-body" id="encBody"></span>
+    </div>
+    <button class="enc-refresh" onclick="nextEnc()" title="Another">↻</button>
+  </div>
+</div>
+
+<!-- 4. TASKS -->
+<div class="band" style="background:white;">
+  <div class="pad" style="padding-bottom:0;">
+    <span class="eyebrow eyebrow-ink">This Week</span>
+    <div class="mix-head mix-pink">
+      <span class="mix-sans">What Gets</span>
+      <span class="mix-serif">Done.</span>
+    </div>
+  </div>
+  <ul class="row-list" id="taskList"></ul>
+  <div class="add-row">
+    <input class="add-input" id="addInput" type="text" placeholder="Add your own task...">
+    <button class="add-btn" onclick="addTask()">+ Add</button>
+  </div>
+</div>
+
+<!-- 5. PRACTICES -->
+<div class="band" style="background:var(--blush);">
+  <div class="pad" style="padding-bottom:0;">
+    <span class="eyebrow eyebrow-hot">Alongside The Tasks</span>
+    <div class="mix-head mix-pink">
+      <span class="mix-sans">The Softer</span>
+      <span class="mix-serif">Work.</span>
+    </div>
+  </div>
+  <div id="practiceList"></div>
+  <div style="height:22px;"></div>
+</div>
+
+<!-- 8. YOU DID THAT button -->
+<div class="ydt-band">
+  <button class="ydt-band-btn" onclick="showYouDidThat()">✦ You Did That — See Everything You've Completed</button>
+</div>
+
+<!-- 9. DATA -->
+<div class="band pad" style="background:var(--lavender);">
+  <span class="eyebrow eyebrow-ink" style="opacity:0.6;">Your Data</span>
+  <div class="mix-head mix-lav" style="margin-bottom:18px;">
+    <span class="mix-sans">Save &amp;</span>
+    <span class="mix-serif">Transfer.</span>
+  </div>
+  <div class="data-row">
+    <button class="data-btn data-btn-export" onclick="exportData()">↓ Export JSON</button>
+    <button class="data-btn data-btn-import" onclick="document.getElementById('importInput').click()">↑ Load JSON</button>
+    <input type="file" id="importInput" accept=".json" onchange="importData(event)">
+  </div>
+  <div class="import-success" id="importSuccess">✓ Data loaded successfully</div>
+  <p class="data-note">
+    <strong>Export</strong> saves a timestamped file — never overwrites old data.<br><br>
+    <strong>Load</strong> any previous export to restore your progress. Syncs between phone and desktop.
+  </p>
+</div>
+<div class="ib-band">
+  <button class="ib-band-btn" onclick="showIdeaBank()"><span style="color:#eefbd1;">✦</span> Idea Bank</button>
+</div>
+
+<!-- 10. TIMELINE -->
+<div class="band pad-sm" style="background:var(--mist);">
+  <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
+  <div class="tl-scroll" id="tlScroll"></div>
+</div>
+
+<!-- STATUS MODAL -->
+<div class="overlay" id="statusModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">What's the status?</div>
+    <div class="modal-sub" id="modalSub">—</div>
+    <span class="modal-lbl">What happened / where things stand</span>
+    <textarea class="modal-ta" id="modalTa" placeholder="Still working on... / Waiting on... / Blocked because..."></textarea>
+    <div class="modal-acts">
+      <button class="mbtn-primary" onclick="saveNote()">Save note</button>
+      <button class="mbtn-secondary" onclick="saveAndPrompt()">Save + build Cowork prompt</button>
+      <button class="mbtn-ghost" onclick="closeModal('statusModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TASK MANAGEMENT MODAL -->
+<div class="overlay" id="taskMgmtModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit Task</div>
+    <div class="modal-sub" id="taskMgmtSub">—</div>
+    <span class="modal-lbl">Task text</span>
+    <input class="modal-input" id="taskMgmtText" type="text" placeholder="Task description...">
+    <span class="modal-lbl">Category</span>
+    <select class="modal-select" id="taskMgmtCat">
+      <option value="admin">Admin</option>
+      <option value="writing">Writing</option>
+      <option value="health">Health</option>
+      <option value="wellness">Wellness</option>
+      <option value="legal">Legal</option>
+      <option value="finance">Finance</option>
+      <option value="comms">Comms</option>
+      <option value="career">Career</option>
+      <option value="self-care">Self-Care</option>
+      <option value="spirit">Spirit</option>
+      <option value="social">Social</option>
+      <option value="home">Home</option>
+      <option value="palava">Palava</option>
+      <option value="system">System</option>
+      <option value="standup">Stand-Up</option>
+      <option value="custom">Custom</option>
+    </select>
+    <div class="modal-divider"></div>
+    <div class="mgmt-reorder">
+      <button onclick="mgmtMoveUp()">↑ Move Up</button>
+      <button onclick="mgmtMoveDown()">↓ Move Down</button>
+    </div>
+    <span class="modal-lbl">Reschedule to another week</span>
+    <select class="modal-select" id="taskReschedSel">
+      <option value="">— pick a week —</option>
+    </select>
+    <div class="modal-acts">
+      <div class="modal-row-btns">
+        <button class="mbtn-primary" onclick="mgmtSave()">Save changes</button>
+        <button class="mbtn-orange" onclick="mgmtCarry()">→ Next Week</button>
+      </div>
+      <button class="mbtn-danger" onclick="mgmtDelete()">Delete this task</button>
+      <button class="mbtn-ghost" onclick="closeModal('taskMgmtModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- IDEA BANK OVERLAY -->
+<div class="ib-overlay" id="ibOverlay">
+  <div class="ib-inner">
+    <button class="ib-back" onclick="closeIdeaBank()">← Back</button>
+    <span class="ib-eyebrow">Creative captures · Best Case Year</span>
+    <span class="ib-title-sans">Idea</span>
+    <span class="ib-title-serif">Bank.</span>
+    <div class="ib-capture">
+      <textarea class="ib-input" id="ibInput" rows="3" placeholder="what just came to you"></textarea>
+      <div class="ib-tags">
+        <button class="ib-tag-btn" data-tag="Stand Up"        onclick="ibTagSelect(this)">STAND UP</button>
+        <button class="ib-tag-btn" data-tag="TV / Pilot"      onclick="ibTagSelect(this)">TV / PILOT</button>
+        <button class="ib-tag-btn" data-tag="Film"            onclick="ibTagSelect(this)">FILM</button>
+        <button class="ib-tag-btn" data-tag="Podcast"         onclick="ibTagSelect(this)">PODCAST</button>
+        <button class="ib-tag-btn" data-tag="Music"           onclick="ibTagSelect(this)">MUSIC</button>
+        <button class="ib-tag-btn" data-tag="Business"        onclick="ibTagSelect(this)">BUSINESS</button>
+        <button class="ib-tag-btn" data-tag="Online / Social" onclick="ibTagSelect(this)">ONLINE</button>
+        <button class="ib-tag-btn" data-tag="Other"           onclick="ibTagSelect(this)">OTHER</button>
+      </div>
+      <button class="ib-save-btn" onclick="saveIdea()">Save to Idea Bank</button>
+    </div>
+    <div class="ib-list-header">
+      <span class="ib-list-eyebrow">Captured Ideas</span>
+      <button class="ib-send-all-btn" onclick="sendAllToNotion()">✦ Copy All & Open Notion</button>
+    </div>
+    <div class="ib-notion-row">
+      <input class="ib-notion-input" id="ibNotionUrl" type="url" placeholder="Notion Idea Bank — connected ✓" onchange="saveIbNotionUrl()" onblur="saveIbNotionUrl()">
+    </div>
+    <div id="ibList"></div>
+  </div>
+</div>
+
+<!-- YOU DID THAT OVERLAY -->
+<div class="ydt-overlay" id="ydtOverlay">
+  <div class="ydt-inner">
+    <button class="ydt-back" onclick="closeYouDidThat()">← Back</button>
+    <div class="ydt-heading">
+      <span class="ydt-eyebrow">Your completed work · Best Case Year</span>
+      <span class="ydt-title-sans">You Did</span>
+      <span class="ydt-title-serif">That.</span>
+      <span class="ydt-count-badge" id="ydtCount">0 tasks complete</span>
+    </div>
+    <div id="ydtContent"></div>
+  </div>
+</div>
+
+<script>
+// ─── WEEKS DATA ───────────────────────────────────────────────────────────────
+const WEEKS = [
+  { id:'w1', label:'Week 1', name:'The Floor', num:'1', start:'2026-03-31', end:'2026-04-06',
+    tasks:[{text:"Driver's license renewed",cat:"admin"},{text:"Blanket text sent to all 150 — one message, not perfect, sent",cat:"comms"},{text:"CalFresh recertified",cat:"admin"},{text:"Tax extension filed",cat:"admin"},{text:"Three estate attorney emails sent — just the ask, not the consultation",cat:"legal"}],
+    practices:["Phone charges in the kitchen starting tonight","One anchor wake time picked — held even when it is hard","Script opened at least twice — not necessarily written, opened"],
+    quote:'"Phone has charged in the kitchen for four months straight. I wake up before noon without trying most days. That started the night you put it down. Do it tonight."',
+    enc:[{icon:"🌅",t:"The Vogue-cover version of you wakes up at the same time every day.",b:"She built that anchor in weeks exactly like this one. Put the phone in the kitchen. That's where it starts."},{icon:"✍️",t:"Pick Me's feature deal happens because you wrote the pages.",b:"Not all at once. Week by week, two opens of the script at a time. That's all that's required right now."},{icon:"📱",t:"Phone in the kitchen tonight?",b:"That's the morning. The morning is the writing. The writing is the film. One step."},{icon:"⏰",t:"Held the wake time?",b:"Not because it's easy. Because the version of you you're building needs the morning. You're building her right now."},{icon:"📬",t:"One admin task done.",b:"Each one off the list is bandwidth returned to the work. The creative life runs on clear mental space."}]
+  },
+  { id:'w2', label:'Week 2', name:'The First Exhale', num:'2', start:'2026-04-07', end:'2026-04-13',
+    tasks:[{text:"EDD follow-up call made",cat:"admin"},{text:"Estate attorney consultation booked from the three responses",cat:"legal"},{text:"Sleep study scheduled",cat:"health"},{text:"ENT scheduled",cat:"health"},{text:"Second hakomi session — book the third before you leave",cat:"wellness"}],
+    practices:["One friend on the couch this week — let them bring food, let them stay","Thirty minutes outside without the phone, three times","The Minnesota scene — write it, Ethan kisses her, no exit strategy"],
+    quote:'"I went outside three times last week without making it a thing. No strategy. Just walked. My nervous system is completely different now. You are literally rebuilding it with those thirty minutes."',
+    enc:[{icon:"🌿",t:"30 minutes outside resets the nervous system.",b:"The Pick Me script that gets written tonight comes from the walk you took this afternoon. They are the same action."},{icon:"🌅",t:"Sleep study done? That's infrastructure.",b:"Your brain at full capacity is your best creative asset. This is how the Vogue cover version of you shows up in the room."},{icon:"📞",t:"Made the EDD call?",b:"That's the thing that would've sat on your chest for weeks. It's off now. The mental space goes back to the work."},{icon:"✍️",t:"Wrote the Minnesota scene?",b:"That's the scene the whole feature earns. Every page you write toward it right now matters."},{icon:"👯",t:"Let someone come over?",b:"That's the practice — receiving, not managing. Exactly what the whole script is about."}]
+  },
+  { id:'w3', label:'Week 3', name:'Birthday Week', num:'3', start:'2026-04-14', end:'2026-04-20',
+    tasks:[{text:"Estate attorney consultation happens — know your rights now",cat:"legal"},{text:"Psych appointment — medication review conversation had",cat:"health"},{text:"Allergy appointments rescheduled",cat:"health"},{text:"Autism diagnosis rescheduled — on the calendar",cat:"health"}],
+    practices:["Tell at least one person what you actually want for your birthday","Do not spend the day alone unless you genuinely want to","Write the scene where Autumn receives something and stays"],
+    quote:'"I told people what I wanted for my birthday this year and they actually showed up exactly right. Turns out people want to get it right — they just need the ask. You\'re practicing the ask right now."',
+    enc:[{icon:"🎂",t:"You said what you wanted?",b:"The version of you who asks for what she needs — she's the one who walks into rooms and changes them. You're building her today."},{icon:"🧠",t:"Calibrated medication is infrastructure.",b:"Pick Me's feature gets packaged by a version of you whose brain is running right. This appointment is part of that."},{icon:"✍️",t:"Wrote the Autumn scene?",b:"The scene where she stays. That's the emotional center of the whole feature. It's waiting for you to write it."},{icon:"⚖️",t:"Attorney consultation done?",b:"Now you know your rights. You walk differently when you know your rights."},{icon:"🌸",t:"Not spending the day alone?",b:"The version of you on the Vogue cover lets people celebrate her. You're practicing that today."}]
+  },
+  { id:'w4', label:'Week 4', name:'The List Gets Shorter', num:'4', start:'2026-04-21', end:'2026-04-27',
+    tasks:[{text:"DMV tabs paid or payment plan arranged",cat:"admin"},{text:"WGA dues handled",cat:"admin"},{text:"CVS card fixed",cat:"admin"},{text:"HBO to Hulu switched",cat:"admin"},{text:"Mail opened, sorted, dealt with or filed",cat:"admin"}],
+    practices:["The wake time is holding — not natural yet, hold it anyway","Sugar reduced — not eliminated, one swap per day","Script: act two is being touched regularly — not finished, touched"],
+    quote:'"The mail doesn\'t pile up anymore. I open it the same day it arrives. Not because I love it — because I know what my brain does to an unopened pile. You\'re teaching yourself that right now."',
+    enc:[{icon:"📬",t:"Opened the mail?",b:"The brain lied about what was in it. It always lies about the mail. Now you know."},{icon:"⏰",t:"Wake time holding?",b:"Even when it doesn't feel natural. The version of you who has a morning built that morning in weeks exactly like this one."},{icon:"🍊",t:"One sugar swap today?",b:"Your body running better is your brain writing better. The Vogue-cover version of you is built on weeks of small swaps."},{icon:"✍️",t:"Touched act two today?",b:"Not finished. Touched. That's how the draft gets done. The Pick Me feature exists because you touched it in weeks like this."},{icon:"✅",t:"Admin list getting shorter.",b:"Each one off is bandwidth returned to the creative work. The creative life runs on the other side of this list."}]
+  },
+  { id:'w5', label:'Week 5', name:'Momentum', num:'5', start:'2026-04-28', end:'2026-05-04',
+    tasks:[{text:"Backyard ready — propane, afternoon with Sameliah",cat:"home"},{text:"Wig refresh appointment scheduled and kept",cat:"self-care"},{text:"Business checking account — three options researched, one chosen",cat:"finance"},{text:"EDD situation resolved or in process",cat:"admin"}],
+    practices:["Bible study — one session, however small, this week","One thing per day system becoming automatic","Notice when you pick up the phone to avoid a feeling — put it down twice"],
+    quote:'"Pick Me is in packaging conversations right now because I kept showing up — to the backyard, to bible study, to the one thing per day. Every system you\'re building this week is load-bearing."',
+    enc:[{icon:"✝️",t:"Made it to bible study?",b:"This is the practice that holds everything else. Small and consistent. The version of you who has a creative empire has a spiritual practice underneath it."},{icon:"📵",t:"Put the phone down twice?",b:"Catching the avoidance in real time is the actual skill. The Vogue-cover version of you is present. You're building presence right now."},{icon:"💇",t:"Wig refresh done?",b:"Showing up looking like yourself is armor. The version of you who walks into rooms and changes them — she looks like herself."},{icon:"🌞",t:"Sat in the backyard?",b:"The rest is not wasted time. It's what makes the work possible. Dad would have liked this yard."},{icon:"🏦",t:"Business account handled?",b:"Palava Productions runs on infrastructure. This is infrastructure."}]
+  },
+  { id:'w6', label:'Week 6', name:'The Creative Re-entry', num:'6', start:'2026-05-05', end:'2026-05-11',
+    tasks:[{text:"Pick Me draft: act two complete or close to complete",cat:"writing"},{text:"Sleep study happens or is imminent",cat:"health"},{text:"Psych adjustment noted — you feel slightly different",cat:"health"},{text:"Debt mapped — the full picture known",cat:"finance"}],
+    practices:["The 10pm writing signal is a real thing in your life now","Going outside without making it a whole thing","Let yourself be excited without immediately auditing the excitement"],
+    quote:'"I write at 10pm every night now. Not because I make myself. Because my body expects it. The signal you\'re creating right now becomes automatic. That\'s how the draft that changes everything gets written."',
+    enc:[{icon:"🌙",t:"The 10pm signal you're building is how Pick Me gets written.",b:"Every time you honor it, the habit gets stronger than the resistance. The feature exists on the other side of this signal."},{icon:"😊",t:"Let yourself be excited without auditing it?",b:"That's the version of you who has a creative life. The Vogue-cover version of you is excited and doesn't apologize for it."},{icon:"✍️",t:"Act two is getting done.",b:"Not perfect. Getting done. That's how it becomes the draft that goes out and changes everything."},{icon:"🚶",t:"Went outside without making it a whole thing?",b:"Just went. The brain resets. The writing happens after."},{icon:"💰",t:"Mapped the debt?",b:"Knowing the full picture is not the same as the situation being bad. Clarity is power."}]
+  },
+  { id:'w7', label:'Week 7', name:'The Diagnosis', num:'7', start:'2026-05-12', end:'2026-05-18',
+    tasks:[{text:"Autism diagnosis appointment completed",cat:"health"},{text:"Sit with it — explanation, not limitation",cat:"self-knowledge"}],
+    practices:["Nothing was ever wrong with you","You were running the wrong operating system — now you know there's another one","Use it as information"],
+    quote:'"The diagnosis didn\'t change who I am. It changed how clearly I can see who I\'ve always been. The information you\'re sitting with right now becomes the operating manual for everything that follows."',
+    enc:[{icon:"💡",t:"The diagnosis is information, not a verdict.",b:"You've been building something extraordinary while running the wrong OS. Imagine what you build now that you know."},{icon:"🧠",t:"None of it was ever a character flaw.",b:"The lateness, the mail, the everything — it all has a name now. Use it the way you use every other tool you've built."},{icon:"✦",t:"Wrong operating system. Right person.",b:"You were always going to be the one who writes this film, builds this company, shows up in this room. Now you know why it looked the way it did."}]
+  },
+  { id:'w8', label:'Week 8', name:'The Social Re-entry', num:'8', start:'2026-05-19', end:'2026-05-25',
+    tasks:[{text:"Seen at least three people in person this month",cat:"social"},{text:"New car plan for July — research done, options known",cat:"admin"},{text:"Mailbox service set up for Palava Productions",cat:"palava"},{text:"Taxes filed or on track for October",cat:"admin"}],
+    practices:["Go to one social thing this week — leave when tired, not when it ends","Do not apologize for leaving","Notice the recovery time is getting shorter"],
+    quote:'"I leave events when I\'m tired now. No apology. My social world is on my terms. The relationships that held are the ones that could hold that. You\'re figuring out which ones those are right now."',
+    enc:[{icon:"🚪",t:"Left when you needed to?",b:"Without apologizing. Less masking, faster recovery, more writing. The version of you who has a creative empire guards her energy."},{icon:"📬",t:"Palava mailbox set up?",b:"Palava Productions has an address. The empire has mail. This is what building looks like before it looks like building."},{icon:"👥",t:"Saw people this month?",b:"The actual you — not the managed version. That's the social world on your terms."},{icon:"🚗",t:"Car situation handled?",b:"The July deadline is taken care of. Bandwidth returned to the work."}]
+  },
+  { id:'w9', label:'Weeks 9–10', name:'Pick Me Draft Complete', num:'9–10', start:'2026-05-26', end:'2026-06-08',
+    tasks:[{text:"Full feature draft done — not perfect, done",cat:"writing"},{text:"Ethan kisses her without an exit strategy — written",cat:"writing"},{text:"Autumn receives something and stays — written",cat:"writing"},{text:"The audition tape scene from inside the nine year old — written",cat:"writing"},{text:"The line Ethan doesn't want to say — written",cat:"writing"},{text:"Third act parking lot that earns the tornado — written",cat:"writing"},{text:"Sent to Sameliah, then one trusted reader — without apology",cat:"writing"}],
+    practices:["Don't apologize when you send it","Say 'here it is, tell me what is true'","The sending is the phone call"],
+    quote:'"The Pick Me feature exists as a produced film. It exists because I finished the draft — the imperfect, complete, sent draft. The pages you\'re writing right now are not practice. They are the thing."',
+    enc:[{icon:"✍️",t:"The draft exists now.",b:"Not perfect. Existing. That's the thing that goes out. That's the thing that changes everything."},{icon:"📤",t:"Sent it without apology?",b:"'Here it is. Tell me what is true.' That's how the Vogue-cover version of you sends work."},{icon:"✦",t:"The sending is the phone call.",b:"He heard it. Every page you finished was addressed to him. He heard all of it."},{icon:"🎬",t:"The parking lot scene is written.",b:"That's the one that earns the whole movie. It was worth it."}]
+  },
+  { id:'w11', label:'Weeks 11–12', name:'The Approach', num:'11–12', start:'2026-06-09', end:'2026-06-22',
+    tasks:[{text:"Feedback integrated — this version goes out",cat:"writing"},{text:"Formal packaging approach underway",cat:"career"},{text:"The letter written — third version, sounds like you",cat:"outreach"},{text:"The letter sent — hands shaking, sent anyway",cat:"outreach"}],
+    practices:["Do not engineer the outcome","Send the version that sounds like you","That is the whole practice — send it anyway"],
+    quote:'"I sent the letter. Hands shaking, sent anyway. It landed. You\'re building the version of yourself who can do that — by doing it right now, smaller version first."',
+    enc:[{icon:"✉️",t:"Sent it anyway?",b:"Shaking hands and all. That's the practice. The Vogue-cover version of you sends things. She doesn't wait until she's not scared."},{icon:"📝",t:"The version that sounds like you is the right one.",b:"Not the press release. You. That's the one that lands. That's the one that gets remembered."},{icon:"🎯",t:"Script is in packaging.",b:"It's in the world. You wrote it in the weather and now it's in the world."}]
+  },
+  { id:'w13', label:'Week 13', name:'The Breath', num:'13', start:'2026-06-23', end:'2026-06-29',
+    tasks:[{text:"Go to bible study",cat:"spirit"},{text:"Call your mother",cat:"family"},{text:"Go outside",cat:"body"}],
+    practices:["Do not wait for the response","Let the thing be in the world without checking","Practice standing still"],
+    quote:'"I don\'t check my phone every hour waiting for news anymore. I made the thing, I sent it, and I breathe. You\'re learning to breathe right now. That\'s not nothing. That\'s everything."',
+    enc:[{icon:"🌿",t:"Not checking every hour?",b:"That's the whole practice. Standing still in the uncertainty. The film is literally about this."},{icon:"✝️",t:"Made it to bible study?",b:"The thing you do before the rest of Sunday starts. It's yours now."},{icon:"📞",t:"Called your mother?",b:"She wants to hear from you. You want to hear her voice. Both of those things can be true."}]
+  },
+  { id:'w14', label:'Weeks 14–15', name:'Festival Season', num:'14–15', start:'2026-06-30', end:'2026-07-13',
+    tasks:[{text:"New car situation resolved by July 1st",cat:"admin"},{text:"Pick Me short — festival run continues",cat:"pick-me"},{text:"Feature script in active packaging conversations",cat:"career"},{text:"Gramcracker — development conversations beginning",cat:"career"}],
+    practices:["Show up present, not performing","Let yourself cry when something accurate is written about you","Do not immediately make it a bit"],
+    quote:'"Someone asked me in an interview what Pick Me is really about and I told them the truth. Not the pitch. The truth. They printed the truth. You\'re building the person who can do that right now."',
+    enc:[{icon:"🎬",t:"The short is making noise.",b:"The industry is catching up to where you already are. That's what happens when you make the work."},{icon:"✦",t:"Present in the interview, not performing?",b:"That's what gets written about. That's what gets remembered. The Vogue-cover version of you shows up as herself."},{icon:"🚗",t:"Car handled by July 1st?",b:"The deadline held. The pre-game worked."}]
+  },
+  { id:'w16', label:'Weeks 16–18', name:'The Life', num:'16–18', start:'2026-07-14', end:'2026-08-03',
+    tasks:[{text:"One thing per day — automatic now",cat:"system"},{text:"10pm writing signal — real and held",cat:"system"},{text:"Anchor wake time holding, 9–11am range",cat:"system"},{text:"Bible study weekly, Sunday morning, small",cat:"spirit"}],
+    practices:["Let the people who've earned it see you in your actual condition","Less masking means less expenditure","Mornings are for the list; nights are for the real writing"],
+    quote:'"I wake up at 9am now without an alarm. My body regulated. The anchor time you\'re holding right now — especially when it\'s hard — is doing the regulating. Keep holding it."',
+    enc:[{icon:"🌅",t:"Woke before noon?",b:"Because your body has regulated. That's what all the earlier work was building toward. You built this."},{icon:"🌙",t:"10pm signal held?",b:"The nights are for the real writing. You're writing now. That's the life."},{icon:"✦",t:"Masking less.",b:"Less expenditure. Faster recovery. More of you available for the work — and for the room when you walk into it."}]
+  },
+  { id:'w19', label:'Weeks 19–22', name:'The Stand-Up', num:'19–22', start:'2026-08-04', end:'2026-08-31',
+    tasks:[{text:"Stand-up architecture developed — not a list of bits, a structure",cat:"standup"},{text:"Wigger confessional written out fully for the first time",cat:"standup"},{text:"Casper bit rewritten — says what it's actually about",cat:"standup"},{text:"'Ladies are we insane' bit — ends where it needs to end",cat:"standup"},{text:"Work-in-progress set performed — small room, mixed audience",cat:"standup"}],
+    practices:["Don't use comedy as the exit hatch for the true things","Let the true things be true and funny simultaneously","Someone will say something after the set you'll think about for a long time"],
+    quote:'"The special exists. It exists because I sat with the true things long enough to find what was funny about them. You\'re doing that right now. This is the writing."',
+    enc:[{icon:"🎤",t:"Did the set?",b:"Small room. Mixed crowd. That's where every special starts. The Vogue-cover version of you has a special. It starts here."},{icon:"✦",t:"Let the true thing be true.",b:"And funny at the same time. That's the register you've always written in. Now it's a whole hour."},{icon:"📝",t:"Architecture, not a list.",b:"That's what separates a special from a set. You're building the special."}]
+  },
+  { id:'w23', label:'Sep–Dec', name:'The Last Quarter', num:'Sep–Dec', start:'2026-09-01', end:'2026-12-31',
+    tasks:[{text:"Script in active packaging — whatever you found out, you're okay",cat:"career"},{text:"Money situation clearer — not solved, clearer",cat:"finance"},{text:"Life insurance situation addressed legally",cat:"legal"},{text:"CalFresh current, EDD resolved, debt has a plan",cat:"admin"},{text:"SeedFest early planning — entity structure decided, 2027 on calendar",cat:"palava"}],
+    practices:["The list is a maintenance schedule now, not a wall","Wake before noon most days — not forced, regulated","Carry him differently — he is the barbecue, the thumbs up, the work"],
+    quote:'"You were always going to be enough. You just needed the year. Every week of this year — including this one, especially this one — was the proof."',
+    enc:[{icon:"✦",t:"You were always going to be enough.",b:"The year just proved it to you. In the hardest weeks of your life, you still made the work. You still showed up."},{icon:"🌱",t:"SeedFest is real now.",b:"In early planning. The 2027 timeline exists the way things exist before they happen."},{icon:"🎬",t:"The script is in the world.",b:"Whatever you found out — you're okay. Better than okay. The Vogue-cover version of you knew she would be."}]
+  }
+];
+
+// ─── V4 STATE SYSTEM ──────────────────────────────────────────────────────────
+const KEY4 = 'bcy_v4';
+
+function gs4() { try { return JSON.parse(localStorage.getItem(KEY4)) || null; } catch { return null; } }
+function ss4(v4) { localStorage.setItem(KEY4, JSON.stringify(v4)); }
+
+function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+
+function initV4() {
+  let v4 = gs4();
+  if (v4 && v4.weeks) return v4;
+  let v3 = null;
+  try { v3 = JSON.parse(localStorage.getItem('bcy_v3')); } catch {}
+  v4 = { weekThemes: {}, weeks: {} };
+  WEEKS.forEach(w => {
+    const bDone  = ((v3?.tasks || {})[w.id] || {});
+    const bNotes = ((v3?.notes  || {})[w.id] || {});
+    const v3Cust = ((v3?.customTasks || {})[w.id] || []);
+    v4.weeks[w.id] = { items: [
+      ...w.tasks.map((t,i) => ({ id:`${w.id}_b_${i}`, text:t.text, cat:t.cat, done:!!bDone[i], note:bNotes[i]||'', builtin:true, originWeek:null, originWeekLabel:null })),
+      ...v3Cust.map((t,ci) => ({ id:genId(w.id+'_c'), text:t.text, cat:t.cat||'custom', done:!!bDone[w.tasks.length+ci], note:bNotes[w.tasks.length+ci]||'', builtin:false, originWeek:null, originWeekLabel:null }))
+    ]};
+  });
+  ss4(v4); return v4;
+}
+
+function getItems(weekId) { return gs4()?.weeks?.[weekId]?.items || []; }
+function saveItems(weekId, items) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  if (!v4.weeks[weekId]) v4.weeks[weekId] = {};
+  v4.weeks[weekId].items = items; ss4(v4);
+}
+function getWeekTheme(weekId) { return (gs4()?.weekThemes || {})[weekId] || null; }
+function setWeekTheme(weekId, name) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  if (!v4.weekThemes) v4.weekThemes = {};
+  if (name && name.trim()) v4.weekThemes[weekId] = name.trim();
+  else delete v4.weekThemes[weekId];
+  ss4(v4);
+}
+
+function toggleItemDone(weekId, itemId, x, y) {
+  const items = getItems(weekId);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  const becomingDone = !item.done;
+  item.done = becomingDone;
+  if (becomingDone) { item.completedAt = new Date().toISOString(); launchGlitter(x, y); }
+  else delete item.completedAt;
+  saveItems(weekId, items); render(weekId);
+}
+function deleteItem(weekId, itemId) { saveItems(weekId, getItems(weekId).filter(it => it.id !== itemId)); }
+function editItem(weekId, itemId, text, cat) {
+  const items = getItems(weekId);
+  const item = items.find(it => it.id === itemId);
+  if (item) { item.text = text; item.cat = cat; }
+  saveItems(weekId, items);
+}
+function moveItemUp(weekId, itemId) {
+  const items = getItems(weekId); const idx = items.findIndex(it => it.id === itemId);
+  if (idx <= 0) return; [items[idx-1], items[idx]] = [items[idx], items[idx-1]]; saveItems(weekId, items);
+}
+function moveItemDown(weekId, itemId) {
+  const items = getItems(weekId); const idx = items.findIndex(it => it.id === itemId);
+  if (idx < 0 || idx >= items.length - 1) return; [items[idx], items[idx+1]] = [items[idx+1], items[idx]]; saveItems(weekId, items);
+}
+function rescheduleItem(fromWeekId, itemId, toWeekId) {
+  if (!toWeekId || fromWeekId === toWeekId) return;
+  const fromItems = getItems(fromWeekId); const idx = fromItems.findIndex(it => it.id === itemId);
+  if (idx < 0) return;
+  const [item] = fromItems.splice(idx, 1);
+  item.done = false; delete item.completedAt;
+  item.originWeek = fromWeekId; item.originWeekLabel = getWeek(fromWeekId)?.label || fromWeekId;
+  item.id = genId(toWeekId + '_r');
+  saveItems(fromWeekId, fromItems);
+  const toItems = getItems(toWeekId); toItems.push(item); saveItems(toWeekId, toItems);
+}
+function carryForward(weekId, itemId) {
+  const wIdx = WEEKS.findIndex(w => w.id === weekId);
+  if (wIdx < 0 || wIdx >= WEEKS.length - 1) return;
+  rescheduleItem(weekId, itemId, WEEKS[wIdx + 1].id);
+}
+function addNewItem(weekId, text, cat) {
+  const items = getItems(weekId);
+  items.push({ id:genId(weekId+'_u'), text, cat:cat||'custom', done:false, note:'', builtin:false, originWeek:null, originWeekLabel:null });
+  saveItems(weekId, items);
+}
+function setItemNote(weekId, itemId, note) {
+  const items = getItems(weekId); const item = items.find(it => it.id === itemId);
+  if (item) item.note = note; saveItems(weekId, items);
+}
+
+// ─── GLOBALS ──────────────────────────────────────────────────────────────────
+let CW = null, EI = 0, MI = null, MGMT_ID = null;
+function getWeek(id) { return WEEKS.find(w => w.id === id); }
+
+function autoWeekId() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (const w of WEEKS) {
+    if (today >= new Date(w.start+'T00:00:00') && today <= new Date(w.end+'T23:59:59')) return w.id;
+  }
+  const last = new Date(WEEKS[WEEKS.length-1].end+'T23:59:59');
+  return today > last ? WEEKS[WEEKS.length-1].id : WEEKS[0].id;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render(weekId) {
+  CW = weekId;
+  const w = getWeek(weekId);
+  const items = getItems(weekId);
+  const done = items.filter(it => it.done).length;
+  const total = items.length;
+  const left = total - done;
+  const pct = total > 0 ? done/total : 0;
+  const wIdx = WEEKS.findIndex(wk => wk.id === weekId);
+  const hasNextWeek = wIdx < WEEKS.length - 1;
+
+  // Hero
+  document.getElementById('heroNum').textContent = 'Week ' + w.num;
+  const theme = getWeekTheme(weekId) || w.name;
+  document.getElementById('heroPhase').textContent = theme;
+  document.getElementById('heroDates').textContent = fmtRange(w.start, w.end);
+  document.getElementById('heroPill').textContent = `${done} of ${total} done`;
+
+  // Ring
+  const circ = 2*Math.PI*33;
+  document.getElementById('ringFill').style.strokeDasharray = circ;
+  document.getElementById('ringFill').style.strokeDashoffset = circ - (pct*circ);
+  document.getElementById('ringN').textContent = done;
+  document.getElementById('ringD').textContent = 'of ' + total;
+
+  if (done === 0) { document.getElementById('progHead').textContent = "Let's get into it."; document.getElementById('progSub').textContent = "Tap any task to mark it done."; }
+  else if (done === total) { document.getElementById('progHead').textContent = "Week complete."; document.getElementById('progSub').textContent = "All of it. Every single thing on the list."; }
+  else { document.getElementById('progHead').textContent = `${done} of ${total} done.`; document.getElementById('progSub').textContent = `${left} thing${left===1?'':'s'} left this week.`; }
+
+  document.getElementById('doneBanner').style.display = (done === total && total > 0) ? 'block' : 'none';
+  // quote section removed
+  renderEnc(w);
+
+  // Tasks
+  const tl = document.getElementById('taskList');
+  tl.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'task-row' + (item.done ? ' done' : '');
+
+    let originHTML = item.originWeekLabel ? `<span class="origin-badge">from ${esc(item.originWeekLabel)}</span>` : '';
+    let noteHTML = '';
+    if (!item.done) noteHTML += `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '📝 update status →' : '+ add status note'}</button>`;
+    if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
+    let carryHTML = (!item.done && hasNextWeek) ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
+
+    li.innerHTML = `
+      <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
+      <div class="task-body">
+        <div class="task-label">${esc(item.text)}</div>
+        ${originHTML}
+        <span class="task-cat">${esc(item.cat||'task')}</span>
+        ${noteHTML}
+      </div>
+      <div class="task-actions">
+        ${carryHTML}
+        <button class="task-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
+      </div>`;
+    tl.appendChild(li);
+  });
+
+  // Practices
+  const pl = document.getElementById('practiceList');
+  pl.innerHTML = '';
+  w.practices.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'practice-row';
+    div.innerHTML = `<div class="pr-dot"></div><span class="pr-text">${esc(p)}</span>`;
+    pl.appendChild(div);
+  });
+
+  // Prompt opts (chips)
+  const list = document.getElementById('promptOpts');
+  list.innerHTML = '';
+  const undone = items.filter(it => !it.done);
+  undone.slice(0,6).forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'prompt-opt';
+    li.textContent = item.text.length > 50 ? item.text.slice(0,48) + '…' : item.text;
+    li.onclick = () => {
+      document.querySelectorAll('#promptOpts .prompt-opt').forEach(el => el.classList.remove('selected'));
+      li.classList.add('selected');
+      document.getElementById('promptCustom').value = item.text;
+    };
+    list.appendChild(li);
+  });
+
+  updateTimeline(weekId);
+}
+
+// ─── ENCOURAGEMENT ────────────────────────────────────────────────────────────
+function renderEnc(w) {
+  const item = w.enc[EI % w.enc.length];
+  document.getElementById('encIcon').textContent = item.icon;
+  document.getElementById('encTitle').textContent = item.t;
+  document.getElementById('encBody').textContent = item.b;
+}
+function nextEnc() { EI = (EI+1) % getWeek(CW).enc.length; renderEnc(getWeek(CW)); }
+
+// ─── STATUS MODAL ─────────────────────────────────────────────────────────────
+function openStatusModal(itemId, e) {
+  e.stopPropagation(); MI = itemId;
+  const item = getItems(CW).find(it => it.id === itemId);
+  document.getElementById('modalSub').textContent = item?.text || '';
+  document.getElementById('modalTa').value = item?.note || '';
+  document.getElementById('statusModal').classList.add('open');
+  setTimeout(() => document.getElementById('modalTa').focus(), 300);
+}
+function saveNote() {
+  if (!MI) return;
+  setItemNote(CW, MI, document.getElementById('modalTa').value.trim());
+  closeModal('statusModal'); render(CW);
+}
+function saveAndPrompt() {
+  if (!MI) return;
+  const cId = MI; const noteText = document.getElementById('modalTa').value.trim();
+  setItemNote(CW, cId, noteText); closeModal('statusModal'); render(CW);
+  const item = getItems(CW).find(it => it.id === cId);
+  if (item) showPrompt(buildPrompt(item.text, noteText));
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  if (id === 'statusModal') MI = null;
+  if (id === 'taskMgmtModal') MGMT_ID = null;
+}
+function bgClose(e) { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); }
+
+// ─── TASK MANAGEMENT ──────────────────────────────────────────────────────────
+function openTaskMgmt(itemId, e) {
+  e.stopPropagation(); MGMT_ID = itemId;
+  const item = getItems(CW).find(it => it.id === itemId);
+  if (!item) return;
+  document.getElementById('taskMgmtSub').textContent = item.text.length > 60 ? item.text.slice(0,58)+'…' : item.text;
+  document.getElementById('taskMgmtText').value = item.text;
+  document.getElementById('taskMgmtCat').value = item.cat || 'custom';
+  const sel = document.getElementById('taskReschedSel');
+  sel.innerHTML = '<option value="">— pick a week —</option>';
+  WEEKS.forEach(w => { if (w.id !== CW) { const o = document.createElement('option'); o.value = w.id; o.textContent = `${w.label}: ${w.name}`; sel.appendChild(o); } });
+  document.getElementById('taskMgmtModal').classList.add('open');
+}
+function mgmtSave() {
+  if (!MGMT_ID) return;
+  const text = document.getElementById('taskMgmtText').value.trim();
+  const cat  = document.getElementById('taskMgmtCat').value;
+  if (!text) { document.getElementById('taskMgmtText').style.borderColor = 'var(--hot)'; return; }
+  editItem(CW, MGMT_ID, text, cat);
+  const toWeek = document.getElementById('taskReschedSel').value;
+  if (toWeek) { rescheduleItem(CW, MGMT_ID, toWeek); }
+  closeModal('taskMgmtModal'); render(CW);
+}
+function mgmtMoveUp() { if (!MGMT_ID) return; moveItemUp(CW, MGMT_ID); render(CW); }
+function mgmtMoveDown() { if (!MGMT_ID) return; moveItemDown(CW, MGMT_ID); render(CW); }
+function mgmtCarry() {
+  if (!MGMT_ID) return;
+  const wIdx = WEEKS.findIndex(w => w.id === CW);
+  if (wIdx < 0 || wIdx >= WEEKS.length - 1) { alert('No next week available.'); return; }
+  carryForward(CW, MGMT_ID); closeModal('taskMgmtModal'); render(CW);
+}
+function mgmtDelete() {
+  if (!MGMT_ID) return;
+  if (!confirm('Delete this task?')) return;
+  deleteItem(CW, MGMT_ID); closeModal('taskMgmtModal'); render(CW);
+}
+function handleCarry(itemId, e) { e.stopPropagation(); carryForward(CW, itemId); render(CW); }
+
+// ─── ADD TASK ─────────────────────────────────────────────────────────────────
+function addTask() {
+  const inp = document.getElementById('addInput');
+  const text = inp.value.trim(); if (!text) return;
+  addNewItem(CW, text, 'custom'); inp.value = ''; render(CW);
+}
+document.getElementById('addInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+
+// ─── WEEK THEME EDIT ──────────────────────────────────────────────────────────
+function startEditTheme() {
+  const ph = document.getElementById('heroPhase');
+  const inp = document.getElementById('heroPhaseInput');
+  inp.value = ph.textContent;
+  ph.style.display = 'none'; inp.style.display = 'block'; inp.focus(); inp.select();
+}
+function saveEditTheme() {
+  const ph = document.getElementById('heroPhase');
+  const inp = document.getElementById('heroPhaseInput');
+  const val = inp.value.trim();
+  setWeekTheme(CW, val);
+  const displayName = val || getWeek(CW)?.name || '';
+  ph.textContent = displayName;
+  ph.style.display = 'block'; inp.style.display = 'none';
+  // sync timeline chip
+  const chip = document.querySelector(`.tl-chip[data-id="${CW}"] .tl-name`);
+  if (chip) chip.textContent = displayName;
+}
+function themeKeydown(e) {
+  if (e.key === 'Enter') saveEditTheme();
+  if (e.key === 'Escape') { document.getElementById('heroPhaseInput').style.display='none'; document.getElementById('heroPhase').style.display='block'; }
+}
+
+// ─── PROMPT BUILDER ───────────────────────────────────────────────────────────
+function buildPrompt(taskText, specificNote) {
+  const w = getWeek(CW); const items = getItems(CW);
+  let p = `I'm in ${w.label} of my Best Case Year — "${w.name}" (${fmtRange(w.start, w.end)}).`;
+  p += `\n\nI need help with: ${taskText}`;
+  if (specificNote) p += `\n\nStatus on this task: ${specificNote}`;
+  const others = items.filter(it => it.note && it.text !== taskText).map(it => `• ${it.text}: ${it.note}`);
+  if (others.length) p += `\n\nOther tasks with saved status notes:\n${others.join('\n')}`;
+  p += `\n\nCan you do the pre-game for me? Break this down into its smallest components, do as much of the prep work as possible, and tell me exactly what action I need to take — and when.`;
+  return p;
+}
+function generatePrompt() {
+  const ta = document.getElementById('promptCustom'); const text = ta.value.trim();
+  if (!text) {
+    ta.style.borderColor = 'var(--hot)'; ta.placeholder = 'Pick a task above or type what you need'; ta.focus();
+    setTimeout(() => { ta.style.borderColor = ''; ta.placeholder = 'What do you need help with?'; }, 3000);
+    return;
+  }
+  showPrompt(buildPrompt(text, ''));
+}
+function showPrompt(text) { document.getElementById('promptResult').textContent = text; document.getElementById('promptModal').classList.add('open'); }
+function copyPrompt() {
+  const text = document.getElementById('promptResult').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#promptModal .mbtn-primary'); btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy to clipboard', 2000);
+  }).catch(() => { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); });
+}
+
+// ─── GLITTER ──────────────────────────────────────────────────────────────────
+function launchGlitter(x, y) {
+  const colors = ['#EA258D','#F5952D','#F1BCD7','#D9AED0','#b2c0f9','#f2ffd5'];
+  const chars  = ['✦','✨','★','◆','●','✿'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('span');
+    el.className = 'glitter-particle';
+    const angle = Math.random() * 2 * Math.PI;
+    const speed = 50 + Math.random() * 100;
+    el.style.cssText = `left:${x}px;top:${y}px;color:${colors[Math.floor(Math.random()*colors.length)]};--dx:${Math.cos(angle)*speed}px;--dy:${Math.sin(angle)*speed}px;font-size:${9+Math.random()*11}px;animation-delay:${Math.random()*0.12}s;`;
+    el.textContent = chars[Math.floor(Math.random()*chars.length)];
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
+// ─── YOU DID THAT ─────────────────────────────────────────────────────────────
+function showYouDidThat() { buildYouDidThat(); document.getElementById('ydtOverlay').classList.add('open'); window.scrollTo(0,0); }
+function closeYouDidThat() { document.getElementById('ydtOverlay').classList.remove('open'); }
+function buildYouDidThat() {
+  const container = document.getElementById('ydtContent');
+  container.innerHTML = '';
+  let totalDone = 0, hasAny = false;
+  WEEKS.forEach(w => {
+    const items = getItems(w.id).filter(it => it.done);
+    if (!items.length) return;
+    hasAny = true; totalDone += items.length;
+    const group = document.createElement('div');
+    group.className = 'ydt-week-group';
+    const theme = getWeekTheme(w.id) || w.name;
+    group.innerHTML = `<span class="ydt-week-label">${esc(w.label)} — ${esc(theme)}</span>`;
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'ydt-task-item';
+      row.innerHTML = `<div class="ydt-check">✓</div><span class="ydt-task-text">${esc(item.text)}</span>`;
+      group.appendChild(row);
+    });
+    container.appendChild(group);
+  });
+  document.getElementById('ydtCount').textContent = `${totalDone} task${totalDone===1?'':'s'} complete`;
+  if (!hasAny) container.innerHTML = '<div class="ydt-empty"><div class="ydt-empty-serif">Nothing yet — but the moment you check something off, it lives here forever.</div></div>';
+}
+
+// ─── EXPORT / IMPORT ──────────────────────────────────────────────────────────
+function exportData() {
+  const v4 = gs4();
+  const data = { version:'4', exported: new Date().toISOString(), state: v4 };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const now = new Date(), p = n => String(n).padStart(2,'0');
+  const fname = `BCY_${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}_${p(now.getHours())}-${p(now.getMinutes())}.json`;
+  const a = document.createElement('a'); a.href = url; a.download = fname; a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.version === '4' && data.state) {
+        ss4(data.state);
+      } else if (data.version === '1' || data.tasks !== undefined) {
+        const v4m = { weekThemes:{}, weeks:{} };
+        WEEKS.forEach(w => {
+          const bDone = ((data.tasks||{})[w.id]||{}); const bNotes = ((data.notes||{})[w.id]||{}); const v3C = ((data.customTasks||{})[w.id]||[]);
+          v4m.weeks[w.id] = { items: [
+            ...w.tasks.map((t,i)=>({id:`${w.id}_b_${i}`,text:t.text,cat:t.cat,done:!!bDone[i],note:bNotes[i]||'',builtin:true,originWeek:null,originWeekLabel:null})),
+            ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false,originWeek:null,originWeekLabel:null}))
+          ]};
+        });
+        ss4(v4m);
+      } else { alert("This doesn't look like a BCY file."); return; }
+      render(CW);
+      const banner = document.getElementById('importSuccess'); banner.style.display = 'block';
+      setTimeout(() => banner.style.display = 'none', 3000);
+    } catch { alert("Couldn't read that file."); }
+  };
+  reader.readAsText(file); event.target.value = '';
+}
+
+// ─── TIMELINE ─────────────────────────────────────────────────────────────────
+function buildTimeline() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const c = document.getElementById('tlScroll'); c.innerHTML = '';
+  WEEKS.forEach(w => {
+    const end = new Date(w.end+'T23:59:59'), start = new Date(w.start+'T00:00:00');
+    const isPast = today > end, isCur = today >= start && today <= end;
+    const chip = document.createElement('div');
+    chip.className = 'tl-chip' + (isCur ? ' active' : '') + (isPast ? ' past' : '');
+    chip.dataset.id = w.id;
+    const theme = getWeekTheme(w.id) || w.name;
+    chip.innerHTML = `<span class="tl-name">${esc(theme)}</span><span class="tl-wk">${esc(w.label)}</span>`;
+    chip.onclick = () => { EI = 0; render(w.id); };
+    c.appendChild(chip);
+  });
+}
+function updateTimeline(weekId) {
+  document.querySelectorAll('.tl-chip').forEach(el => { el.classList.remove('active'); if (el.dataset.id === weekId) el.classList.add('active'); });
+  const a = document.querySelector(`.tl-chip[data-id="${weekId}"]`);
+  if (a) { const cont = document.getElementById('tlScroll'); cont.scrollLeft = a.offsetLeft - (cont.offsetWidth/2) + (a.offsetWidth/2); }
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function fmtRange(s, e) {
+  const sd = new Date(s+'T12:00:00'), ed = new Date(e+'T12:00:00');
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return sd.getMonth()===ed.getMonth() ? `${M[sd.getMonth()]} ${sd.getDate()} – ${ed.getDate()}` : `${M[sd.getMonth()]} ${sd.getDate()} – ${M[ed.getMonth()]} ${ed.getDate()}`;
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// ─── GOOD MORNING ─────────────────────────────────────────────────────────────
+const GM_ITEMS = [
+  { id:'phone',     label:'No phone first',              reminder:'Your first thought of the day belongs to you. Not anyone\'s DM or news feed. That choice compounds. The version of you who made the film started here.' },
+  { id:'movement',  label:'Movement',                    reminder:'Your nervous system just reset. The writing session tonight runs on what you did this morning. Your body and your brain are the same instrument.' },
+  { id:'meds',      label:'Meds',                        reminder:'This is infrastructure. Your brain at full capacity is your most valuable creative asset. Every room you walk into — this makes it better.' },
+  { id:'spirit',    label:'Bible study or morning pages', reminder:'You just fed the well. The ideas that come today, the instincts you trust — they\'re built from mornings exactly like this one.' },
+  { id:'breakfast', label:'Breakfast',                   reminder:'You\'re taking care of the person who does the work. The Vogue-cover version of you eats breakfast. She needs fuel to make the thing.' }
+];
+const GM_KEY = 'bcy_morning';
+function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function loadMorning() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(GM_KEY));
+    if (raw && raw.date === todayStr()) return raw.states;
+  } catch {}
+  return { phone:false, movement:false, meds:false, spirit:false, breakfast:false };
+}
+function saveMorning(states) {
+  localStorage.setItem(GM_KEY, JSON.stringify({ date: todayStr(), states }));
+}
+function toggleMorningItem(id) {
+  const states = loadMorning();
+  states[id] = !states[id];
+  saveMorning(states);
+  renderMorning();
+}
+function renderMorning() {
+  const states = loadMorning();
+  GM_ITEMS.forEach(it => {
+    const box = document.getElementById('gmBox_' + it.id);
+    const label = document.getElementById('gmLabel_' + it.id);
+    const reminder = document.getElementById('gmReminder_' + it.id);
+    if (box) box.className = 'gm-box' + (states[it.id] ? ' checked' : '');
+    if (label) label.className = 'gm-label' + (states[it.id] ? ' checked' : '');
+    if (reminder) reminder.className = 'gm-reminder' + (states[it.id] ? ' show' : '');
+  });
+  const allDoneEl = document.getElementById('gmAllDone');
+  if (allDoneEl) allDoneEl.classList.toggle('show', GM_ITEMS.every(it => states[it.id]));
+}
+
+// ─── IDEA BANK ────────────────────────────────────────────────────────────────
+const IB_KEY = 'bcy_ideabank';
+const IB_TAG_COLORS = { 'Stand Up':'var(--hot)', 'TV / Pilot':'#b2c0f9', 'Film':'var(--pink)', 'Podcast':'var(--lavender)', 'Music':'var(--orange)', 'Business':'var(--mist)', 'Online / Social':'#a8d8a0', 'Other':'#ccc' };
+function loadIdeas() { try { return JSON.parse(localStorage.getItem(IB_KEY)) || []; } catch { return []; } }
+function saveIdeas(ideas) { localStorage.setItem(IB_KEY, JSON.stringify(ideas)); }
+function getNotionIdeaUrl() { return gs4()?.notionIdeaBankUrl || 'https://www.notion.so/1734237e26d081fe9515cf8a2f0b9fa0'; }
+function setNotionIdeaUrl(url) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  v4.notionIdeaBankUrl = url.trim(); ss4(v4);
+}
+function saveIdea() {
+  const text = document.getElementById('ibInput').value.trim();
+  if (!text) return;
+  const activeTag = document.querySelector('#ibOverlay .ib-tag-btn.active');
+  const tag = activeTag ? activeTag.dataset.tag : '';
+  const idea = { id: genId('idea'), text, tag, ts: new Date().toISOString(), sent: false };
+  const ideas = loadIdeas(); ideas.unshift(idea); saveIdeas(ideas);
+  document.getElementById('ibInput').value = '';
+  document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
+  renderIdeaBank();
+}
+function deleteIdea(id) { saveIdeas(loadIdeas().filter(i => i.id !== id)); renderIdeaBank(); }
+let _toastTimer = null;
+function showToast(msg) {
+  let t = document.getElementById('bcyToast');
+  if (!t) { t = document.createElement('div'); t.id = 'bcyToast'; t.className = 'bcy-toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer); _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+function ibCopyText(text) {
+  const fb = () => { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(fb); else fb();
+}
+function sendIdeaToNotion(id) {
+  const ideas = loadIdeas(); const idea = ideas.find(i => i.id === id); if (!idea) return;
+  const dateStr = new Date(idea.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  ibCopyText(`[${idea.tag||'Other'}] ${idea.text}`);
+  idea.sent = true; saveIdeas(ideas); renderIdeaBank();
+  showToast('Copied! Paste into your Notion page 💋');
+  const url = getNotionIdeaUrl(); if (url) window.open(url, '_blank');
+}
+function sendAllToNotion() {
+  const ideas = loadIdeas().filter(i => !i.sent);
+  if (!ideas.length) { showToast('No unsent ideas yet.'); return; }
+  let out = '';
+  ideas.forEach(i => {
+    const tag = i.tag || 'Other';
+    out += `[${tag}] ${i.text}\n`;
+  });
+  ibCopyText(out.trim());
+  const all = loadIdeas(); all.forEach(i => { if (!i.sent) i.sent = true; }); saveIdeas(all);
+  renderIdeaBank();
+  showToast('All ideas copied! Paste into Notion 💋');
+  const url = getNotionIdeaUrl(); if (url) window.open(url, '_blank');
+}
+function ibTagSelect(btn) {
+  const was = btn.classList.contains('active');
+  document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
+  if (!was) btn.classList.add('active');
+}
+function saveIbNotionUrl() { setNotionIdeaUrl(document.getElementById('ibNotionUrl').value || ''); }
+function renderIdeaBank() {
+  const ideas = loadIdeas();
+  const list = document.getElementById('ibList'); if (!list) return;
+  if (!ideas.length) { list.innerHTML = '<div class="ib-empty">Nothing here yet. Ideas incoming.</div>'; return; }
+  list.innerHTML = ideas.map(idea => {
+    const color = IB_TAG_COLORS[idea.tag] || 'var(--mist)';
+    const dateStr = new Date(idea.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="ib-card" style="border-left-color:${color}">
+      <div class="ib-card-text">${esc(idea.text)}</div>
+      <div class="ib-card-meta">
+        ${idea.tag ? `<span class="ib-tag-badge" style="color:${color}">${esc(idea.tag)}</span>` : ''}
+        <span class="ib-ts">${dateStr}</span>
+        ${idea.sent ? '<span class="ib-sent">sent ✓</span>' : ''}
+      </div>
+      <div class="ib-card-acts">
+        <button class="ib-notion-btn" onclick="sendIdeaToNotion('${esc(idea.id)}')">✦ Copy & Open Notion</button>
+        <button class="ib-del-btn" onclick="deleteIdea('${esc(idea.id)}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function showIdeaBank() {
+  document.getElementById('ibOverlay').classList.add('open');
+  document.getElementById('ibNotionUrl').value = getNotionIdeaUrl();
+  renderIdeaBank();
+}
+function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove('open'); }
+
+// ─── FULLSCREEN ───────────────────────────────────────────────────────────────
+const FS_EXPAND = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
+const FS_SHRINK = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
+function toggleFS() {
+  const el = document.documentElement;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el).catch(()=>{});
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document).catch(()=>{});
+  }
+}
+function updateFsIcon() {
+  const icon = document.getElementById('fsIcon');
+  if (icon) icon.innerHTML = (document.fullscreenElement || document.webkitFullscreenElement) ? FS_SHRINK : FS_EXPAND;
+}
+document.addEventListener('fullscreenchange', updateFsIcon);
+document.addEventListener('webkitfullscreenchange', updateFsIcon);
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+initV4();
+buildTimeline();
+render(autoWeekId());
+renderMorning();
+</script>
+</body>
+</html>
