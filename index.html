@@ -240,6 +240,36 @@
     .gm-reminder.show { display: block; }
     .gm-all-done { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #fff; margin-top: 14px; display: none; text-align: center; }
     .gm-all-done.show { display: block; }
+    .gm-edit-toggle { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 0; transition: color 0.2s; }
+    .gm-edit-toggle:active { color: #fff; }
+    .gm-edit-panel { display: none; margin-top: 14px; }
+    .gm-edit-panel.open { display: block; }
+    .gm-edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .gm-edit-input { flex: 1; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.4); background: transparent; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 0; outline: none; }
+    .gm-edit-input:focus { border-color: #fff; }
+    .gm-edit-input::placeholder { color: rgba(255,255,255,0.35); }
+    .gm-edit-del { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 16px; cursor: pointer; padding: 2px 6px; }
+    .gm-edit-del:active { color: #fff; }
+    .gm-edit-add { display: flex; gap: 8px; margin-top: 10px; }
+    .gm-edit-add input { flex: 1; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; background: transparent; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; outline: none; }
+    .gm-edit-add input::placeholder { color: rgba(255,255,255,0.35); }
+    .gm-edit-add button { background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 800; padding: 8px 14px; cursor: pointer; }
+
+    /* ── PRACTICES EDIT ── */
+    .pr-edit-toggle { background: none; border: none; color: var(--hot); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 0; opacity: 0.5; transition: opacity 0.2s; }
+    .pr-edit-toggle:active { opacity: 1; }
+    .pr-edit-panel { display: none; padding: 0 22px 16px; }
+    .pr-edit-panel.open { display: block; }
+    .pr-edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .pr-edit-input { flex: 1; border: none; border-bottom: 1.5px solid var(--pink); background: transparent; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 6px 0; outline: none; line-height: 1.4; }
+    .pr-edit-input:focus { border-color: var(--hot); }
+    .pr-edit-input::placeholder { color: var(--lavender); }
+    .pr-edit-del { background: none; border: none; color: var(--lavender); font-size: 16px; cursor: pointer; padding: 2px 6px; }
+    .pr-edit-del:active { color: var(--hot); }
+    .pr-edit-add { display: flex; gap: 8px; margin-top: 6px; }
+    .pr-edit-add input { flex: 1; border: 1.5px solid var(--blush); border-radius: 8px; background: transparent; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 8px 10px; outline: none; }
+    .pr-edit-add input::placeholder { color: var(--lavender); }
+    .pr-edit-add button { background: var(--pink); border: none; border-radius: 8px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 800; padding: 8px 14px; cursor: pointer; }
 
     /* ── IDEA BANK ── */
     .ib-overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 5000; overflow-y: auto; }
@@ -319,30 +349,19 @@
 
 <!-- 0. GOOD MORNING RITUAL -->
 <section class="gm-band" id="gmBand">
-  <span class="gm-title">Good Morning ✨</span>
-  <div class="gm-items" id="gmItems">
-    <div class="gm-item" data-id="phone" onclick="toggleMorningItem('phone')">
-      <div class="gm-check-row"><div class="gm-box" id="gmBox_phone"></div><span class="gm-label" id="gmLabel_phone">No phone first</span></div>
-      <div class="gm-reminder" id="gmReminder_phone">Your first thought of the day belongs to you. Not anyone&#39;s DM or news feed. That choice compounds.</div>
-    </div>
-    <div class="gm-item" data-id="movement" onclick="toggleMorningItem('movement')">
-      <div class="gm-check-row"><div class="gm-box" id="gmBox_movement"></div><span class="gm-label" id="gmLabel_movement">Movement</span></div>
-      <div class="gm-reminder" id="gmReminder_movement">Your nervous system just reset. The writing session tonight runs on what you did this morning.</div>
-    </div>
-    <div class="gm-item" data-id="meds" onclick="toggleMorningItem('meds')">
-      <div class="gm-check-row"><div class="gm-box" id="gmBox_meds"></div><span class="gm-label" id="gmLabel_meds">Meds</span></div>
-      <div class="gm-reminder" id="gmReminder_meds">This is infrastructure. Your brain at full capacity is your most valuable creative asset.</div>
-    </div>
-    <div class="gm-item" data-id="spirit" onclick="toggleMorningItem('spirit')">
-      <div class="gm-check-row"><div class="gm-box" id="gmBox_spirit"></div><span class="gm-label" id="gmLabel_spirit">Bible study or morning pages</span></div>
-      <div class="gm-reminder" id="gmReminder_spirit">You just fed the well. The ideas that come today, the instincts you trust — they&#39;re built from mornings like this.</div>
-    </div>
-    <div class="gm-item" data-id="breakfast" onclick="toggleMorningItem('breakfast')">
-      <div class="gm-check-row"><div class="gm-box" id="gmBox_breakfast"></div><span class="gm-label" id="gmLabel_breakfast">Breakfast</span></div>
-      <div class="gm-reminder" id="gmReminder_breakfast">You&#39;re taking care of the person who does the work. The Vogue-cover version of you eats breakfast.</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+    <span class="gm-title" style="margin-bottom:0;">Good Morning ✨</span>
+    <button class="gm-edit-toggle" id="gmEditBtn" onclick="toggleGmEdit()">edit</button>
+  </div>
+  <div class="gm-items" id="gmItems"></div>
+  <div class="gm-all-done" id="gmAllDone">The morning is done. The rest of the day answers to you now.</div>
+  <div class="gm-edit-panel" id="gmEditPanel">
+    <div id="gmEditList"></div>
+    <div class="gm-edit-add">
+      <input id="gmAddInput" type="text" placeholder="New morning item...">
+      <button onclick="addMorningItem()">+ Add</button>
     </div>
   </div>
-  <div class="gm-all-done" id="gmAllDone">The morning is done. The rest of the day answers to you now.</div>
 </section>
 
 <!-- 1. HERO -->
@@ -412,13 +431,25 @@
 <!-- 5. PRACTICES -->
 <div class="band" style="background:var(--blush);">
   <div class="pad" style="padding-bottom:0;">
-    <span class="eyebrow eyebrow-hot">Alongside The Tasks</span>
-    <div class="mix-head mix-pink">
-      <span class="mix-sans">The Softer</span>
-      <span class="mix-serif">Work.</span>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div>
+        <span class="eyebrow eyebrow-hot">Alongside The Tasks</span>
+        <div class="mix-head mix-pink">
+          <span class="mix-sans">The Softer</span>
+          <span class="mix-serif">Work.</span>
+        </div>
+      </div>
+      <button class="pr-edit-toggle" onclick="togglePrEdit()">edit</button>
     </div>
   </div>
   <div id="practiceList"></div>
+  <div class="pr-edit-panel" id="prEditPanel">
+    <div id="prEditList"></div>
+    <div class="pr-edit-add">
+      <input id="prAddInput" type="text" placeholder="Add a practice...">
+      <button onclick="addPractice()">+ Add</button>
+    </div>
+  </div>
   <div style="height:22px;"></div>
 </div>
 
@@ -779,6 +810,7 @@ function autoWeekId() {
 // ─── RENDER ───────────────────────────────────────────────────────────────────
 function render(weekId) {
   CW = weekId;
+  _currentWeekId = weekId;
   const w = getWeek(weekId);
   const items = getItems(weekId);
   const done = items.filter(it => it.done).length;
@@ -838,15 +870,11 @@ function render(weekId) {
     tl.appendChild(li);
   });
 
-  // Practices
-  const pl = document.getElementById('practiceList');
-  pl.innerHTML = '';
-  w.practices.forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'practice-row';
-    div.innerHTML = `<div class="pr-dot"></div><span class="pr-text">${esc(p)}</span>`;
-    pl.appendChild(div);
-  });
+  // Practices (editable)
+  renderPracticesDisplay(getCurrentPractices(w));
+  // Close edit panel when switching weeks
+  const prPanel = document.getElementById('prEditPanel');
+  if (prPanel) prPanel.classList.remove('open');
 
   // Prompt opts (chips)
   const list = document.getElementById('promptOpts');
@@ -1115,21 +1143,32 @@ function fmtRange(s, e) {
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 // ─── GOOD MORNING ─────────────────────────────────────────────────────────────
-const GM_ITEMS = [
-  { id:'phone',     label:'No phone first',              reminder:'Your first thought of the day belongs to you. Not anyone\'s DM or news feed. That choice compounds. The version of you who made the film started here.' },
-  { id:'movement',  label:'Movement',                    reminder:'Your nervous system just reset. The writing session tonight runs on what you did this morning. Your body and your brain are the same instrument.' },
-  { id:'meds',      label:'Meds',                        reminder:'This is infrastructure. Your brain at full capacity is your most valuable creative asset. Every room you walk into — this makes it better.' },
-  { id:'spirit',    label:'Bible study or morning pages', reminder:'You just fed the well. The ideas that come today, the instincts you trust — they\'re built from mornings exactly like this one.' },
-  { id:'breakfast', label:'Breakfast',                   reminder:'You\'re taking care of the person who does the work. The Vogue-cover version of you eats breakfast. She needs fuel to make the thing.' }
+const GM_DEFAULT_ITEMS = [
+  { id:'phone', label:'No phone first' },
+  { id:'movement', label:'Movement' },
+  { id:'meds', label:'Meds' },
+  { id:'spirit', label:'Bible study or morning pages' },
+  { id:'breakfast', label:'Breakfast' }
 ];
 const GM_KEY = 'bcy_morning';
+const GM_ITEMS_KEY = 'bcy_morning_items';
+
 function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+function loadGmItems() {
+  try { const raw = JSON.parse(localStorage.getItem(GM_ITEMS_KEY)); if (raw && raw.length) return raw; } catch {}
+  return GM_DEFAULT_ITEMS.map(i => ({ ...i }));
+}
+function saveGmItems(items) { localStorage.setItem(GM_ITEMS_KEY, JSON.stringify(items)); }
+
 function loadMorning() {
   try {
     const raw = JSON.parse(localStorage.getItem(GM_KEY));
     if (raw && raw.date === todayStr()) return raw.states;
   } catch {}
-  return { phone:false, movement:false, meds:false, spirit:false, breakfast:false };
+  const states = {};
+  loadGmItems().forEach(it => { states[it.id] = false; });
+  return states;
 }
 function saveMorning(states) {
   localStorage.setItem(GM_KEY, JSON.stringify({ date: todayStr(), states }));
@@ -1140,18 +1179,146 @@ function toggleMorningItem(id) {
   saveMorning(states);
   renderMorning();
 }
+
 function renderMorning() {
+  const items = loadGmItems();
   const states = loadMorning();
-  GM_ITEMS.forEach(it => {
-    const box = document.getElementById('gmBox_' + it.id);
-    const label = document.getElementById('gmLabel_' + it.id);
-    const reminder = document.getElementById('gmReminder_' + it.id);
-    if (box) box.className = 'gm-box' + (states[it.id] ? ' checked' : '');
-    if (label) label.className = 'gm-label' + (states[it.id] ? ' checked' : '');
-    if (reminder) reminder.className = 'gm-reminder' + (states[it.id] ? ' show' : '');
-  });
+  const container = document.getElementById('gmItems');
+  container.innerHTML = items.map(it => {
+    const checked = !!states[it.id];
+    return `<div class="gm-item" onclick="toggleMorningItem('${esc(it.id)}')">
+      <div class="gm-check-row">
+        <div class="gm-box${checked ? ' checked' : ''}"></div>
+        <span class="gm-label${checked ? ' checked' : ''}">${esc(it.label)}</span>
+      </div>
+    </div>`;
+  }).join('');
   const allDoneEl = document.getElementById('gmAllDone');
-  if (allDoneEl) allDoneEl.classList.toggle('show', GM_ITEMS.every(it => states[it.id]));
+  if (allDoneEl) allDoneEl.classList.toggle('show', items.length > 0 && items.every(it => states[it.id]));
+}
+
+// ── Morning edit mode ──
+function toggleGmEdit() {
+  const panel = document.getElementById('gmEditPanel');
+  const btn = document.getElementById('gmEditBtn');
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? 'done' : 'edit';
+  if (panel.classList.contains('open')) renderGmEditList();
+}
+function renderGmEditList() {
+  const items = loadGmItems();
+  document.getElementById('gmEditList').innerHTML = items.map((it, i) => {
+    return `<div class="gm-edit-item">
+      <input class="gm-edit-input" value="${esc(it.label)}" onchange="renameGmItem(${i}, this.value)" onblur="renameGmItem(${i}, this.value)">
+      <button class="gm-edit-del" onclick="removeGmItem(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+function renameGmItem(idx, val) {
+  const items = loadGmItems();
+  if (idx < items.length && val.trim()) {
+    items[idx].label = val.trim();
+    saveGmItems(items);
+    renderMorning();
+  }
+}
+function removeGmItem(idx) {
+  const items = loadGmItems();
+  items.splice(idx, 1);
+  saveGmItems(items);
+  renderMorning();
+  renderGmEditList();
+}
+function addMorningItem() {
+  const input = document.getElementById('gmAddInput');
+  const label = input.value.trim();
+  if (!label) return;
+  const items = loadGmItems();
+  const id = 'gm_' + Date.now();
+  items.push({ id, label });
+  saveGmItems(items);
+  input.value = '';
+  renderMorning();
+  renderGmEditList();
+}
+
+// ─── PRACTICES EDIT ──────────────────────────────────────────────────────────
+const PR_KEY = 'bcy_custom_practices';
+let _currentWeekId = null;
+
+function loadCustomPractices(weekId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PR_KEY)) || {};
+    return all[weekId] || null;
+  } catch { return null; }
+}
+function saveCustomPractices(weekId, practices) {
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem(PR_KEY)) || {}; } catch {}
+  all[weekId] = practices;
+  localStorage.setItem(PR_KEY, JSON.stringify(all));
+}
+function getCurrentPractices(week) {
+  const custom = loadCustomPractices(week.id);
+  return custom !== null ? custom : [...week.practices];
+}
+function togglePrEdit() {
+  const panel = document.getElementById('prEditPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderPrEditList();
+}
+function renderPrEditList() {
+  if (!_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  if (!week) return;
+  const practices = getCurrentPractices(week);
+  document.getElementById('prEditList').innerHTML = practices.map((p, i) => {
+    return `<div class="pr-edit-item">
+      <input class="pr-edit-input" value="${esc(p)}" onchange="renamePractice(${i}, this.value)" onblur="renamePractice(${i}, this.value)">
+      <button class="pr-edit-del" onclick="removePractice(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+function renamePractice(idx, val) {
+  if (!_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const practices = getCurrentPractices(week);
+  if (idx < practices.length && val.trim()) {
+    practices[idx] = val.trim();
+    saveCustomPractices(_currentWeekId, practices);
+    renderPracticesDisplay(practices);
+  }
+}
+function removePractice(idx) {
+  if (!_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const practices = getCurrentPractices(week);
+  practices.splice(idx, 1);
+  saveCustomPractices(_currentWeekId, practices);
+  renderPracticesDisplay(practices);
+  renderPrEditList();
+}
+function addPractice() {
+  const input = document.getElementById('prAddInput');
+  const text = input.value.trim();
+  if (!text || !_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const practices = getCurrentPractices(week);
+  practices.push(text);
+  saveCustomPractices(_currentWeekId, practices);
+  input.value = '';
+  renderPracticesDisplay(practices);
+  renderPrEditList();
+}
+function renderPracticesDisplay(practices) {
+  const pl = document.getElementById('practiceList');
+  pl.innerHTML = '';
+  practices.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'practice-row';
+    div.innerHTML = `<div class="pr-dot"></div><span class="pr-text">${esc(p)}</span>`;
+    pl.appendChild(div);
+  });
 }
 
 // ─── IDEA BANK ────────────────────────────────────────────────────────────────
