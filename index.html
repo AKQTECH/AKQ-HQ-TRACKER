@@ -37,15 +37,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    .fs-btn {
-      position: fixed; top: 14px; right: 16px; z-index: 8000;
-      background: none; border: none; padding: 0;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; opacity: 0.5;
-      transition: opacity 0.2s;
-    }
-    .fs-btn:hover { opacity: 1; }
-    .fs-btn svg { width: 16px; height: 16px; fill: none; stroke: var(--orange); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
     .band { width: 100%; }
     .pad { padding: 28px 22px; }
@@ -325,9 +316,6 @@
 <body>
 
 <!-- FULLSCREEN BUTTON -->
-<button class="fs-btn" id="fsBtn" onclick="toggleFS()" title="Fullscreen">
-  <svg id="fsIcon" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-</button>
 
 <!-- 0. GOOD MORNING RITUAL -->
 <section class="gm-band" id="gmBand">
@@ -387,6 +375,9 @@
       <h2 id="progHead">Let's get into it.</h2>
       <p id="progSub">Tap any task to mark it done.</p>
     </div>
+  </div>
+  <div class="ib-band" style="text-align:right;">
+    <button class="ib-band-btn" onclick="showIdeaBank()"><span style="color:#eefbd1;">✦</span> Idea Bank</button>
   </div>
 </div>
 
@@ -453,9 +444,6 @@
     <strong>Export</strong> saves a timestamped file — never overwrites old data.<br><br>
     <strong>Load</strong> any previous export to restore your progress. Syncs between phone and desktop.
   </p>
-</div>
-<div class="ib-band">
-  <button class="ib-band-btn" onclick="showIdeaBank()"><span style="color:#eefbd1;">✦</span> Idea Bank</button>
 </div>
 
 <!-- 10. TIMELINE -->
@@ -1404,23 +1392,6 @@ function showIdeaBank() {
 }
 function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove('open'); }
 
-// ─── FULLSCREEN ───────────────────────────────────────────────────────────────
-const FS_EXPAND = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
-const FS_SHRINK = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
-function toggleFS() {
-  const el = document.documentElement;
-  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-    (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el).catch(()=>{});
-  } else {
-    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document).catch(()=>{});
-  }
-}
-function updateFsIcon() {
-  const icon = document.getElementById('fsIcon');
-  if (icon) icon.innerHTML = (document.fullscreenElement || document.webkitFullscreenElement) ? FS_SHRINK : FS_EXPAND;
-}
-document.addEventListener('fullscreenchange', updateFsIcon);
-document.addEventListener('webkitfullscreenchange', updateFsIcon);
 
 // ─── PWA SERVICE WORKER ──────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
