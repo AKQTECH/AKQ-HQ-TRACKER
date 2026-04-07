@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#F1BCD7">
   <title>Best Case Year · AKQ</title>
+  <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f2ffd5'/><text y='54' x='50' text-anchor='middle' font-size='52' fill='%23EA258D' font-family='serif'>✦</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f2ffd5'/><text y='54' x='50' text-anchor='middle' font-size='52' fill='%23EA258D' font-family='serif'>✦</text></svg>">
+  <link rel="apple-touch-icon" href="icon.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
@@ -282,6 +286,20 @@
     .ib-send-all-btn { background: transparent; border: 1.5px solid var(--hot); color: var(--hot); border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .ib-notion-row { margin-bottom: 16px; }
     .ib-notion-input { width: 100%; border: 1px solid var(--blush); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--ink); font-family: 'DM Sans', sans-serif; outline: none; }
+    .ib-settings-toggle { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; opacity: 0.4; transition: opacity 0.2s; }
+    .ib-settings-toggle:active { opacity: 1; }
+    .ib-settings-panel { display: none; background: var(--off); border: 1.5px solid var(--blush); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .ib-settings-panel.open { display: block; }
+    .ib-settings-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: var(--hot); display: block; margin-bottom: 8px; }
+    .ib-token-input { width: 100%; border: 1.5px solid var(--blush); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--ink); font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 10px; }
+    .ib-token-input:focus { border-color: var(--hot); }
+    .ib-token-btns { display: flex; gap: 8px; }
+    .ib-token-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.04em; }
+    .ib-token-save { background: var(--pink); color: white; }
+    .ib-token-test { background: white; color: var(--ink); border: 1.5px solid var(--blush) !important; }
+    .ib-sync-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 12px; margin-left: 8px; }
+    .ib-sync-on { background: #dcfce7; color: #166534; }
+    .ib-sync-off { background: var(--off); color: rgba(0,0,0,0.35); border: 1px solid var(--blush); }
     .ib-card { background: #fff; border-left: 4px solid; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .ib-card-text { font-size: 14px; color: var(--ink); line-height: 1.5; margin-bottom: 8px; }
     .ib-card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
@@ -512,10 +530,27 @@
 <!-- IDEA BANK OVERLAY -->
 <div class="ib-overlay" id="ibOverlay">
   <div class="ib-inner">
-    <button class="ib-back" onclick="closeIdeaBank()">← Back</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <button class="ib-back" onclick="closeIdeaBank()" style="margin-bottom:0;">← Back</button>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="ib-sync-badge" id="ibSyncBadge">offline</span>
+        <button class="ib-settings-toggle" onclick="toggleIbSettings()" title="Notion settings">⚙️</button>
+      </div>
+    </div>
     <span class="ib-eyebrow">Creative captures · Best Case Year</span>
     <span class="ib-title-sans">Idea</span>
     <span class="ib-title-serif">Bank.</span>
+
+    <!-- NOTION SETTINGS (hidden by default) -->
+    <div class="ib-settings-panel" id="ibSettingsPanel">
+      <span class="ib-settings-label">Notion Integration Token</span>
+      <input class="ib-token-input" id="ibTokenInput" type="password" placeholder="Paste your ntn_xxx or secret_xxx token">
+      <div class="ib-token-btns">
+        <button class="ib-token-btn ib-token-save" onclick="saveIbToken()">Save Token</button>
+        <button class="ib-token-btn ib-token-test" onclick="testIbToken()">Test Connection</button>
+      </div>
+    </div>
+
     <div class="ib-capture">
       <textarea class="ib-input" id="ibInput" rows="3" placeholder="what just came to you"></textarea>
       <div class="ib-tags">
@@ -528,14 +563,11 @@
         <button class="ib-tag-btn" data-tag="Online / Social" onclick="ibTagSelect(this)">ONLINE</button>
         <button class="ib-tag-btn" data-tag="Other"           onclick="ibTagSelect(this)">OTHER</button>
       </div>
-      <button class="ib-save-btn" onclick="saveIdea()">Save to Idea Bank</button>
+      <button class="ib-save-btn" id="ibSaveBtn" onclick="saveIdea()">Save to Idea Bank</button>
     </div>
     <div class="ib-list-header">
       <span class="ib-list-eyebrow">Captured Ideas</span>
-      <button class="ib-send-all-btn" onclick="sendAllToNotion()">✦ Copy All & Open Notion</button>
-    </div>
-    <div class="ib-notion-row">
-      <input class="ib-notion-input" id="ibNotionUrl" type="url" placeholder="Notion Idea Bank — connected ✓" onchange="saveIbNotionUrl()" onblur="saveIbNotionUrl()">
+      <button class="ib-send-all-btn" id="ibSendAllBtn" onclick="sendAllToNotion()" style="display:none;">✦ Sync All to Notion</button>
     </div>
     <div id="ibList"></div>
   </div>
@@ -1135,26 +1167,93 @@ function renderMorning() {
 
 // ─── IDEA BANK ────────────────────────────────────────────────────────────────
 const IB_KEY = 'bcy_ideabank';
+const IB_TOKEN_KEY = 'bcy_notion_token';
+const IB_DB_ID = '1734237e26d081fe9515cf8a2f0b9fa0';
 const IB_TAG_COLORS = { 'Stand Up':'var(--hot)', 'TV / Pilot':'#b2c0f9', 'Film':'var(--pink)', 'Podcast':'var(--lavender)', 'Music':'var(--orange)', 'Business':'var(--mist)', 'Online / Social':'#a8d8a0', 'Other':'#ccc' };
+
+function getIbToken() { return localStorage.getItem(IB_TOKEN_KEY) || ''; }
 function loadIdeas() { try { return JSON.parse(localStorage.getItem(IB_KEY)) || []; } catch { return []; } }
-function saveIdeas(ideas) { localStorage.setItem(IB_KEY, JSON.stringify(ideas)); }
-function getNotionIdeaUrl() { return gs4()?.notionIdeaBankUrl || 'https://www.notion.so/1734237e26d081fe9515cf8a2f0b9fa0'; }
-function setNotionIdeaUrl(url) {
-  const v4 = gs4() || { weekThemes:{}, weeks:{} };
-  v4.notionIdeaBankUrl = url.trim(); ss4(v4);
+function saveIdeasLocal(ideas) { localStorage.setItem(IB_KEY, JSON.stringify(ideas)); }
+
+function ibMakeShorthand(text) {
+  return text.replace(/[^\w\s]/g,'').toUpperCase().trim().split(/\s+/).slice(0,4).join(' ');
 }
-function saveIdea() {
+
+// ── Direct Notion API ──
+async function ibSendToNotion(idea) {
+  const token = getIbToken();
+  if (!token) return false;
+  try {
+    const url = 'https://corsproxy.io/?' + encodeURIComponent('https://api.notion.com/v1/pages');
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28'
+      },
+      body: JSON.stringify({
+        parent: { database_id: IB_DB_ID },
+        icon: { type: 'emoji', emoji: '✨' },
+        properties: {
+          Name:     { title:     [{ text: { content: ibMakeShorthand(idea.text) } }] },
+          Category: { select:    { name: idea.tag || 'Other' } },
+          Status:   { status:    { name: 'In progress' } },
+          details:  { rich_text: [{ text: { content: idea.text } }] }
+        }
+      })
+    });
+    return res.ok;
+  } catch(e) {
+    console.error('Notion API error:', e);
+    return false;
+  }
+}
+
+// ── Save idea — sends to Notion automatically if token exists ──
+async function saveIdea() {
   const text = document.getElementById('ibInput').value.trim();
   if (!text) return;
   const activeTag = document.querySelector('#ibOverlay .ib-tag-btn.active');
   const tag = activeTag ? activeTag.dataset.tag : '';
   const idea = { id: genId('idea'), text, tag, ts: new Date().toISOString(), sent: false };
-  const ideas = loadIdeas(); ideas.unshift(idea); saveIdeas(ideas);
+
+  // Disable button while sending
+  const btn = document.getElementById('ibSaveBtn');
+  const origText = btn.textContent;
+  const token = getIbToken();
+
+  if (token) {
+    btn.textContent = 'Sending to Notion...';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+  }
+
+  const ideas = loadIdeas(); ideas.unshift(idea); saveIdeasLocal(ideas);
   document.getElementById('ibInput').value = '';
   document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
   renderIdeaBank();
+
+  if (token) {
+    const ok = await ibSendToNotion(idea);
+    if (ok) {
+      idea.sent = true;
+      saveIdeasLocal(loadIdeas().map(i => i.id === idea.id ? idea : i));
+      renderIdeaBank();
+      showToast('Added to Notion ✨');
+    } else {
+      showToast('Saved locally — Notion sync failed');
+    }
+    btn.textContent = origText;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  } else {
+    showToast('Saved locally');
+  }
 }
-function deleteIdea(id) { saveIdeas(loadIdeas().filter(i => i.id !== id)); renderIdeaBank(); }
+
+function deleteIdea(id) { saveIdeasLocal(loadIdeas().filter(i => i.id !== id)); renderIdeaBank(); }
+
 let _toastTimer = null;
 function showToast(msg) {
   let t = document.getElementById('bcyToast');
@@ -1162,62 +1261,145 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   clearTimeout(_toastTimer); _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
-function ibCopyText(text) {
-  const fb = () => { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); };
-  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(fb); else fb();
+
+// ── Sync a single unsent idea to Notion ──
+async function syncIdeaToNotion(id) {
+  const token = getIbToken();
+  if (!token) { showToast('Set up Notion token first — tap ⚙️'); return; }
+  const ideas = loadIdeas();
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  showToast('Sending...');
+  const ok = await ibSendToNotion(idea);
+  if (ok) {
+    idea.sent = true; saveIdeasLocal(ideas); renderIdeaBank();
+    showToast('Added to Notion ✨');
+  } else {
+    showToast('Sync failed — check your token');
+  }
 }
-function sendIdeaToNotion(id) {
-  const ideas = loadIdeas(); const idea = ideas.find(i => i.id === id); if (!idea) return;
-  const dateStr = new Date(idea.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  ibCopyText(`[${idea.tag||'Other'}] ${idea.text}`);
-  idea.sent = true; saveIdeas(ideas); renderIdeaBank();
-  showToast('Copied! Paste into your Notion page 💋');
-  const url = getNotionIdeaUrl(); if (url) window.open(url, '_blank');
+
+// ── Sync all unsent ideas ──
+async function sendAllToNotion() {
+  const token = getIbToken();
+  if (!token) { showToast('Set up Notion token first — tap ⚙️'); return; }
+  const ideas = loadIdeas();
+  const unsent = ideas.filter(i => !i.sent);
+  if (!unsent.length) { showToast('All ideas already synced'); return; }
+  showToast('Syncing ' + unsent.length + ' ideas...');
+  let success = 0;
+  for (const idea of unsent) {
+    const ok = await ibSendToNotion(idea);
+    if (ok) { idea.sent = true; success++; }
+  }
+  saveIdeasLocal(ideas); renderIdeaBank();
+  showToast(success + ' of ' + unsent.length + ' synced to Notion ✨');
 }
-function sendAllToNotion() {
-  const ideas = loadIdeas().filter(i => !i.sent);
-  if (!ideas.length) { showToast('No unsent ideas yet.'); return; }
-  let out = '';
-  ideas.forEach(i => {
-    const tag = i.tag || 'Other';
-    out += `[${tag}] ${i.text}\n`;
-  });
-  ibCopyText(out.trim());
-  const all = loadIdeas(); all.forEach(i => { if (!i.sent) i.sent = true; }); saveIdeas(all);
-  renderIdeaBank();
-  showToast('All ideas copied! Paste into Notion 💋');
-  const url = getNotionIdeaUrl(); if (url) window.open(url, '_blank');
-}
+
 function ibTagSelect(btn) {
   const was = btn.classList.contains('active');
   document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
   if (!was) btn.classList.add('active');
 }
-function saveIbNotionUrl() { setNotionIdeaUrl(document.getElementById('ibNotionUrl').value || ''); }
+
+// ── Settings: token management ──
+function toggleIbSettings() {
+  const panel = document.getElementById('ibSettingsPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    document.getElementById('ibTokenInput').value = getIbToken();
+  }
+}
+function saveIbToken() {
+  const val = document.getElementById('ibTokenInput').value.trim();
+  if (!val) { showToast('Paste a token first'); return; }
+  if (!val.startsWith('secret_') && !val.startsWith('ntn_')) {
+    showToast('That doesn\'t look like a Notion token'); return;
+  }
+  localStorage.setItem(IB_TOKEN_KEY, val);
+  updateIbSyncBadge();
+  renderIdeaBank();
+  showToast('Token saved — ideas go straight to Notion now');
+}
+async function testIbToken() {
+  const val = document.getElementById('ibTokenInput').value.trim();
+  if (!val) { showToast('Paste a token to test'); return; }
+  showToast('Testing...');
+  try {
+    const url = 'https://corsproxy.io/?' + encodeURIComponent('https://api.notion.com/v1/databases/' + IB_DB_ID);
+    const res = await fetch(url, {
+      headers: { 'Authorization': 'Bearer ' + val, 'Notion-Version': '2022-06-28' }
+    });
+    if (res.ok) {
+      showToast('Connected to Idea Bank ✨');
+    } else if (res.status === 404) {
+      showToast('Token works but can\'t see Idea Bank — add the connection in Notion');
+    } else {
+      showToast('Token error: ' + res.status);
+    }
+  } catch(e) {
+    showToast('Connection failed — check internet');
+  }
+}
+
+function updateIbSyncBadge() {
+  const badge = document.getElementById('ibSyncBadge');
+  if (!badge) return;
+  const token = getIbToken();
+  if (token) {
+    badge.textContent = 'Notion sync on';
+    badge.className = 'ib-sync-badge ib-sync-on';
+  } else {
+    badge.textContent = 'offline';
+    badge.className = 'ib-sync-badge ib-sync-off';
+  }
+}
+
+function updateIbSaveBtn() {
+  const btn = document.getElementById('ibSaveBtn');
+  if (!btn) return;
+  btn.textContent = getIbToken() ? 'Add to Notion ✨' : 'Save to Idea Bank';
+}
+
 function renderIdeaBank() {
   const ideas = loadIdeas();
   const list = document.getElementById('ibList'); if (!list) return;
+  const token = getIbToken();
+
+  // Show/hide sync all button
+  const syncAllBtn = document.getElementById('ibSendAllBtn');
+  const unsent = ideas.filter(i => !i.sent);
+  if (syncAllBtn) syncAllBtn.style.display = (token && unsent.length > 0) ? 'inline-block' : 'none';
+
+  updateIbSyncBadge();
+  updateIbSaveBtn();
+
   if (!ideas.length) { list.innerHTML = '<div class="ib-empty">Nothing here yet. Ideas incoming.</div>'; return; }
   list.innerHTML = ideas.map(idea => {
     const color = IB_TAG_COLORS[idea.tag] || 'var(--mist)';
     const dateStr = new Date(idea.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const syncBtn = (!idea.sent && token)
+      ? `<button class="ib-notion-btn" onclick="syncIdeaToNotion('${esc(idea.id)}')">✦ Sync to Notion</button>`
+      : (!idea.sent && !token)
+        ? ''
+        : '';
     return `<div class="ib-card" style="border-left-color:${color}">
       <div class="ib-card-text">${esc(idea.text)}</div>
       <div class="ib-card-meta">
         ${idea.tag ? `<span class="ib-tag-badge" style="color:${color}">${esc(idea.tag)}</span>` : ''}
         <span class="ib-ts">${dateStr}</span>
-        ${idea.sent ? '<span class="ib-sent">sent ✓</span>' : ''}
+        ${idea.sent ? '<span class="ib-sent">in Notion ✨</span>' : ''}
       </div>
       <div class="ib-card-acts">
-        <button class="ib-notion-btn" onclick="sendIdeaToNotion('${esc(idea.id)}')">✦ Copy & Open Notion</button>
+        ${syncBtn}
         <button class="ib-del-btn" onclick="deleteIdea('${esc(idea.id)}')">✕</button>
       </div>
     </div>`;
   }).join('');
 }
+
 function showIdeaBank() {
   document.getElementById('ibOverlay').classList.add('open');
-  document.getElementById('ibNotionUrl').value = getNotionIdeaUrl();
   renderIdeaBank();
 }
 function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove('open'); }
@@ -1239,6 +1421,11 @@ function updateFsIcon() {
 }
 document.addEventListener('fullscreenchange', updateFsIcon);
 document.addEventListener('webkitfullscreenchange', updateFsIcon);
+
+// ─── PWA SERVICE WORKER ──────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').catch(function(e) { console.log('SW registration failed:', e); });
+}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 initV4();
