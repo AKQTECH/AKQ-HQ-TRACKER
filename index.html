@@ -540,7 +540,8 @@
     </div>
 
     <div class="ib-capture">
-      <textarea class="ib-input" id="ibInput" rows="3" placeholder="what just came to you"></textarea>
+      <input class="ib-input" id="ibName" type="text" placeholder="ENTRY NAME (optional)" style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;font-style:normal;margin-bottom:10px;border-bottom:1.5px solid var(--blush);padding-bottom:10px;">
+      <textarea class="ib-input" id="ibInput" rows="3" placeholder="full idea details"></textarea>
       <div class="ib-tags">
         <button class="ib-tag-btn" data-tag="Stand Up"        onclick="ibTagSelect(this)">STAND UP</button>
         <button class="ib-tag-btn" data-tag="TV / Pilot"      onclick="ibTagSelect(this)">TV / PILOT</button>
@@ -1184,7 +1185,7 @@ async function ibSendToNotion(idea) {
         parent: { database_id: IB_DB_ID },
         icon: { type: 'emoji', emoji: '✨' },
         properties: {
-          Name:     { title:     [{ text: { content: ibMakeShorthand(idea.text) } }] },
+          Name:     { title:     [{ text: { content: idea.name || ibMakeShorthand(idea.text) } }] },
           Category: { select:    { name: idea.tag || 'Other' } },
           Status:   { status:    { name: 'In progress' } },
           details:  { rich_text: [{ text: { content: idea.text } }] }
@@ -1202,9 +1203,11 @@ async function ibSendToNotion(idea) {
 async function saveIdea() {
   const text = document.getElementById('ibInput').value.trim();
   if (!text) return;
+  const nameInput = document.getElementById('ibName');
+  const customName = nameInput ? nameInput.value.trim().toUpperCase() : '';
   const activeTag = document.querySelector('#ibOverlay .ib-tag-btn.active');
   const tag = activeTag ? activeTag.dataset.tag : '';
-  const idea = { id: genId('idea'), text, tag, ts: new Date().toISOString(), sent: false };
+  const idea = { id: genId('idea'), text, tag, name: customName, ts: new Date().toISOString(), sent: false };
 
   // Disable button while sending
   const btn = document.getElementById('ibSaveBtn');
@@ -1219,6 +1222,7 @@ async function saveIdea() {
 
   const ideas = loadIdeas(); ideas.unshift(idea); saveIdeasLocal(ideas);
   document.getElementById('ibInput').value = '';
+  if (nameInput) nameInput.value = '';
   document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
   renderIdeaBank();
 
@@ -1372,6 +1376,7 @@ function renderIdeaBank() {
         ? ''
         : '';
     return `<div class="ib-card" style="border-left-color:${color}">
+      ${idea.name ? `<div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--hot);margin-bottom:4px;">${esc(idea.name)}</div>` : ''}
       <div class="ib-card-text">${esc(idea.text)}</div>
       <div class="ib-card-meta">
         ${idea.tag ? `<span class="ib-tag-badge" style="color:${color}">${esc(idea.tag)}</span>` : ''}
