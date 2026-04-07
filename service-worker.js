@@ -1,7 +1,8 @@
-const CACHE_NAME = 'bcy-v1';
+const CACHE_NAME = 'bcy-v2';
 const urlsToCache = [
   './',
   './index.html',
+  './DESKTOP_VERSION.html',
   './manifest.json',
   './icon.jpg'
 ];
