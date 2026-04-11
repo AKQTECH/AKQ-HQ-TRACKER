@@ -883,6 +883,7 @@ function renderD(weekId) {
   CW = weekId;
   _currentWeekId = weekId;
   const w = getWeek(weekId);
+  if (!w) { console.warn('renderD: week not found', weekId, 'AW.length=', AW.length); return; }
   const items = getItems(weekId);
   const done = items.filter(it => it.done).length;
   const total = items.length;
@@ -1697,11 +1698,18 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-initV4();
-refreshAW();
-buildTimeline();
-renderD(autoWeek());
-renderMorning();
+function _init() {
+  initV4();
+  refreshAW();
+  buildTimeline();
+  renderD(autoWeek());
+  renderMorning();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _init);
+} else {
+  _init();
+}
 </script>
 
 <!-- WEEK MANAGEMENT MODAL (Desktop) -->
