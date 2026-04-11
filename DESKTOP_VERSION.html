@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Case Year · Desktop · AKQ</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f2ffd5'/><text y='54' x='50' text-anchor='middle' font-size='52' fill='%23EA258D' font-family='serif'>✦</text></svg>">
+  <title>AKQ HQ App · Desktop</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M15 52 L38 75 L85 25' stroke='%23EFFBD5' stroke-width='13' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
@@ -135,7 +135,7 @@
     /* You Did That link in sidebar */
     .ydt-link {
       display: block; margin: 0 22px 16px;
-      background: var(--orange); color: var(--hot);
+      background: #b2c0f9; color: #3b4a8c;
       border: none; border-radius: 10px;
       padding: 10px 14px; font-size: 12px; font-weight: 800;
       letter-spacing: 0.05em; text-transform: uppercase;
@@ -157,7 +157,7 @@
 
     /* ── MAIN CONTENT ── */
     .main { grid-column: 2; grid-row: 4; overflow-y: auto; display: flex; flex-direction: column; }
-    .done-banner { display: none; grid-column: 1/-1; grid-row: 3; background: var(--hot); color: white; text-align: center; padding: 12px 24px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; font-weight: 700; }
+    .done-banner { display: none; grid-column: 1/-1; grid-row: 3; background: var(--hot); color: #f6d0f6; text-align: center; padding: 12px 24px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
     .section { border-bottom: 1px solid var(--blush); }
     .section-head { padding: 28px 36px 0; }
     .eyebrow-main { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.3); display: block; margin-bottom: 8px; }
@@ -210,7 +210,7 @@
     .practice-section { background: var(--blush); }
     .practice-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 36px; border-bottom: 1px solid rgba(234,37,141,0.1); }
     .practice-row:last-child { border-bottom: none; }
-    .pr-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 7px; }
+    .pr-dot { width: 7px; height: 7px; border-radius: 50%; background: #f6d0f6; flex-shrink: 0; margin-top: 7px; }
     .pr-text { font-size: 14px; color: #5a3348; line-height: 1.5; }
 
     /* Prompt builder – single area */
@@ -444,7 +444,7 @@
 <!-- TOP HEADER BAR -->
 <header class="top-bar">
   <div class="top-left">
-    <span class="eyebrow">Best Case Scenario · Week by Week · April Korto Quioh</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span class="eyebrow" style="margin-bottom:0;">week by week · april korto quioh</span><button style="background:none;border:none;color:rgba(0,0,0,0.35);font-size:22px;cursor:pointer;padding:0 0 0 8px;line-height:1;" onclick="openWeekMgmt()" title="Manage this week">⋯</button></div>
     <div class="week-display">
       <span class="week-num" id="weekNum">1</span>
       <div class="week-meta">
@@ -477,7 +477,7 @@
 </header>
 
 <!-- DONE BANNER -->
-<div class="done-banner" id="doneBanner">✦ All done this week. The work is getting made. ✦</div>
+<div class="done-banner" id="doneBanner">✦ you did that ✓ ✦</div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
@@ -495,7 +495,7 @@
     <span class="sb-eyebrow">Navigate the Year</span>
     <div id="tlD"></div>
   </div>
-  <button class="ydt-link" onclick="showYouDidThat()">✦ You Did That</button>
+  <button class="ydt-link" onclick="showYouDidThat()"><span style="color:#eefbd1;">✦</span> You Did That</button>
   <div class="data-block">
     <span class="sb-eyebrow" style="margin-bottom:12px;">Your Data</span>
     <div class="import-ok" id="importOkD">✓ Data loaded</div>
@@ -504,7 +504,7 @@
       <button class="d-btn d-btn-im" onclick="document.getElementById('importInputD').click()">↑ Load JSON</button>
       <input type="file" id="importInputD" accept=".json" onchange="importDataD(event)">
     </div>
-    <p class="data-note-sb">Files named <strong style="color:var(--hot);">BCY_YYYY-MM-DD_HH-MM.json</strong> — compatible with the mobile version.</p>
+
   </div>
 </aside>
 
@@ -530,7 +530,7 @@
       <div>
         <span class="eyebrow-main">Alongside the Tasks</span>
         <div class="mix-head">
-          <span class="mix-sans" style="color:#5a3348;">The Softer</span>
+          <span class="mix-sans" style="color:#5a3348;">The Real</span>
           <span class="mix-serif">Work.</span>
         </div>
       </div>
@@ -621,7 +621,7 @@
       </div>
     </div>
     <div class="ib-heading">
-      <span class="ib-eyebrow">Creative captures · Best Case Year</span>
+      <span class="ib-eyebrow">Creative captures · AKQ HQ</span>
       <span class="ib-title-sans">Idea</span>
       <span class="ib-title-serif">Bank.</span>
     </div>
@@ -664,7 +664,7 @@
   <div class="ydt-inner">
     <button class="ydt-back" onclick="closeYouDidThat()">← Back to this week</button>
     <div class="ydt-heading">
-      <span class="ydt-eyebrow">Your completed work · Best Case Year</span>
+      <span class="ydt-eyebrow">Your completed work · AKQ HQ</span>
       <span class="ydt-title-sans">You Did</span>
       <span class="ydt-title-serif">That.</span>
       <span class="ydt-count-badge" id="ydtCountD">0 tasks complete</span>
@@ -676,172 +676,51 @@
 <script>
 // ─── WEEKS DATA ───────────────────────────────────────────────────────────────
 
-const WEEKS = [
-  { id:'w1', label:'Week 1', name:'The Floor', num:'1', start:'2026-03-31', end:'2026-04-06',
-    tasks:[{text:"Driver's license renewed",cat:"admin"},{text:"Blanket text sent to all 150 — one message, not perfect, sent",cat:"comms"},{text:"CalFresh recertified",cat:"admin"},{text:"Tax extension filed",cat:"admin"},{text:"Three estate attorney emails sent — just the ask, not the consultation",cat:"legal"}],
-    practices:["Phone charges in the kitchen starting tonight","One anchor wake time picked — held even when it is hard","Script opened at least twice — not necessarily written, opened"],
-    quote:'"Phone has charged in the kitchen for four months straight. I wake up before noon without trying most days. That started the night you put it down. Do it tonight."',
-    enc:[
-      {icon:"🌅",t:"The Vogue-cover version of you wakes up at the same time every day.",b:"She built that anchor in weeks exactly like this one. Put the phone in the kitchen. That's where it starts."},
-      {icon:"✍️",t:"Pick Me's feature deal happens because you wrote the pages.",b:"Not all at once. Week by week, two opens of the script at a time. That's all that's required right now."},
-      {icon:"📱",t:"Phone in the kitchen tonight?",b:"That's the morning. The morning is the writing. The writing is the film. One step."},
-      {icon:"⏰",t:"Held the wake time?",b:"Not because it's easy. Because the version of you you're building needs the morning. You're building her right now."},
-      {icon:"📬",t:"One admin task done.",b:"Each one off the list is bandwidth returned to the work. The creative life runs on clear mental space."}
-    ]
-  },
-  { id:'w2', label:'Week 2', name:'The First Exhale', num:'2', start:'2026-04-07', end:'2026-04-13',
-    tasks:[{text:"EDD follow-up call made",cat:"admin"},{text:"Estate attorney consultation booked from the three responses",cat:"legal"},{text:"Sleep study scheduled",cat:"health"},{text:"ENT scheduled",cat:"health"},{text:"Second hakomi session — book the third before you leave",cat:"wellness"}],
-    practices:["One friend on the couch this week — let them bring food, let them stay","Thirty minutes outside without the phone, three times","The Minnesota scene — write it, Ethan kisses her, no exit strategy"],
-    quote:'"I went outside three times last week without making it a thing. No strategy. Just walked. My nervous system is completely different now. You are literally rebuilding it with those thirty minutes."',
-    enc:[
-      {icon:"🌿",t:"30 minutes outside resets the nervous system.",b:"The Pick Me script that gets written tonight comes from the walk you took this afternoon. They are the same action."},
-      {icon:"🌅",t:"Sleep study done? That's infrastructure.",b:"Your brain at full capacity is your best creative asset. This is how the Vogue cover version of you shows up in the room."},
-      {icon:"📞",t:"Made the EDD call?",b:"That's the thing that would've sat on your chest for weeks. It's off now. The mental space goes back to the work."},
-      {icon:"✍️",t:"Wrote the Minnesota scene?",b:"That's the scene the whole feature earns. Every page you write toward it right now matters."},
-      {icon:"👯",t:"Let someone come over?",b:"That's the practice — receiving, not managing. Exactly what the whole script is about."}
-    ]
-  },
-  { id:'w3', label:'Week 3', name:'Birthday Week', num:'3', start:'2026-04-14', end:'2026-04-20',
-    tasks:[{text:"Estate attorney consultation happens — know your rights now",cat:"legal"},{text:"Psych appointment — medication review conversation had",cat:"health"},{text:"Allergy appointments rescheduled",cat:"health"},{text:"Autism diagnosis rescheduled — on the calendar",cat:"health"}],
-    practices:["Tell at least one person what you actually want for your birthday","Do not spend the day alone unless you genuinely want to","Write the scene where Autumn receives something and stays"],
-    quote:'"I told people what I wanted for my birthday this year and they actually showed up exactly right. Turns out people want to get it right — they just need the ask. You\'re practicing the ask right now."',
-    enc:[
-      {icon:"🎂",t:"You said what you wanted?",b:"The version of you who asks for what she needs — she\'s the one who walks into rooms and changes them. You\'re building her today."},
-      {icon:"🧠",t:"Calibrated medication is infrastructure.",b:"Pick Me\'s feature gets packaged by a version of you whose brain is running right. This appointment is part of that."},
-      {icon:"✍️",t:"Wrote the Autumn scene?",b:"The scene where she stays. That\'s the emotional center of the whole feature. It\'s waiting for you to write it."},
-      {icon:"⚖️",t:"Attorney consultation done?",b:"Now you know your rights. You walk differently when you know your rights."},
-      {icon:"🌸",t:"Not spending the day alone?",b:"The version of you on the Vogue cover lets people celebrate her. You\'re practicing that today."}
-    ]
-  },
-  { id:'w4', label:'Week 4', name:'The List Gets Shorter', num:'4', start:'2026-04-21', end:'2026-04-27',
-    tasks:[{text:"DMV tabs paid or payment plan arranged",cat:"admin"},{text:"WGA dues handled",cat:"admin"},{text:"CVS card fixed",cat:"admin"},{text:"HBO to Hulu switched",cat:"admin"},{text:"Mail opened, sorted, dealt with or filed",cat:"admin"}],
-    practices:["The wake time is holding — not natural yet, hold it anyway","Sugar reduced — not eliminated, one swap per day","Script: act two is being touched regularly — not finished, touched"],
-    quote:'"The mail doesn\'t pile up anymore. I open it the same day it arrives. Not because I love it — because I know what my brain does to an unopened pile. You\'re teaching yourself that right now."',
-    enc:[
-      {icon:"📬",t:"Opened the mail?",b:"The brain lied about what was in it. It always lies about the mail. Now you know."},
-      {icon:"⏰",t:"Wake time holding?",b:"Even when it doesn\'t feel natural. The version of you who has a morning built that morning in weeks exactly like this one. Keep holding it."},
-      {icon:"🍊",t:"One sugar swap today?",b:"Your body running better is your brain writing better. The Vogue-cover version of you is built on weeks of small swaps. This one counts."},
-      {icon:"✍️",t:"Touched act two today?",b:"Not finished. Touched. That\'s how the draft gets done. The Pick Me feature exists because you touched it in weeks like this."},
-      {icon:"✅",t:"Admin list getting shorter.",b:"Each one off is bandwidth returned to the creative work. The creative life runs on the other side of this list."}
-    ]
-  },
-  { id:'w5', label:'Week 5', name:'Momentum', num:'5', start:'2026-04-28', end:'2026-05-04',
-    tasks:[{text:"Backyard ready — propane, afternoon with Sameliah",cat:"home"},{text:"Wig refresh appointment scheduled and kept",cat:"self-care"},{text:"Business checking account — three options researched, one chosen",cat:"finance"},{text:"EDD situation resolved or in process",cat:"admin"}],
-    practices:["Bible study — one session, however small, this week","One thing per day system becoming automatic","Notice when you pick up the phone to avoid a feeling — put it down twice"],
-    quote:'"Pick Me is in packaging conversations right now because I kept showing up — to the backyard, to bible study, to the one thing per day. Every system you\'re building this week is load-bearing."',
-    enc:[
-      {icon:"✝️",t:"Made it to bible study?",b:"This is the practice that holds everything else. Small and consistent. The version of you who has a creative empire has a spiritual practice underneath it."},
-      {icon:"📵",t:"Put the phone down twice?",b:"Catching the avoidance in real time is the actual skill. The Vogue-cover version of you is present. You\'re building presence right now."},
-      {icon:"💇",t:"Wig refresh done?",b:"Showing up looking like yourself is armor. The version of you who walks into rooms and changes them — she looks like herself. This is part of the work."},
-      {icon:"🌞",t:"Sat in the backyard?",b:"The rest is not wasted time. It\'s what makes the work possible. Dad would have liked this yard."},
-      {icon:"🏦",t:"Business account handled?",b:"Palava Productions runs on infrastructure. This is infrastructure."}
-    ]
-  },
-  { id:'w6', label:'Week 6', name:'The Creative Re-entry', num:'6', start:'2026-05-05', end:'2026-05-11',
-    tasks:[{text:"Pick Me draft: act two complete or close to complete",cat:"writing"},{text:"Sleep study happens or is imminent",cat:"health"},{text:"Psych adjustment noted — you feel slightly different",cat:"health"},{text:"Debt mapped — the full picture known",cat:"finance"}],
-    practices:["The 10pm writing signal is a real thing in your life now","Going outside without making it a whole thing","Let yourself be excited without immediately auditing the excitement"],
-    quote:'"I write at 10pm every night now. Not because I make myself. Because my body expects it. The signal you\'re creating right now becomes automatic. That\'s how the draft that changes everything gets written."',
-    enc:[
-      {icon:"🌙",t:"The 10pm signal you\'re building is how Pick Me gets written.",b:"Every time you honor it, the habit gets stronger than the resistance. The feature exists on the other side of this signal."},
-      {icon:"😊",t:"Let yourself be excited without auditing it?",b:"That\'s the version of you who has a creative life. The Vogue-cover version of you is excited and doesn\'t apologize for it."},
-      {icon:"✍️",t:"Act two is getting done.",b:"Not perfect. Getting done. That\'s how it becomes the draft that goes out and changes everything."},
-      {icon:"🚶",t:"Went outside without making it a whole thing?",b:"Just went. The brain resets. The writing happens after. This is infrastructure for the creative life you\'re building."},
-      {icon:"💰",t:"Mapped the debt?",b:"Knowing the full picture is not the same as the situation being bad. Clarity is power. The Vogue-cover version of you knows her numbers."}
-    ]
-  },
-  { id:'w7', label:'Week 7', name:'The Diagnosis', num:'7', start:'2026-05-12', end:'2026-05-18',
-    tasks:[{text:"Autism diagnosis appointment completed",cat:"health"},{text:"Sit with it — explanation, not limitation",cat:"self-knowledge"}],
-    practices:["Nothing was ever wrong with you","You were running the wrong operating system — now you know there's another one","Use it as information"],
-    quote:'"The diagnosis didn\'t change who I am. It changed how clearly I can see who I\'ve always been. The information you\'re sitting with right now becomes the operating manual for everything that follows."',
-    enc:[
-      {icon:"💡",t:"The diagnosis is information, not a verdict.",b:"You\'ve been building something extraordinary while running the wrong OS. Imagine what you build now that you know."},
-      {icon:"🧠",t:"None of it was ever a character flaw.",b:"The lateness, the mail, the everything — it all has a name now. Use it the way you use every other tool you\'ve built."},
-      {icon:"✦",t:"Wrong operating system. Right person.",b:"You were always going to be the one who writes this film, builds this company, shows up in this room. Now you know why it looked the way it did."}
-    ]
-  },
-  { id:'w8', label:'Week 8', name:'The Social Re-entry', num:'8', start:'2026-05-19', end:'2026-05-25',
-    tasks:[{text:"Seen at least three people in person this month",cat:"social"},{text:"New car plan for July — research done, options known",cat:"admin"},{text:"Mailbox service set up for Palava Productions",cat:"palava"},{text:"Taxes filed or on track for October",cat:"admin"}],
-    practices:["Go to one social thing this week — leave when tired, not when it ends","Do not apologize for leaving","Notice the recovery time is getting shorter"],
-    quote:'"I leave events when I\'m tired now. No apology. My social world is on my terms. The relationships that held are the ones that could hold that. You\'re figuring out which ones those are right now."',
-    enc:[
-      {icon:"🚪",t:"Left when you needed to?",b:"Without apologizing. Less masking, faster recovery, more writing. The version of you who has a creative empire guards her energy."},
-      {icon:"📬",t:"Palava mailbox set up?",b:"Palava Productions has an address. The empire has mail. This is what building looks like before it looks like building."},
-      {icon:"👥",t:"Saw people this month?",b:"The actual you — not the managed version. That\'s the social world on your terms. The Vogue-cover version of you knows the difference."},
-      {icon:"🚗",t:"Car situation handled?",b:"The July deadline is taken care of. One less thing on the mental list. Bandwidth returned to the work."}
-    ]
-  },
-  { id:'w9', label:'Weeks 9–10', name:'Pick Me Draft Complete', num:'9–10', start:'2026-05-26', end:'2026-06-08',
-    tasks:[{text:"Full feature draft done — not perfect, done",cat:"writing"},{text:"Ethan kisses her without an exit strategy — written",cat:"writing"},{text:"Autumn receives something and stays — written",cat:"writing"},{text:"The audition tape scene from inside the nine year old — written",cat:"writing"},{text:"The line Ethan doesn't want to say — written",cat:"writing"},{text:"Third act parking lot that earns the tornado — written",cat:"writing"},{text:"Sent to Sameliah, then one trusted reader — without apology",cat:"writing"}],
-    practices:["Don't apologize when you send it","Say 'here it is, tell me what is true'","The sending is the phone call"],
-    quote:'"The Pick Me feature exists as a produced film. It exists because I finished the draft — the imperfect, complete, sent draft. The pages you\'re writing right now are not practice. They are the thing."',
-    enc:[
-      {icon:"✍️",t:"The draft exists now.",b:"Not perfect. Existing. That\'s the thing that goes out. That\'s the thing that changes everything."},
-      {icon:"📤",t:"Sent it without apology?",b:"\'Here it is. Tell me what is true.\' That\'s how you send work you believe in. That\'s how the Vogue-cover version of you operates."},
-      {icon:"✦",t:"The sending is the phone call.",b:"He heard it. Every page you finished was addressed to him. He heard all of it."},
-      {icon:"🎬",t:"The parking lot scene is written.",b:"That\'s the one that earns the whole movie. It was worth it."}
-    ]
-  },
-  { id:'w11', label:'Weeks 11–12', name:'The Approach', num:'11–12', start:'2026-06-09', end:'2026-06-22',
-    tasks:[{text:"Feedback integrated — this version goes out",cat:"writing"},{text:"Formal packaging approach underway",cat:"career"},{text:"The letter written — third version, sounds like you",cat:"outreach"},{text:"The letter sent — hands shaking, sent anyway",cat:"outreach"}],
-    practices:["Do not engineer the outcome","Send the version that sounds like you","That is the whole practice — send it anyway"],
-    quote:'"I sent the letter. Hands shaking, sent anyway. It landed. You\'re building the version of yourself who can do that — by doing it right now, smaller version first."',
-    enc:[
-      {icon:"✉️",t:"Sent it anyway?",b:"Shaking hands and all. That\'s the practice. The Vogue-cover version of you sends things. She doesn\'t wait until she\'s not scared."},
-      {icon:"📝",t:"The version that sounds like you is the right one.",b:"Not the press release. You. That\'s the one that lands. That\'s the one that gets remembered."},
-      {icon:"🎯",t:"Script is in packaging.",b:"It\'s in the world. You wrote it in the weather and now it\'s in the world."}
-    ]
-  },
-  { id:'w13', label:'Week 13', name:'The Breath', num:'13', start:'2026-06-23', end:'2026-06-29',
-    tasks:[{text:"Go to bible study",cat:"spirit"},{text:"Call your mother",cat:"family"},{text:"Go outside",cat:"body"}],
-    practices:["Do not wait for the response","Let the thing be in the world without checking","Practice standing still"],
-    quote:'"I don\'t check my phone every hour waiting for news anymore. I made the thing, I sent it, and I breathe. You\'re learning to breathe right now. That\'s not nothing. That\'s everything."',
-    enc:[
-      {icon:"🌿",t:"Not checking every hour?",b:"That\'s the whole practice. Standing still in the uncertainty. The film is literally about this. You\'re living it right now."},
-      {icon:"✝️",t:"Made it to bible study?",b:"The thing you do before the rest of Sunday starts. It\'s yours now. It\'s what holds everything else."},
-      {icon:"📞",t:"Called your mother?",b:"She wants to hear from you. You want to hear her voice. Both of those things can be true."}
-    ]
-  },
-  { id:'w14', label:'Weeks 14–15', name:'Festival Season', num:'14–15', start:'2026-06-30', end:'2026-07-13',
-    tasks:[{text:"New car situation resolved by July 1st",cat:"admin"},{text:"Pick Me short — festival run continues",cat:"pick-me"},{text:"Feature script in active packaging conversations",cat:"career"},{text:"Gramcracker — development conversations beginning",cat:"career"}],
-    practices:["Show up present, not performing","Let yourself cry when something accurate is written about you","Do not immediately make it a bit"],
-    quote:'"Someone asked me in an interview what Pick Me is really about and I told them the truth. Not the pitch. The truth. They printed the truth. You\'re building the person who can do that right now."',
-    enc:[
-      {icon:"🎬",t:"The short is making noise.",b:"The industry is catching up to where you already are. That\'s what happens when you make the work."},
-      {icon:"✦",t:"Present in the interview, not performing?",b:"That\'s what gets written about. That\'s what gets remembered. The Vogue-cover version of you shows up as herself."},
-      {icon:"🚗",t:"Car handled by July 1st?",b:"The deadline held. The pre-game worked."}
-    ]
-  },
-  { id:'w16', label:'Weeks 16–18', name:'The Life', num:'16–18', start:'2026-07-14', end:'2026-08-03',
-    tasks:[{text:"One thing per day — automatic now",cat:"system"},{text:"10pm writing signal — real and held",cat:"system"},{text:"Anchor wake time holding, 9–11am range",cat:"system"},{text:"Bible study weekly, Sunday morning, small",cat:"spirit"}],
-    practices:["Let the people who've earned it see you in your actual condition","Less masking means less expenditure","Mornings are for the list; nights are for the real writing"],
-    quote:'"I wake up at 9am now without an alarm. My body regulated. The anchor time you\'re holding right now — especially when it\'s hard — is doing the regulating. Keep holding it."',
-    enc:[
-      {icon:"🌅",t:"Woke before noon?",b:"Because your body has regulated. That\'s what all the earlier work was building toward. You built this."},
-      {icon:"🌙",t:"10pm signal held?",b:"The nights are for the real writing. You\'re writing now. That\'s the life. That\'s how Pick Me gets finished."},
-      {icon:"✦",t:"Masking less.",b:"Less expenditure. Faster recovery. More of you available for the work — and for the room when you walk into it."}
-    ]
-  },
-  { id:'w19', label:'Weeks 19–22', name:'The Stand-Up', num:'19–22', start:'2026-08-04', end:'2026-08-31',
-    tasks:[{text:"Stand-up architecture developed — not a list of bits, a structure",cat:"standup"},{text:"Wigger confessional written out fully for the first time",cat:"standup"},{text:"Casper bit rewritten — says what it's actually about",cat:"standup"},{text:"'Ladies are we insane' bit ends where it needs to end",cat:"standup"},{text:"Work-in-progress set performed — small room, mixed audience",cat:"standup"}],
-    practices:["Don't use comedy as the exit hatch for the true things","Let the true things be true and funny simultaneously"],
-    quote:'"The special exists. It exists because I sat with the true things long enough to find what was funny about them. You\'re doing that right now. This is the writing."',
-    enc:[
-      {icon:"🎤",t:"Did the set?",b:"Small room. Mixed crowd. That\'s where every special starts. The Vogue-cover version of you has a special. It starts here."},
-      {icon:"✦",t:"Let the true thing be true.",b:"And funny at the same time. That\'s the register you\'ve always written in. Now it\'s a whole hour."},
-      {icon:"📝",t:"Architecture, not a list.",b:"That\'s what separates a special from a set. You\'re building the special."}
-    ]
-  },
-  { id:'w23', label:'Sep–Dec', name:'The Last Quarter', num:'Sep–Dec', start:'2026-09-01', end:'2026-12-31',
-    tasks:[{text:"Script in active packaging — whatever you found out, you're okay",cat:"career"},{text:"Money situation clearer — not solved, clearer",cat:"finance"},{text:"Life insurance situation addressed legally",cat:"legal"},{text:"CalFresh current, EDD resolved, debt has a plan",cat:"admin"},{text:"SeedFest early planning — entity structure decided",cat:"palava"}],
-    practices:["The list is a maintenance schedule now, not a wall","Carry him differently — he is the barbecue, the thumbs up, the work"],
-    quote:'"You were always going to be enough. You just needed the year. Every week of this year — including this one, especially this one — was the proof."',
-    enc:[
-      {icon:"✦",t:"You were always going to be enough.",b:"The year just proved it to you. In the hardest weeks of your life, you still made the work. You still showed up."},
-      {icon:"🌱",t:"SeedFest is real now.",b:"In early planning. The 2027 timeline exists. It exists the way things exist before they happen — which is the only way anything exists."},
-      {icon:"🎬",t:"The script is in the world.",b:"Whatever you found out — you\'re okay. Better than okay. The Vogue-cover version of you knew she would be."}
-    ]
-  }
+const DEFAULT_ENC = [
+  {icon:"✦",t:"This week is yours to define.",b:"Name it, own it. What gets done this week builds toward what comes next."},
+  {icon:"🌅",t:"Show up, even when it's small.",b:"The version of you you're becoming is built in weeks exactly like this one."},
+  {icon:"✍️",t:"Tap the week name above to give this week a theme.",b:"A named week has intention. An intentioned week gets things done."}
 ];
+
+const BCY_PLAN = {
+  w14:{ name:'The Floor', tasks:[{text:"Driver's license renewed",cat:"admin"},{text:"Blanket text sent to all 150 — one message, not perfect, sent",cat:"comms"},{text:"CalFresh recertified",cat:"admin"},{text:"Tax extension filed",cat:"admin"},{text:"Three estate attorney emails sent — just the ask, not the consultation",cat:"legal"}], practices:["Phone charges in the kitchen starting tonight","One anchor wake time picked — held even when it is hard","Script opened at least twice — not necessarily written, opened"], enc:[{icon:"🌅",t:"The Vogue-cover version of you wakes up at the same time every day.",b:"She built that anchor in weeks exactly like this one. Put the phone in the kitchen. That's where it starts."},{icon:"✍️",t:"Pick Me's feature deal happens because you wrote the pages.",b:"Not all at once. Week by week, two opens of the script at a time. That's all that's required right now."},{icon:"📱",t:"Phone in the kitchen tonight?",b:"That's the morning. The morning is the writing. The writing is the film. One step."},{icon:"⏰",t:"Held the wake time?",b:"Not because it's easy. Because the version of you you're building needs the morning. You're building her right now."},{icon:"📬",t:"One admin task done.",b:"Each one off the list is bandwidth returned to the work. The creative life runs on clear mental space."}]},
+  w15:{ name:'The First Exhale', tasks:[{text:"EDD follow-up call made",cat:"admin"},{text:"Estate attorney consultation booked from the three responses",cat:"legal"},{text:"Sleep study scheduled",cat:"health"},{text:"ENT scheduled",cat:"health"},{text:"Second hakomi session — book the third before you leave",cat:"wellness"}], practices:["One friend on the couch this week — let them bring food, let them stay","Thirty minutes outside without the phone, three times","The Minnesota scene — write it, Ethan kisses her, no exit strategy"], enc:[{icon:"🌿",t:"30 minutes outside resets the nervous system.",b:"The Pick Me script that gets written tonight comes from the walk you took this afternoon. They are the same action."},{icon:"🌅",t:"Sleep study done? That's infrastructure.",b:"Your brain at full capacity is your best creative asset. This is how the Vogue cover version of you shows up in the room."},{icon:"📞",t:"Made the EDD call?",b:"That's the thing that would've sat on your chest for weeks. It's off now. The mental space goes back to the work."},{icon:"✍️",t:"Wrote the Minnesota scene?",b:"That's the scene the whole feature earns. Every page you write toward it right now matters."},{icon:"👯",t:"Let someone come over?",b:"That's the practice — receiving, not managing. Exactly what the whole script is about."}]},
+  w16:{ name:'Birthday Week', tasks:[{text:"Estate attorney consultation happens — know your rights now",cat:"legal"},{text:"Psych appointment — medication review conversation had",cat:"health"},{text:"Allergy appointments rescheduled",cat:"health"},{text:"Autism diagnosis rescheduled — on the calendar",cat:"health"}], practices:["Tell at least one person what you actually want for your birthday","Do not spend the day alone unless you genuinely want to","Write the scene where Autumn receives something and stays"], enc:[{icon:"🎂",t:"You said what you wanted?",b:"The version of you who asks for what she needs — she's the one who walks into rooms and changes them. You're building her today."},{icon:"🧠",t:"Calibrated medication is infrastructure.",b:"Pick Me's feature gets packaged by a version of you whose brain is running right. This appointment is part of that."},{icon:"✍️",t:"Wrote the Autumn scene?",b:"The scene where she stays. That's the emotional center of the whole feature. It's waiting for you to write it."},{icon:"⚖️",t:"Attorney consultation done?",b:"Now you know your rights. You walk differently when you know your rights."},{icon:"🌸",t:"Not spending the day alone?",b:"The version of you on the Vogue cover lets people celebrate her. You're practicing that today."}]},
+  w17:{ name:'The List Gets Shorter', tasks:[{text:"DMV tabs paid or payment plan arranged",cat:"admin"},{text:"WGA dues handled",cat:"admin"},{text:"CVS card fixed",cat:"admin"},{text:"HBO to Hulu switched",cat:"admin"},{text:"Mail opened, sorted, dealt with or filed",cat:"admin"}], practices:["The wake time is holding — not natural yet, hold it anyway","Sugar reduced — not eliminated, one swap per day","Script: act two is being touched regularly — not finished, touched"], enc:[{icon:"📬",t:"Opened the mail?",b:"The brain lied about what was in it. It always lies about the mail. Now you know."},{icon:"⏰",t:"Wake time holding?",b:"Even when it doesn't feel natural. The version of you who has a morning built that morning in weeks exactly like this one."},{icon:"🍊",t:"One sugar swap today?",b:"Your body running better is your brain writing better. The Vogue-cover version of you is built on weeks of small swaps."},{icon:"✍️",t:"Touched act two today?",b:"Not finished. Touched. That's how the draft gets done. The Pick Me feature exists because you touched it in weeks like this."},{icon:"✅",t:"Admin list getting shorter.",b:"Each one off is bandwidth returned to the creative work. The creative life runs on the other side of this list."}]},
+  w18:{ name:'Momentum', tasks:[{text:"Backyard ready — propane, afternoon with Sameliah",cat:"home"},{text:"Wig refresh appointment scheduled and kept",cat:"self-care"},{text:"Business checking account — three options researched, one chosen",cat:"finance"},{text:"EDD situation resolved or in process",cat:"admin"}], practices:["Bible study — one session, however small, this week","One thing per day system becoming automatic","Notice when you pick up the phone to avoid a feeling — put it down twice"], enc:[{icon:"✝️",t:"Made it to bible study?",b:"This is the practice that holds everything else. Small and consistent. The version of you who has a creative empire has a spiritual practice underneath it."},{icon:"📵",t:"Put the phone down twice?",b:"Catching the avoidance in real time is the actual skill. The Vogue-cover version of you is present. You're building presence right now."},{icon:"💇",t:"Wig refresh done?",b:"Showing up looking like yourself is armor. The version of you who walks into rooms and changes them — she looks like herself."},{icon:"🌞",t:"Sat in the backyard?",b:"The rest is not wasted time. It's what makes the work possible. Dad would have liked this yard."},{icon:"🏦",t:"Business account handled?",b:"Palava Productions runs on infrastructure. This is infrastructure."}]},
+  w19:{ name:'The Creative Re-entry', tasks:[{text:"Pick Me draft: act two complete or close to complete",cat:"writing"},{text:"Sleep study happens or is imminent",cat:"health"},{text:"Psych adjustment noted — you feel slightly different",cat:"health"},{text:"Debt mapped — the full picture known",cat:"finance"}], practices:["The 10pm writing signal is a real thing in your life now","Going outside without making it a whole thing","Let yourself be excited without immediately auditing the excitement"], enc:[{icon:"🌙",t:"The 10pm signal you're building is how Pick Me gets written.",b:"Every time you honor it, the habit gets stronger than the resistance. The feature exists on the other side of this signal."},{icon:"😊",t:"Let yourself be excited without auditing it?",b:"That's the version of you who has a creative life. The Vogue-cover version of you is excited and doesn't apologize for it."},{icon:"✍️",t:"Act two is getting done.",b:"Not perfect. Getting done. That's how it becomes the draft that goes out and changes everything."},{icon:"🚶",t:"Went outside without making it a whole thing?",b:"Just went. The brain resets. The writing happens after."},{icon:"💰",t:"Mapped the debt?",b:"Knowing the full picture is not the same as the situation being bad. Clarity is power."}]},
+  w20:{ name:'The Diagnosis', tasks:[{text:"Autism diagnosis appointment completed",cat:"health"},{text:"Sit with it — explanation, not limitation",cat:"self-knowledge"}], practices:["Nothing was ever wrong with you","You were running the wrong operating system — now you know there's another one","Use it as information"], enc:[{icon:"💡",t:"The diagnosis is information, not a verdict.",b:"You've been building something extraordinary while running the wrong OS. Imagine what you build now that you know."},{icon:"🧠",t:"None of it was ever a character flaw.",b:"The lateness, the mail, the everything — it all has a name now. Use it the way you use every other tool you've built."},{icon:"✦",t:"Wrong operating system. Right person.",b:"You were always going to be the one who writes this film, builds this company, shows up in this room. Now you know why it looked the way it did."}]},
+  w21:{ name:'The Social Re-entry', tasks:[{text:"Seen at least three people in person this month",cat:"social"},{text:"New car plan for July — research done, options known",cat:"admin"},{text:"Mailbox service set up for Palava Productions",cat:"palava"},{text:"Taxes filed or on track for October",cat:"admin"}], practices:["Go to one social thing this week — leave when tired, not when it ends","Do not apologize for leaving","Notice the recovery time is getting shorter"], enc:[{icon:"🚪",t:"Left when you needed to?",b:"Without apologizing. Less masking, faster recovery, more writing. The version of you who has a creative empire guards her energy."},{icon:"📬",t:"Palava mailbox set up?",b:"Palava Productions has an address. The empire has mail. This is what building looks like before it looks like building."},{icon:"👥",t:"Saw people this month?",b:"The actual you — not the managed version. That's the social world on your terms."},{icon:"🚗",t:"Car situation handled?",b:"The July deadline is taken care of. Bandwidth returned to the work."}]},
+  w22:{ name:'Pick Me Draft Complete', tasks:[{text:"Full feature draft done — not perfect, done",cat:"writing"},{text:"Ethan kisses her without an exit strategy — written",cat:"writing"},{text:"Autumn receives something and stays — written",cat:"writing"},{text:"The audition tape scene from inside the nine year old — written",cat:"writing"},{text:"The line Ethan doesn't want to say — written",cat:"writing"},{text:"Third act parking lot that earns the tornado — written",cat:"writing"},{text:"Sent to Sameliah, then one trusted reader — without apology",cat:"writing"}], practices:["Don't apologize when you send it","Say 'here it is, tell me what is true'","The sending is the phone call"], enc:[{icon:"✍️",t:"The draft exists now.",b:"Not perfect. Existing. That's the thing that goes out. That's the thing that changes everything."},{icon:"📤",t:"Sent it without apology?",b:"'Here it is. Tell me what is true.' That's how the Vogue-cover version of you sends work."},{icon:"✦",t:"The sending is the phone call.",b:"He heard it. Every page you finished was addressed to him. He heard all of it."},{icon:"🎬",t:"The parking lot scene is written.",b:"That's the one that earns the whole movie. It was worth it."}]},
+  w24:{ name:'The Approach', tasks:[{text:"Feedback integrated — this version goes out",cat:"writing"},{text:"Formal packaging approach underway",cat:"career"},{text:"The letter written — third version, sounds like you",cat:"outreach"},{text:"The letter sent — hands shaking, sent anyway",cat:"outreach"}], practices:["Do not engineer the outcome","Send the version that sounds like you","That is the whole practice — send it anyway"], enc:[{icon:"✉️",t:"Sent it anyway?",b:"Shaking hands and all. That's the practice. The Vogue-cover version of you sends things. She doesn't wait until she's not scared."},{icon:"📝",t:"The version that sounds like you is the right one.",b:"Not the press release. You. That's the one that lands. That's the one that gets remembered."},{icon:"🎯",t:"Script is in packaging.",b:"It's in the world. You wrote it in the weather and now it's in the world."}]},
+  w26:{ name:'The Breath', tasks:[{text:"Go to bible study",cat:"spirit"},{text:"Call your mother",cat:"family"},{text:"Go outside",cat:"body"}], practices:["Do not wait for the response","Let the thing be in the world without checking","Practice standing still"], enc:[{icon:"🌿",t:"Not checking every hour?",b:"That's the whole practice. Standing still in the uncertainty. The film is literally about this."},{icon:"✝️",t:"Made it to bible study?",b:"The thing you do before the rest of Sunday starts. It's yours now."},{icon:"📞",t:"Called your mother?",b:"She wants to hear from you. You want to hear her voice. Both of those things can be true."}]},
+  w27:{ name:'Festival Season', tasks:[{text:"New car situation resolved by July 1st",cat:"admin"},{text:"Pick Me short — festival run continues",cat:"pick-me"},{text:"Feature script in active packaging conversations",cat:"career"},{text:"Gramcracker — development conversations beginning",cat:"career"}], practices:["Show up present, not performing","Let yourself cry when something accurate is written about you","Do not immediately make it a bit"], enc:[{icon:"🎬",t:"The short is making noise.",b:"The industry is catching up to where you already are. That's what happens when you make the work."},{icon:"✦",t:"Present in the interview, not performing?",b:"That's what gets written about. That's what gets remembered. The Vogue-cover version of you shows up as herself."},{icon:"🚗",t:"Car handled by July 1st?",b:"The deadline held. The pre-game worked."}]},
+  w29:{ name:'The Life', tasks:[{text:"One thing per day — automatic now",cat:"system"},{text:"10pm writing signal — real and held",cat:"system"},{text:"Anchor wake time holding, 9–11am range",cat:"system"},{text:"Bible study weekly, Sunday morning, small",cat:"spirit"}], practices:["Let the people who've earned it see you in your actual condition","Less masking means less expenditure","Mornings are for the list; nights are for the real writing"], enc:[{icon:"🌅",t:"Woke before noon?",b:"Because your body has regulated. That's what all the earlier work was building toward. You built this."},{icon:"🌙",t:"10pm signal held?",b:"The nights are for the real writing. You're writing now. That's the life."},{icon:"✦",t:"Masking less.",b:"Less expenditure. Faster recovery. More of you available for the work — and for the room when you walk into it."}]},
+  w32:{ name:'The Stand-Up', tasks:[{text:"Stand-up architecture developed — not a list of bits, a structure",cat:"standup"},{text:"Wigger confessional written out fully for the first time",cat:"standup"},{text:"Casper bit rewritten — says what it's actually about",cat:"standup"},{text:"'Ladies are we insane' bit — ends where it needs to end",cat:"standup"},{text:"Work-in-progress set performed — small room, mixed audience",cat:"standup"}], practices:["Don't use comedy as the exit hatch for the true things","Let the true things be true and funny simultaneously","Someone will say something after the set you'll think about for a long time"], enc:[{icon:"🎤",t:"Did the set?",b:"Small room. Mixed crowd. That's where every special starts. The Vogue-cover version of you has a special. It starts here."},{icon:"✦",t:"Let the true thing be true.",b:"And funny at the same time. That's the register you've always written in. Now it's a whole hour."},{icon:"📝",t:"Architecture, not a list.",b:"That's what separates a special from a set. You're building the special."}]},
+  w36:{ name:'The Last Quarter', tasks:[{text:"Script in active packaging — whatever you found out, you're okay",cat:"career"},{text:"Money situation clearer — not solved, clearer",cat:"finance"},{text:"Life insurance situation addressed legally",cat:"legal"},{text:"CalFresh current, EDD resolved, debt has a plan",cat:"admin"},{text:"SeedFest early planning — entity structure decided, 2027 on calendar",cat:"palava"}], practices:["The list is a maintenance schedule now, not a wall","Wake before noon most days — not forced, regulated","Carry him differently — he is the barbecue, the thumbs up, the work"], enc:[{icon:"✦",t:"You were always going to be enough.",b:"The year just proved it to you. In the hardest weeks of your life, you still made the work. You still showed up."},{icon:"🌱",t:"SeedFest is real now.",b:"In early planning. The 2027 timeline exists the way things exist before they happen."},{icon:"🎬",t:"The script is in the world.",b:"Whatever you found out — you're okay. Better than okay. The Vogue-cover version of you knew she would be."}]}
+};
+
+const WEEK_DATES = ['2025-12-29','2026-01-04','2026-01-05','2026-01-11','2026-01-12','2026-01-18','2026-01-19','2026-01-25','2026-01-26','2026-02-01','2026-02-02','2026-02-08','2026-02-09','2026-02-15','2026-02-16','2026-02-22','2026-02-23','2026-03-01','2026-03-02','2026-03-08','2026-03-09','2026-03-15','2026-03-16','2026-03-22','2026-03-23','2026-03-29','2026-03-30','2026-04-05','2026-04-06','2026-04-12','2026-04-13','2026-04-19','2026-04-20','2026-04-26','2026-04-27','2026-05-03','2026-05-04','2026-05-10','2026-05-11','2026-05-17','2026-05-18','2026-05-24','2026-05-25','2026-05-31','2026-06-01','2026-06-07','2026-06-08','2026-06-14','2026-06-15','2026-06-21','2026-06-22','2026-06-28','2026-06-29','2026-07-05','2026-07-06','2026-07-12','2026-07-13','2026-07-19','2026-07-20','2026-07-26','2026-07-27','2026-08-02','2026-08-03','2026-08-09','2026-08-10','2026-08-16','2026-08-17','2026-08-23','2026-08-24','2026-08-30','2026-08-31','2026-09-06','2026-09-07','2026-09-13','2026-09-14','2026-09-20','2026-09-21','2026-09-27','2026-09-28','2026-10-04','2026-10-05','2026-10-11','2026-10-12','2026-10-18','2026-10-19','2026-10-25','2026-10-26','2026-11-01','2026-11-02','2026-11-08','2026-11-09','2026-11-15','2026-11-16','2026-11-22','2026-11-23','2026-11-29','2026-11-30','2026-12-06','2026-12-07','2026-12-13','2026-12-14','2026-12-20','2026-12-21','2026-12-27','2026-12-28','2027-01-03'];
+
+const WEEKS = WEEK_DATES.reduce((arr, _, i, d) => {
+  if (i % 2 !== 0) return arr;
+  const n = i/2 + 1, id = 'w'+n, p = BCY_PLAN[id] || {};
+  arr.push({ id, label:'Week '+n, num:String(n), start:d[i], end:d[i+1], name:p.name||'', tasks:p.tasks||[], practices:p.practices||[], enc:p.enc||DEFAULT_ENC });
+  return arr;
+}, []);
+
+
+
+// ─── ACTIVE WEEKS (mutable — supports delete/add) ─────────────────────────────
+let AW = [];
+function refreshAW() {
+  const v4 = gs4() || {};
+  const deleted = new Set(v4.deletedWeeks || []);
+  const custom = (v4.customWeeks || []);
+  AW = [...WEEKS.filter(w => !deleted.has(w.id)),
+        ...custom.map(cw => ({ ...cw, tasks:[], practices:[], enc:cw.enc||DEFAULT_ENC }))]
+       .sort((a, b) => a.start.localeCompare(b.start));
+}
 
 // ─── V4 STATE SYSTEM ──────────────────────────────────────────────────────────
 
@@ -859,7 +738,16 @@ function genId(prefix) {
 
 function initV4() {
   let v4 = gs4();
-  if (v4 && v4.weeks) return v4;
+  if (v4 && v4.weeks) {
+    // One-time migration: old system had w1=Mar31 (now w14), w2=Apr7 (now w15), etc.
+    if (v4.weeks['w1'] && !v4.weeks['w14'] && !v4.weeks['w15']) {
+      const OLD_MAP = {w1:'w14',w2:'w15',w3:'w16',w4:'w17',w5:'w18',w6:'w19',w7:'w20',w8:'w21',w9:'w22',w11:'w24',w13:'w26',w14:'w27',w16:'w29',w19:'w32',w23:'w36'};
+      const nw = {};
+      Object.entries(v4.weeks).forEach(([id,data]) => { nw[OLD_MAP[id]||id] = data; });
+      v4.weeks = nw; ss4(v4);
+    }
+    return v4;
+  }
 
   // Migrate from v3 if it exists
   let v3 = null;
@@ -959,9 +847,9 @@ function rescheduleItem(fromWeekId, itemId, toWeekId) {
   saveItems(toWeekId, toItems);
 }
 function carryForward(weekId, itemId) {
-  const wIdx = WEEKS.findIndex(w => w.id === weekId);
-  if (wIdx < 0 || wIdx >= WEEKS.length - 1) return;
-  rescheduleItem(weekId, itemId, WEEKS[wIdx + 1].id);
+  const wIdx = AW.findIndex(w => w.id === weekId);
+  if (wIdx < 0 || wIdx >= AW.length - 1) return;
+  rescheduleItem(weekId, itemId, AW[wIdx + 1].id);
 }
 function addNewItem(weekId, text, cat) {
   const items = getItems(weekId);
@@ -977,16 +865,17 @@ function setItemNote(weekId, itemId, note) {
 
 // ─── GLOBALS ──────────────────────────────────────────────────────────────────
 let CW = null, EID = 0, MID = null, MGMT_ID = null;
-function getWeek(id) { return WEEKS.find(w => w.id === id); }
+function getWeek(id) { return AW.find(w => w.id === id); }
 
 function autoWeek() {
+  if (!AW.length) return WEEKS[0].id; // fallback: all weeks deleted
   const t = new Date(); t.setHours(0,0,0,0);
-  for (const w of WEEKS) {
+  for (const w of AW) {
     const s = new Date(w.start+'T00:00:00'), e = new Date(w.end+'T23:59:59');
     if (t >= s && t <= e) return w.id;
   }
-  const last = new Date(WEEKS[WEEKS.length-1].end+'T23:59:59');
-  return t > last ? WEEKS[WEEKS.length-1].id : WEEKS[0].id;
+  const last = new Date(AW[AW.length-1].end+'T23:59:59');
+  return t > last ? AW[AW.length-1].id : AW[0].id;
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
@@ -999,8 +888,8 @@ function renderD(weekId) {
   const total = items.length;
   const left = total - done;
   const pct = total > 0 ? done/total : 0;
-  const wIdx = WEEKS.findIndex(wk => wk.id === weekId);
-  const hasNextWeek = wIdx < WEEKS.length - 1;
+  const wIdx = AW.findIndex(wk => wk.id === weekId);
+  const hasNextWeek = wIdx < AW.length - 1;
 
   // Header
   document.getElementById('weekNum').textContent = 'Week ' + w.num;
@@ -1087,7 +976,7 @@ function renderD(weekId) {
 
 function renderEncD(w) {
   const item = w.enc[EID % w.enc.length];
-  document.getElementById('encIconD').textContent = item.icon;
+  document.getElementById('encIconD').innerHTML = '<span style="color:#eefbd1;">✦</span>';
   document.getElementById('encTitleD').textContent = item.t;
   document.getElementById('encBodyD').textContent = item.b;
 }
@@ -1137,7 +1026,7 @@ function openTaskMgmtD(itemId, e) {
   // Populate reschedule selector
   const sel = document.getElementById('taskReschedSelD');
   sel.innerHTML = '<option value="">— pick a week —</option>';
-  WEEKS.forEach(w => {
+  AW.forEach(w => {
     if (w.id !== CW) {
       const opt = document.createElement('option');
       opt.value = w.id; opt.textContent = `${w.label}: ${w.name}`;
@@ -1179,8 +1068,8 @@ function mgmtMoveDownD() {
 }
 function mgmtCarryD() {
   if (!MGMT_ID) return;
-  const wIdx = WEEKS.findIndex(w => w.id === CW);
-  if (wIdx < 0 || wIdx >= WEEKS.length - 1) { alert('No next week available.'); return; }
+  const wIdx = AW.findIndex(w => w.id === CW);
+  if (wIdx < 0 || wIdx >= AW.length - 1) { alert('No next week available.'); return; }
   carryForward(CW, MGMT_ID);
   closeModalD('taskMgmtModalD'); renderD(CW);
 }
@@ -1240,7 +1129,7 @@ function themeKeydown(e) {
 function buildPromptD(taskText, specNote) {
   const w = getWeek(CW);
   const items = getItems(CW);
-  let p = `I'm in ${w.label} of my Best Case Year — "${w.name}" (${fmtR(w.start,w.end)}).`;
+  let p = `I'm in ${w.label} of my AKQ HQ — "${w.name}" (${fmtR(w.start,w.end)}).`;
   p += `\n\nI need help with: ${taskText}`;
   if (specNote) p += `\n\nStatus on this task: ${specNote}`;
   const others = items.filter(it => it.note && it.text !== taskText).map(it => `• ${it.text}: ${it.note}`);
@@ -1301,7 +1190,7 @@ function buildYouDidThat() {
   let totalDone = 0;
   let hasAny = false;
 
-  WEEKS.forEach(w => {
+  AW.forEach(w => {
     const items = getItems(w.id).filter(it => it.done);
     if (!items.length) return;
     hasAny = true;
@@ -1333,7 +1222,7 @@ function exportDataD() {
   const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const now = new Date(), p = n => String(n).padStart(2,'0');
-  const fname = `BCY_${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}_${p(now.getHours())}-${p(now.getMinutes())}.json`;
+  const fname = `AKQ_HQ_${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}_${p(now.getHours())}-${p(now.getMinutes())}.json`;
   const a = document.createElement('a'); a.href = url; a.download = fname; a.click();
   URL.revokeObjectURL(url);
 }
@@ -1358,7 +1247,7 @@ function importDataD(event) {
           ]};
         });
         ss4(v4m);
-      } else { alert("Doesn't look like a BCY file."); return; }
+      } else { alert("Doesn't look like an AKQ HQ file."); return; }
       renderD(CW);
       const ok = document.getElementById('importOkD'); ok.style.display='block'; setTimeout(()=>ok.style.display='none',3000);
     } catch { alert("Couldn't read that file."); }
@@ -1370,7 +1259,7 @@ function importDataD(event) {
 function buildTimeline() {
   const today = new Date(); today.setHours(0,0,0,0);
   const c = document.getElementById('tlD'); c.innerHTML = '';
-  WEEKS.forEach(w => {
+  AW.forEach(w => {
     const end   = new Date(w.end+'T23:59:59');
     const start = new Date(w.start+'T00:00:00');
     const isPast = today > end, isCur = today >= start && today <= end;
@@ -1382,6 +1271,12 @@ function buildTimeline() {
     el.onclick = () => { EID = 0; renderD(w.id); };
     c.appendChild(el);
   });
+  // "+ Add Week" button
+  const addEl = document.createElement('div');
+  addEl.style.cssText = 'padding:6px 10px;margin-top:6px;cursor:pointer;border:1.5px dashed var(--pink);border-radius:8px;text-align:center;';
+  addEl.innerHTML = '<span style="font-size:11px;font-weight:700;color:var(--hot);">+ Add Week</span>';
+  addEl.onclick = openAddWeek;
+  c.appendChild(addEl);
 }
 function updateTlD(weekId) {
   document.querySelectorAll('.tl-item').forEach(el => { el.classList.remove('active'); if (el.dataset.id === weekId) el.classList.add('active'); });
@@ -1514,7 +1409,7 @@ function togglePrEdit() {
 }
 function renderPrEditList() {
   if (!_currentWeekId) return;
-  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const week = AW.find(w => w.id === _currentWeekId);
   if (!week) return;
   const practices = getCurrentPractices(week);
   document.getElementById('prEditList').innerHTML = practices.map((p, i) => {
@@ -1526,7 +1421,7 @@ function renderPrEditList() {
 }
 function renamePractice(idx, val) {
   if (!_currentWeekId) return;
-  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const week = AW.find(w => w.id === _currentWeekId);
   const practices = getCurrentPractices(week);
   if (idx < practices.length && val.trim()) {
     practices[idx] = val.trim();
@@ -1536,7 +1431,7 @@ function renamePractice(idx, val) {
 }
 function removePractice(idx) {
   if (!_currentWeekId) return;
-  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const week = AW.find(w => w.id === _currentWeekId);
   const practices = getCurrentPractices(week);
   practices.splice(idx, 1);
   saveCustomPractices(_currentWeekId, practices);
@@ -1547,7 +1442,7 @@ function addPractice() {
   const input = document.getElementById('prAddInput');
   const text = input.value.trim();
   if (!text || !_currentWeekId) return;
-  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const week = AW.find(w => w.id === _currentWeekId);
   const practices = getCurrentPractices(week);
   practices.push(text);
   saveCustomPractices(_currentWeekId, practices);
@@ -1802,9 +1697,117 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 initV4();
+refreshAW();
 buildTimeline();
 renderD(autoWeek());
 renderMorning();
 </script>
+
+<!-- WEEK MANAGEMENT MODAL (Desktop) -->
+<div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;backdrop-filter:blur(3px);" id="weekMgmtModalD" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:20px 20px 0 0;padding:24px 22px 44px;width:100%;max-width:520px;margin:0 auto;">
+    <div style="width:36px;height:4px;background:#CACBDF;border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;color:#111;margin-bottom:4px;">Week Settings</div>
+    <div style="font-size:13px;color:#888;margin-bottom:20px;font-style:italic;" id="weekMgmtSubD">—</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button style="background:none;color:#c0392b;border:1.5px solid #c0392b;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="confirmDeleteWeekD()">🗑 Delete this week from the year</button>
+      <button style="background:none;color:#D9AED0;border:none;padding:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="document.getElementById('weekMgmtModalD').style.display='none'">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD WEEK MODAL (Desktop) -->
+<div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;backdrop-filter:blur(3px);" id="addWeekModalD" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:20px 20px 0 0;padding:24px 22px 44px;width:100%;max-width:520px;margin:0 auto;">
+    <div style="width:36px;height:4px;background:#CACBDF;border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;color:#111;margin-bottom:4px;">Add a Week</div>
+    <div style="font-size:13px;color:#888;margin-bottom:20px;font-style:italic;">Custom weeks appear in the timeline alongside the regular year.</div>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#EA258D;margin-bottom:8px;display:block;">Week theme / name (optional)</span>
+    <input id="addWeekNameD" type="text" placeholder="e.g. The Deep Work Sprint" style="width:100%;border:1.5px solid #F1BCD7;border-radius:10px;padding:12px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#111;background:white;outline:none;margin-bottom:14px;">
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#EA258D;margin-bottom:8px;display:block;">Start date</span>
+    <input id="addWeekStartD" type="date" style="width:100%;border:1.5px solid #F1BCD7;border-radius:10px;padding:12px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#111;background:white;outline:none;margin-bottom:14px;">
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#EA258D;margin-bottom:8px;display:block;">End date</span>
+    <input id="addWeekEndD" type="date" style="width:100%;border:1.5px solid #F1BCD7;border-radius:10px;padding:12px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#111;background:white;outline:none;margin-bottom:14px;">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button style="background:#F37EB3;color:white;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="saveNewWeekD()">Add Week</button>
+      <button style="background:none;color:#D9AED0;border:none;padding:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="document.getElementById('addWeekModalD').style.display='none'">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── WEEK MANAGEMENT (Desktop) ────────────────────────────────────────────────
+function openWeekMgmt() {
+  const w = getWeek(CW);
+  const theme = getWeekTheme(CW) || w?.name || CW;
+  document.getElementById('weekMgmtSubD').textContent = (w?.label || CW) + (theme ? ' — ' + theme : '');
+  const modal = document.getElementById('weekMgmtModalD');
+  modal.style.display = 'flex';
+}
+function confirmDeleteWeekD() {
+  const w = getWeek(CW);
+  const theme = getWeekTheme(CW) || w?.name || CW;
+  if (!confirm('Delete ' + (w?.label||CW) + (theme ? ' (' + theme + ')' : '') + '?\nYour data is preserved in exports.')) return;
+  document.getElementById('weekMgmtModalD').style.display = 'none';
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], customWeeks:[] };
+  if (!v4.deletedWeeks) v4.deletedWeeks = [];
+  if (!v4.customWeeks) v4.customWeeks = [];
+  if (CW.startsWith('c_')) {
+    v4.customWeeks = v4.customWeeks.filter(w => w.id !== CW);
+  } else {
+    if (!v4.deletedWeeks.includes(CW)) v4.deletedWeeks.push(CW);
+  }
+  ss4(v4);
+  refreshAW();
+  buildTimeline();
+  EI = 0; renderD(autoWeek());
+  showToast('Week deleted');
+}
+function openAddWeek() {
+  const today = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const ts = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
+  const end = new Date(today); end.setDate(end.getDate() + 6);
+  const es = end.getFullYear() + '-' + pad(end.getMonth()+1) + '-' + pad(end.getDate());
+  document.getElementById('addWeekNameD').value = '';
+  document.getElementById('addWeekStartD').value = ts;
+  document.getElementById('addWeekEndD').value = es;
+  document.getElementById('addWeekModalD').style.display = 'flex';
+  document.getElementById('addWeekStartD').addEventListener('change', function() {
+    const s = new Date(this.value + 'T12:00:00'); if (isNaN(s)) return;
+    s.setDate(s.getDate() + 6);
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('addWeekEndD').value = s.getFullYear() + '-' + pad(s.getMonth()+1) + '-' + pad(s.getDate());
+  }, { once: true });
+}
+function saveNewWeekD() {
+  const name  = document.getElementById('addWeekNameD').value.trim();
+  const start = document.getElementById('addWeekStartD').value;
+  const end   = document.getElementById('addWeekEndD').value;
+  if (!start || !end) { showToast('Set a start and end date'); return; }
+  if (start > end)    { showToast('End date must be after start'); return; }
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], customWeeks:[] };
+  if (!v4.customWeeks) v4.customWeeks = [];
+  const id = genId('c');
+  v4.customWeeks.push({ id, label:'Custom', num:'—', start, end, name, enc: DEFAULT_ENC });
+  ss4(v4);
+  document.getElementById('addWeekModalD').style.display = 'none';
+  refreshAW();
+  const del = new Set(v4.deletedWeeks || []);
+  const merged = [...WEEKS.filter(w => !del.has(w.id)), ...v4.customWeeks].sort((a,b) => a.start.localeCompare(b.start));
+  const pos = merged.findIndex(w => w.id === id);
+  if (pos >= 0) {
+    const lbl = 'Week ' + (pos + 1);
+    const aw = AW.find(w => w.id === id);
+    if (aw) { aw.label = lbl; aw.num = String(pos + 1); }
+    v4.customWeeks = v4.customWeeks.map(cw => cw.id === id ? { ...cw, label:lbl, num:String(pos+1) } : cw);
+    ss4(v4);
+  }
+  buildTimeline();
+  EI = 0; renderD(id);
+  showToast('Week added ✦');
+}
+</script>
+
 </body>
 </html>
