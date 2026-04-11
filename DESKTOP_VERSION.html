@@ -108,7 +108,7 @@
       overflow-y: auto;
     }
     .enc-block { background: #b2c0f9; padding: 24px 22px; border-left: 3px solid var(--orange); }
-    .enc-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+    .enc-icon { font-size: 22px; margin-bottom: 8px; display: block; color: #eefbd1; }
     .enc-title { font-weight: 800; font-size: 15px; color: var(--ink); display: block; margin-bottom: 4px; }
     .enc-body  { font-size: 12px; color: rgba(0,0,0,0.65); line-height: 1.5; }
     .enc-row   { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -905,7 +905,8 @@ function renderD(weekId) {
   document.getElementById('ringND').textContent = done;
   document.getElementById('ringDD').textContent = 'of ' + total;
 
-  if (done === 0) { document.getElementById('progH').textContent = "Let's go."; document.getElementById('progS').textContent = "Click a task to check it off."; }
+  if (done === 0 && total === 0) { document.getElementById('progH').textContent = "Your week."; document.getElementById('progS').textContent = ""; }
+  else if (done === 0) { document.getElementById('progH').textContent = "Let's get into it."; document.getElementById('progS').textContent = `${total} thing${total===1?'':'s'} this week.`; }
   else if (done === total) { document.getElementById('progH').textContent = "Week complete."; document.getElementById('progS').textContent = "All of it. Every single thing."; }
   else { document.getElementById('progH').textContent = `${done} of ${total} done.`; document.getElementById('progS').textContent = `${left} left.`; }
 
