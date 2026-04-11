@@ -1,6 +1,6 @@
 {
-  "name": "Best Case Year · AKQ",
-  "short_name": "BCY Tracker",
+  "name": "AKQ HQ App",
+  "short_name": "AKQ HQ",
   "description": "Week-by-week personal tracker + Idea Bank with Notion sync",
   "start_url": "./",
   "display": "standalone",
