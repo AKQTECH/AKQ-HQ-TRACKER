@@ -872,6 +872,7 @@ function render(weekId) {
   CW = weekId;
   _currentWeekId = weekId;
   const w = getWeek(weekId);
+  if (!w) { console.warn('render: week not found', weekId); return; }
   const items = getItems(weekId);
   const done = items.filter(it => it.done).length;
   const total = items.length;
@@ -1158,29 +1159,38 @@ function exportData() {
 function importData(event) {
   const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
+  reader.onerror = () => alert("File read failed — try exporting again.");
   reader.onload = (e) => {
+    // Step 1: Parse JSON — isolated so parse errors don't hide other bugs
+    let data;
     try {
-      const data = JSON.parse(e.target.result);
-      if (data.version === '4' && data.state) {
-        ss4(data.state);
-      } else if (data.version === '1' || data.tasks !== undefined) {
-        const v4m = { weekThemes:{}, weeks:{} };
-        WEEKS.forEach(w => {
-          const bDone = ((data.tasks||{})[w.id]||{}); const bNotes = ((data.notes||{})[w.id]||{}); const v3C = ((data.customTasks||{})[w.id]||[]);
-          v4m.weeks[w.id] = { items: [
-            ...w.tasks.map((t,i)=>({id:`${w.id}_b_${i}`,text:t.text,cat:t.cat,done:!!bDone[i],note:bNotes[i]||'',builtin:true,originWeek:null,originWeekLabel:null})),
-            ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false,originWeek:null,originWeekLabel:null}))
-          ]};
-        });
-        ss4(v4m);
-      } else { alert("This doesn't look like an AKQ HQ file."); return; }
-      initV4();
-      refreshAW();
-      buildTimeline();
-      render(autoWeekId());
-      const banner = document.getElementById('importSuccess'); banner.style.display = 'block';
-      setTimeout(() => banner.style.display = 'none', 3000);
-    } catch { alert("Couldn't read that file."); }
+      const raw = (e.target.result || '').replace(/^\uFEFF/, ''); // strip BOM
+      data = JSON.parse(raw);
+    } catch {
+      alert("Couldn't read that file — it may be corrupted. Try exporting a fresh copy.");
+      return;
+    }
+    // Step 2: Validate format
+    if (data.version === '4' && data.state) {
+      ss4(data.state);
+    } else if (data.version === '1' || data.tasks !== undefined) {
+      const v4m = { weekThemes:{}, weeks:{} };
+      WEEKS.forEach(w => {
+        const bDone = ((data.tasks||{})[w.id]||{}); const bNotes = ((data.notes||{})[w.id]||{}); const v3C = ((data.customTasks||{})[w.id]||[]);
+        v4m.weeks[w.id] = { items: [
+          ...w.tasks.map((t,i)=>({id:`${w.id}_b_${i}`,text:t.text,cat:t.cat,done:!!bDone[i],note:bNotes[i]||'',builtin:true,originWeek:null,originWeekLabel:null})),
+          ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false,originWeek:null,originWeekLabel:null}))
+        ]};
+      });
+      ss4(v4m);
+    } else { alert("This doesn't look like an AKQ HQ file."); return; }
+    // Step 3: Refresh app state (outside parse try/catch — errors here are real bugs)
+    initV4();
+    refreshAW();
+    buildTimeline();
+    render(autoWeekId());
+    const banner = document.getElementById('importSuccess'); banner.style.display = 'block';
+    setTimeout(() => banner.style.display = 'none', 3000);
   };
   reader.readAsText(file); event.target.value = '';
 }
