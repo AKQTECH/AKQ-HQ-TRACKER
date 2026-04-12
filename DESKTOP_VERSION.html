@@ -1250,7 +1250,10 @@ function importDataD(event) {
         });
         ss4(v4m);
       } else { alert("Doesn't look like an AKQ HQ file."); return; }
-      renderD(CW);
+      initV4();
+      refreshAW();
+      buildTimeline();
+      renderD(autoWeek());
       const ok = document.getElementById('importOkD'); ok.style.display='block'; setTimeout(()=>ok.style.display='none',3000);
     } catch { alert("Couldn't read that file."); }
   };
