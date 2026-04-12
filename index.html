@@ -883,7 +883,14 @@ function render(weekId) {
   // Hero
   document.getElementById('heroNum').textContent = 'Week ' + w.num;
   const theme = getWeekTheme(weekId) || w.name;
-  document.getElementById('heroPhase').textContent = theme;
+  const heroPhaseEl = document.getElementById('heroPhase');
+  if (theme) {
+    heroPhaseEl.textContent = theme;
+    heroPhaseEl.style.opacity = '1';
+  } else {
+    heroPhaseEl.textContent = 'name this week →';
+    heroPhaseEl.style.opacity = '0.35';
+  }
   document.getElementById('heroDates').textContent = fmtRange(w.start, w.end);
   document.getElementById('heroPill').textContent = `${done} of ${total} done`;
 
@@ -1043,7 +1050,8 @@ document.getElementById('addInput').addEventListener('keydown', e => { if (e.key
 function startEditTheme() {
   const ph = document.getElementById('heroPhase');
   const inp = document.getElementById('heroPhaseInput');
-  inp.value = ph.textContent;
+  // Use actual saved theme, not display text (which may be a placeholder)
+  inp.value = getWeekTheme(CW) || '';
   ph.style.display = 'none'; inp.style.display = 'block'; inp.focus(); inp.select();
 }
 function saveEditTheme() {
@@ -1143,8 +1151,9 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const now = new Date(), p = n => String(n).padStart(2,'0');
   const fname = `AKQ_HQ_${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}_${p(now.getHours())}-${p(now.getMinutes())}.json`;
-  const a = document.createElement('a'); a.href = url; a.download = fname; a.click();
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
 }
 function importData(event) {
   const file = event.target.files[0]; if (!file) return;

@@ -895,7 +895,14 @@ function renderD(weekId) {
   // Header
   document.getElementById('weekNum').textContent = 'Week ' + w.num;
   const theme = getWeekTheme(weekId) || w.name;
-  document.getElementById('weekPhase').textContent = theme;
+  const weekPhaseEl = document.getElementById('weekPhase');
+  if (theme) {
+    weekPhaseEl.textContent = theme;
+    weekPhaseEl.style.opacity = '1';
+  } else {
+    weekPhaseEl.textContent = 'name this week →';
+    weekPhaseEl.style.opacity = '0.35';
+  }
   document.getElementById('weekDates').textContent = fmtR(w.start, w.end);
   document.getElementById('topPill').textContent = `${done} of ${total} done`;
 
@@ -1101,7 +1108,8 @@ document.getElementById('addInputD').addEventListener('keydown', e => { if (e.ke
 function startEditTheme() {
   const ph = document.getElementById('weekPhase');
   const inp = document.getElementById('weekPhaseInput');
-  inp.value = ph.textContent;
+  // Use actual saved theme, not display text (which may be a placeholder)
+  inp.value = getWeekTheme(CW) || '';
   ph.style.display = 'none';
   inp.style.display = 'block';
   inp.focus(); inp.select();
@@ -1225,8 +1233,9 @@ function exportDataD() {
   const url = URL.createObjectURL(blob);
   const now = new Date(), p = n => String(n).padStart(2,'0');
   const fname = `AKQ_HQ_${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}_${p(now.getHours())}-${p(now.getMinutes())}.json`;
-  const a = document.createElement('a'); a.href = url; a.download = fname; a.click();
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
 }
 function importDataD(event) {
   const file = event.target.files[0]; if (!file) return;
