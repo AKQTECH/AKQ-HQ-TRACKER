@@ -1,56 +1,50 @@
-const CACHE_NAME = 'bcy-v2';
-const urlsToCache = [
+// ─── AKQ HQ SERVICE WORKER ────────────────────────────────────────────────────
+// Bump this version string every deploy to force cache refresh on all devices.
+const VERSION = 'akq-hq-v3';
+
+const ASSETS = [
   './',
   './index.html',
-  './DESKTOP_VERSION.html',
   './manifest.json',
   './icon.jpg'
 ];
 
-// Install — cache core files
-self.addEventListener('install', function(event) {
+// ─── INSTALL: cache all app assets ────────────────────────────────────────────
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(VERSION).then(cache => cache.addAll(ASSETS))
   );
+  // Take over immediately — don't wait for old tabs to close
   self.skipWaiting();
 });
 
-// Activate — clear old caches
-self.addEventListener('activate', function(event) {
+// ─── ACTIVATE: delete any old caches ──────────────────────────────────────────
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(function(names) {
-      return Promise.all(
-        names.filter(function(name) { return name !== CACHE_NAME; })
-             .map(function(name) { return caches.delete(name); })
-      );
-    })
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k)))
+    )
   );
+  // Claim all open tabs right away
   self.clients.claim();
 });
 
-// Fetch — network first for HTML/API, cache fallback for assets
-self.addEventListener('fetch', function(event) {
-  // Never cache Notion API or CORS proxy calls
-  if (event.request.url.includes('corsproxy.io') || event.request.url.includes('api.notion.com')) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
+// ─── FETCH: cache-first, fall back to network ─────────────────────────────────
+self.addEventListener('fetch', event => {
+  // Only handle same-origin requests
+  if (!event.request.url.startsWith(self.location.origin)) return;
 
-  // Network first, fall back to cache
   event.respondWith(
-    fetch(event.request).then(function(response) {
-      // Update cache with fresh version
-      if (response.status === 200) {
-        var responseClone = response.clone();
-        caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(event.request, responseClone);
-        });
-      }
-      return response;
-    }).catch(function() {
-      return caches.match(event.request);
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+      return fetch(event.request).then(response => {
+        // Cache successful GET responses
+        if (event.request.method === 'GET' && response.status === 200) {
+          const clone = response.clone();
+          caches.open(VERSION).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      });
     })
   );
 });
