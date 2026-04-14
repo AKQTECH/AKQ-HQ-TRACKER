@@ -100,7 +100,7 @@
     .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: var(--blush); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
-    .origin-badge { display: inline-block; background: var(--orange); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: var(--orange); color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Task action controls */
     .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
@@ -217,6 +217,9 @@
     .ydt-task-text { font-size: 13px; color: var(--ink); line-height: 1.4; }
     .ydt-empty { text-align: center; padding: 50px 20px; }
     .ydt-empty-serif { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #7A4A6A; line-height: 1.6; }
+    .ydt-section { margin-bottom: 36px; }
+    .ydt-section-title { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 16px; color: var(--hot); letter-spacing: -0.01em; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--blush); display: flex; align-items: center; gap: 6px; }
+    .ydt-section-title--past { font-size: 10px; font-weight: 700; color: rgba(0,0,0,0.3); letter-spacing: 0.18em; text-transform: uppercase; border-bottom-color: rgba(0,0,0,0.06); }
 
     /* ── DONE BANNER ── */
     .done-banner { display: none; background: var(--hot); color: #f6d0f6; text-align: center; padding: 14px 22px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
@@ -914,15 +917,14 @@ function render(weekId) {
   // Tasks
   const tl = document.getElementById('taskList');
   tl.innerHTML = '';
-  items.forEach(item => {
+  items.filter(it => !it.done).forEach(item => {
     const li = document.createElement('li');
-    li.className = 'task-row' + (item.done ? ' done' : '');
+    li.className = 'task-row';
 
     let originHTML = item.originWeekLabel ? `<span class="origin-badge">from ${esc(item.originWeekLabel)}</span>` : '';
-    let noteHTML = '';
-    if (!item.done) noteHTML += `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '📝 update status →' : '+ add status note'}</button>`;
+    let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '📝 update status →' : '+ add status note'}</button>`;
     if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
-    let carryHTML = (!item.done && hasNextWeek) ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
+    let carryHTML = hasNextWeek ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
 
     li.innerHTML = `
       <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
@@ -1124,24 +1126,70 @@ function buildYouDidThat() {
   const container = document.getElementById('ydtContent');
   container.innerHTML = '';
   let totalDone = 0, hasAny = false;
+  const currentWId = autoWeekId();
+  const thisWeekItems = [];  // done items from the current week
+  const pastWeeks = [];      // { w, items } for all other weeks
+
   AW.forEach(w => {
     const items = getItems(w.id).filter(it => it.done);
     if (!items.length) return;
     hasAny = true; totalDone += items.length;
-    const group = document.createElement('div');
-    group.className = 'ydt-week-group';
-    const theme = getWeekTheme(w.id) || w.name;
-    group.innerHTML = `<span class="ydt-week-label">${esc(w.label)} — ${esc(theme)}</span>`;
-    items.forEach(item => {
+    if (w.id === currentWId) {
+      thisWeekItems.push(...items.map(it => ({ ...it, _wid: w.id })));
+    } else {
+      pastWeeks.push({ w, items });
+    }
+  });
+
+  // ── "Crushed it this week" section ──
+  if (thisWeekItems.length) {
+    const section = document.createElement('div');
+    section.className = 'ydt-section';
+    section.innerHTML = `<div class="ydt-section-title">✦ Crushed it this week</div>`;
+    thisWeekItems.forEach(item => {
       const row = document.createElement('div');
       row.className = 'ydt-task-item';
-      row.innerHTML = `<div class="ydt-check">✓</div><span class="ydt-task-text">${esc(item.text)}</span>`;
-      group.appendChild(row);
+      row.innerHTML = `<div class="ydt-check" style="cursor:pointer;" title="Tap to undo" onclick="ydtUncheck('${esc(item._wid)}','${esc(item.id)}')">✓</div><span class="ydt-task-text">${esc(item.text)}</span>`;
+      section.appendChild(row);
     });
-    container.appendChild(group);
-  });
+    container.appendChild(section);
+  }
+
+  // ── "Everything else" section ──
+  if (pastWeeks.length) {
+    const section = document.createElement('div');
+    section.className = 'ydt-section';
+    if (thisWeekItems.length) {
+      section.innerHTML = `<div class="ydt-section-title ydt-section-title--past">Everything else</div>`;
+    }
+    pastWeeks.forEach(({ w, items }) => {
+      const group = document.createElement('div');
+      group.className = 'ydt-week-group';
+      const theme = getWeekTheme(w.id) || w.name;
+      group.innerHTML = `<span class="ydt-week-label">${esc(w.label)} — ${esc(theme)}</span>`;
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'ydt-task-item';
+        row.innerHTML = `<div class="ydt-check" style="cursor:pointer;" title="Tap to undo" onclick="ydtUncheck('${esc(w.id)}','${esc(item.id)}')">✓</div><span class="ydt-task-text">${esc(item.text)}</span>`;
+        group.appendChild(row);
+      });
+      section.appendChild(group);
+    });
+    container.appendChild(section);
+  }
+
   document.getElementById('ydtCount').textContent = `${totalDone} task${totalDone===1?'':'s'} complete`;
   if (!hasAny) container.innerHTML = '<div class="ydt-empty"><div class="ydt-empty-serif">Nothing yet — but the moment you check something off, it lives here forever.</div></div>';
+}
+function ydtUncheck(weekId, itemId) {
+  const items = getItems(weekId);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  item.done = false;
+  delete item.completedAt;
+  saveItems(weekId, items);
+  buildYouDidThat();
+  if (CW) render(CW); // re-render the currently displayed week, not the item's week
 }
 
 // ─── EXPORT / IMPORT ──────────────────────────────────────────────────────────
