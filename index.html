@@ -83,6 +83,7 @@
     .enc-text  { flex: 1; }
     .enc-title { font-weight: 800; font-size: 15px; color: var(--ink); display: block; margin-bottom: 3px; }
     .enc-body  { font-size: 13px; color: rgba(0,0,0,0.65); line-height: 1.5; }
+    .enc-attr  { font-size: 11px; color: rgba(0,0,0,0.45); font-style: italic; display: block; margin-top: 5px; }
     .enc-refresh { background: none; border: none; color: rgba(0,0,0,0.35); font-size: 20px; cursor: pointer; flex-shrink: 0; padding: 0; transition: color 0.2s; }
     .enc-refresh:active { color: var(--ink); }
 
@@ -100,7 +101,40 @@
     .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: var(--blush); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
-    .origin-badge { display: inline-block; background: var(--orange); color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+
+    /* Down the Line section */
+    .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
+    .dtl-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
+    .dtl-label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hot); }
+    .dtl-count-badge { background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: none; }
+    .dtl-toggle-indicator { font-size: 13px; color: rgba(0,0,0,0.35); margin-left: 6px; }
+    .dtl-body { padding: 0 20px 16px; }
+    .dtl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .dtl-item:last-of-type { border-bottom: none; }
+    .dtl-text { flex: 1; min-width: 0; }
+    .dtl-task-text { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+    .dtl-blocker { font-size: 11px; color: rgba(0,0,0,0.5); font-style: italic; margin-top: 3px; }
+    .dtl-item-actions { display: flex; gap: 5px; flex-shrink: 0; align-items: flex-start; padding-top: 2px; }
+    .dtl-activate-btn { background: var(--pink); color: white; border: none; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .dtl-mgmt-btn { background: none; border: none; color: rgba(0,0,0,0.3); font-size: 18px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+    .dtl-add-area { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .dtl-add-input { background: var(--blush); border: 1.5px solid transparent; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink); outline: none; transition: border-color 0.15s; }
+    .dtl-add-input:focus { border-color: #ffadf7; }
+    .dtl-add-input::placeholder { color: rgba(0,0,0,0.35); }
+    .dtl-add-btn { background: #ffadf7; color: var(--hot); border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; align-self: flex-start; }
+    /* Category list in manage-cats modal */
+    .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .cat-list-item:last-child { border-bottom: none; }
+    .cat-list-name { font-size: 14px; font-weight: 600; color: var(--ink); text-transform: capitalize; }
+    .cat-del-btn { background: none; border: none; color: #c0392b; font-size: 14px; cursor: pointer; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+    .modal-lbl-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .modal-lbl-row .modal-lbl { margin-bottom: 0; }
+    .modal-lbl-link { background: none; border: none; color: var(--pink); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; }
+    /* DTL toggle in task modal */
+    .mgmt-dtl-row { display: flex; align-items: center; justify-content: space-between; margin: 4px 0; }
+    .mgmt-dtl-btn { background: var(--blush); color: var(--hot); border: 1.5px solid transparent; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .mgmt-dtl-btn.active { background: #ffadf7; border-color: var(--hot); }
 
     /* Task action controls */
     .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
@@ -190,7 +224,7 @@
     .mbtn-primary   { background: var(--pink); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-primary:active { background: #d9689f; }
     .mbtn-secondary { background: #7A4A6A; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-orange    { background: var(--orange); color: #fff; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-orange    { background: #f2bdd8; color: #eb268f; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-outline   { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger    { background: none; color: #c0392b; border: 1.5px solid #c0392b; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger:active { background: #c0392b; color: white; }
@@ -418,6 +452,7 @@
     <div class="enc-text">
       <strong class="enc-title" id="encTitle">Loading...</strong>
       <span class="enc-body" id="encBody"></span>
+      <span class="enc-attr" id="encAttr"></span>
     </div>
     <button class="enc-refresh" onclick="nextEnc()" title="Another">↻</button>
   </div>
@@ -436,6 +471,23 @@
   <div class="add-row">
     <input class="add-input" id="addInput" type="text" placeholder="Add your own task...">
     <button class="add-btn" onclick="addTask()">+ Add</button>
+  </div>
+  <div class="dtl-section" id="dtlSection">
+    <button class="dtl-header" onclick="toggleDTLPanel()">
+      <span class="dtl-label">Down the Line</span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="dtl-count-badge" id="dtlCountBadge"></span>
+        <span class="dtl-toggle-indicator" id="dtlToggleInd">+</span>
+      </span>
+    </button>
+    <div class="dtl-body" id="dtlBody" style="display:none;">
+      <ul class="row-list" id="dtlList" style="margin-bottom:0;"></ul>
+      <div class="dtl-add-area">
+        <input class="dtl-add-input" id="dtlAddText" type="text" placeholder="What needs to wait...">
+        <input class="dtl-add-input" id="dtlAddBlocker" type="text" placeholder="Need X first... (optional)">
+        <button class="dtl-add-btn" onclick="addDTLTask()">+ Add to Down the Line</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -514,25 +566,20 @@
     <div class="modal-sub" id="taskMgmtSub">—</div>
     <span class="modal-lbl">Task text</span>
     <input class="modal-input" id="taskMgmtText" type="text" placeholder="Task description...">
-    <span class="modal-lbl">Category</span>
-    <select class="modal-select" id="taskMgmtCat">
-      <option value="admin">Admin</option>
-      <option value="writing">Writing</option>
-      <option value="health">Health</option>
-      <option value="wellness">Wellness</option>
-      <option value="legal">Legal</option>
-      <option value="finance">Finance</option>
-      <option value="comms">Comms</option>
-      <option value="career">Career</option>
-      <option value="self-care">Self-Care</option>
-      <option value="spirit">Spirit</option>
-      <option value="social">Social</option>
-      <option value="home">Home</option>
-      <option value="palava">Palava</option>
-      <option value="system">System</option>
-      <option value="standup">Stand-Up</option>
-      <option value="custom">Custom</option>
-    </select>
+    <div class="modal-lbl-row">
+      <span class="modal-lbl">Category</span>
+      <button class="modal-lbl-link" onclick="openCatsModal()">Edit categories</button>
+    </div>
+    <select class="modal-select" id="taskMgmtCat"></select>
+    <div class="modal-divider"></div>
+    <div class="mgmt-dtl-row">
+      <span class="modal-lbl" style="margin-bottom:0;">Down the line?</span>
+      <button class="mgmt-dtl-btn" id="taskMgmtDTLBtn" onclick="toggleMgmtDTL()">No</button>
+    </div>
+    <div id="taskMgmtBlockerRow" style="display:none;margin-top:8px;">
+      <span class="modal-lbl">Need X first (blocker note)</span>
+      <input class="modal-input" id="taskMgmtBlocker" type="text" placeholder="What needs to happen first...">
+    </div>
     <div class="modal-divider"></div>
     <div class="mgmt-reorder">
       <button onclick="mgmtMoveUp()">↑ Move Up</button>
@@ -549,6 +596,22 @@
       </div>
       <button class="mbtn-danger" onclick="mgmtDelete()">Delete this task</button>
       <button class="mbtn-ghost" onclick="closeModal('taskMgmtModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES MODAL -->
+<div class="overlay" id="catsModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Manage Categories</div>
+    <ul id="catsList" style="list-style:none;margin:0 0 14px;padding:0;max-height:260px;overflow-y:auto;"></ul>
+    <div style="display:flex;gap:8px;margin-bottom:4px;">
+      <input class="modal-input" id="catNewInput" type="text" placeholder="New category name..." style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')addCat()">
+      <button class="mbtn-primary" onclick="addCat()" style="white-space:nowrap;padding:12px 14px;">Add</button>
+    </div>
+    <div class="modal-acts">
+      <button class="mbtn-primary" onclick="closeCatsModal()">Done</button>
     </div>
   </div>
 </div>
@@ -651,8 +714,17 @@
 // ─── WEEKS DATA ───────────────────────────────────────────────────────────────
 const DEFAULT_ENC = [
   {icon:"✦",t:"This week is yours to define.",b:"Name it, own it. What gets done this week builds toward what comes next."},
-  {icon:"🌅",t:"Show up, even when it's small.",b:"The version of you you're becoming is built in weeks exactly like this one."},
-  {icon:"✍️",t:"Tap the week name above to give this week a theme.",b:"A named week has intention. An intentioned week gets things done."}
+  {icon:"✦",t:"Show up, even when it's small.",b:"The version of you you're becoming is built in weeks exactly like this one."},
+  {icon:"✦",t:"Tap the week name above to give this week a theme.",b:"A named week has intention. An intentioned week gets things done."},
+  {icon:"✦",t:"Your perfectionism exists to help you.",b:"\"What if your perfectionism exists to help you? Perfectionism does not have to be a struggle. You do not have to stop being a perfectionist to be healthy.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"An excellent servant. A terrible master.",b:"\"Perfectionism makes an excellent servant and a terrible master.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"You are not the problem.",b:"\"Your problem is not that you're a perfectionist. Your problem is that you're not being your full self.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Some gifts feel like a burden first.",b:"\"Some gifts feel like a burden until you understand how they can serve you.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Acknowledging more is boldness.",b:"\"Acknowledging that you want more is an act of boldness.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Not talent. Persistence.",b:"\"It's not mere talent that rises to the top, it's persistence.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Not changing is a deeper loss.",b:"\"While change does always involve loss, not changing involves a much deeper loss.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Champions of possibility.",b:"\"We need messy perfectionists in the world; they are the champions of possibility.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Obedient is not the same as healthy.",b:"\"Subscribing to prepackaged notions of balance and generic wellness when they don't fit who you are isn't being healthy, it's being obedient.\"",attr:"— Katherine Morgan Schafler"}
 ];
 
 const BCY_PLAN = {
@@ -816,10 +888,15 @@ function toggleItemDone(weekId, itemId, x, y) {
   saveItems(weekId, items); render(weekId);
 }
 function deleteItem(weekId, itemId) { saveItems(weekId, getItems(weekId).filter(it => it.id !== itemId)); }
-function editItem(weekId, itemId, text, cat) {
+function editItem(weekId, itemId, text, cat, dtl, blocker) {
   const items = getItems(weekId);
   const item = items.find(it => it.id === itemId);
-  if (item) { item.text = text; item.cat = cat; }
+  if (item) {
+    item.text = text; item.cat = cat;
+    if (dtl !== undefined) item.dtl = !!dtl;
+    if (dtl) item.blocker = blocker || '';
+    else delete item.blocker;
+  }
   saveItems(weekId, items);
 }
 function moveItemUp(weekId, itemId) {
@@ -877,8 +954,9 @@ function render(weekId) {
   const w = getWeek(weekId);
   if (!w) { console.warn('render: week not found', weekId); return; }
   const items = getItems(weekId);
-  const done = items.filter(it => it.done).length;
-  const total = items.length;
+  const activeItems = items.filter(it => !it.dtl);
+  const done = activeItems.filter(it => it.done).length;
+  const total = activeItems.length;
   const left = total - done;
   const pct = total > 0 ? done/total : 0;
   const wIdx = AW.findIndex(wk => wk.id === weekId);
@@ -917,11 +995,11 @@ function render(weekId) {
   // Tasks
   const tl = document.getElementById('taskList');
   tl.innerHTML = '';
-  items.filter(it => !it.done).forEach(item => {
+  items.filter(it => !it.done && !it.dtl).forEach(item => {
     const li = document.createElement('li');
     li.className = 'task-row';
 
-    let originHTML = item.originWeekLabel ? `<span class="origin-badge">from ${esc(item.originWeekLabel)}</span>` : '';
+    let originHTML = item.originWeekLabel ? `<span class="origin-badge">from previous week</span>` : '';
     let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '📝 update status →' : '+ add status note'}</button>`;
     if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
     let carryHTML = hasNextWeek ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
@@ -940,6 +1018,9 @@ function render(weekId) {
       </div>`;
     tl.appendChild(li);
   });
+
+  // Down the Line section
+  renderDTL(weekId);
 
   // Practices (editable)
   renderPracticesDisplay(getCurrentPractices(w));
@@ -972,6 +1053,8 @@ function renderEnc(w) {
   document.getElementById('encIcon').innerHTML = '<span style="color:#eefbd1;">✦</span>';
   document.getElementById('encTitle').textContent = item.t;
   document.getElementById('encBody').textContent = item.b;
+  const attrEl = document.getElementById('encAttr');
+  if (attrEl) { attrEl.textContent = item.attr || ''; attrEl.style.display = item.attr ? 'block' : 'none'; }
 }
 function nextEnc() { EI = (EI+1) % getWeek(CW).enc.length; renderEnc(getWeek(CW)); }
 
@@ -1010,7 +1093,16 @@ function openTaskMgmt(itemId, e) {
   if (!item) return;
   document.getElementById('taskMgmtSub').textContent = item.text.length > 60 ? item.text.slice(0,58)+'…' : item.text;
   document.getElementById('taskMgmtText').value = item.text;
-  document.getElementById('taskMgmtCat').value = item.cat || 'custom';
+  buildCatSelect('taskMgmtCat', item.cat || 'custom');
+  // DTL state
+  const isDTL = !!item.dtl;
+  const dtlBtn = document.getElementById('taskMgmtDTLBtn');
+  const blockerRow = document.getElementById('taskMgmtBlockerRow');
+  dtlBtn.textContent = isDTL ? 'Yes' : 'No';
+  dtlBtn.dataset.dtl = isDTL ? 'true' : 'false';
+  dtlBtn.classList.toggle('active', isDTL);
+  blockerRow.style.display = isDTL ? 'block' : 'none';
+  document.getElementById('taskMgmtBlocker').value = item.blocker || '';
   const sel = document.getElementById('taskReschedSel');
   sel.innerHTML = '<option value="">— pick a week —</option>';
   AW.forEach(w => { if (w.id !== CW) { const o = document.createElement('option'); o.value = w.id; o.textContent = `${w.label}: ${w.name || 'Unnamed'}`; sel.appendChild(o); } });
@@ -1021,7 +1113,9 @@ function mgmtSave() {
   const text = document.getElementById('taskMgmtText').value.trim();
   const cat  = document.getElementById('taskMgmtCat').value;
   if (!text) { document.getElementById('taskMgmtText').style.borderColor = 'var(--hot)'; return; }
-  editItem(CW, MGMT_ID, text, cat);
+  const isDTL = document.getElementById('taskMgmtDTLBtn').dataset.dtl === 'true';
+  const blocker = isDTL ? document.getElementById('taskMgmtBlocker').value.trim() : '';
+  editItem(CW, MGMT_ID, text, cat, isDTL, blocker);
   const toWeek = document.getElementById('taskReschedSel').value;
   if (toWeek) { rescheduleItem(CW, MGMT_ID, toWeek); }
   closeModal('taskMgmtModal'); render(CW);
@@ -1040,6 +1134,116 @@ function mgmtDelete() {
   deleteItem(CW, MGMT_ID); closeModal('taskMgmtModal'); render(CW);
 }
 function handleCarry(itemId, e) { e.stopPropagation(); carryForward(CW, itemId); render(CW); }
+
+// ─── CATEGORY MANAGEMENT ──────────────────────────────────────────────────────
+const DEFAULT_CATS = ['admin','writing','health','wellness','legal','finance','comms','career','self-care','spirit','social','home','palava','system','standup','custom'];
+function getCats() { try { const c = localStorage.getItem('bcy_cats'); return c ? JSON.parse(c) : [...DEFAULT_CATS]; } catch(e) { return [...DEFAULT_CATS]; } }
+function saveCats(cats) { try { localStorage.setItem('bcy_cats', JSON.stringify(cats)); } catch(e) {} }
+function buildCatSelect(selId, currentVal) {
+  const sel = document.getElementById(selId);
+  if (!sel) return;
+  sel.innerHTML = '';
+  getCats().forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g,' ');
+    sel.appendChild(o);
+  });
+  if (currentVal) sel.value = currentVal;
+}
+function openCatsModal() {
+  renderCatsList();
+  document.getElementById('catsModal').classList.add('open');
+}
+function closeCatsModal() {
+  closeModal('catsModal');
+  const currentCat = document.getElementById('taskMgmtCat')?.value;
+  buildCatSelect('taskMgmtCat', currentCat);
+}
+function renderCatsList() {
+  const ul = document.getElementById('catsList');
+  if (!ul) return;
+  ul.innerHTML = '';
+  getCats().forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'cat-list-item';
+    li.innerHTML = `<span class="cat-list-name">${esc(cat.replace(/-/g,' '))}</span><button class="cat-del-btn" onclick="deleteCat('${esc(cat)}')">✕</button>`;
+    ul.appendChild(li);
+  });
+}
+function addCat() {
+  const input = document.getElementById('catNewInput');
+  const val = input.value.trim().toLowerCase().replace(/\s+/g, '-');
+  if (!val) { input.style.borderColor = 'var(--hot)'; return; }
+  input.style.borderColor = '';
+  const cats = getCats();
+  if (!cats.includes(val)) { cats.push(val); saveCats(cats); }
+  input.value = ''; renderCatsList();
+}
+function deleteCat(cat) {
+  const cats = getCats().filter(c => c !== cat);
+  saveCats(cats); renderCatsList();
+}
+
+// ─── DOWN THE LINE ────────────────────────────────────────────────────────────
+let DTL_OPEN = false;
+function toggleDTLPanel() {
+  DTL_OPEN = !DTL_OPEN;
+  document.getElementById('dtlBody').style.display = DTL_OPEN ? 'block' : 'none';
+  document.getElementById('dtlToggleInd').textContent = DTL_OPEN ? '−' : '+';
+}
+function renderDTL(weekId) {
+  const dtlItems = getItems(weekId).filter(it => it.dtl && !it.done);
+  const badge = document.getElementById('dtlCountBadge');
+  if (badge) { badge.textContent = dtlItems.length; badge.style.display = dtlItems.length > 0 ? 'inline-block' : 'none'; }
+  const list = document.getElementById('dtlList');
+  if (!list) return;
+  list.innerHTML = '';
+  dtlItems.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'dtl-item';
+    const catBadge = item.cat ? `<span class="task-cat" style="margin-top:4px;">${esc(item.cat)}</span>` : '';
+    const blockerEl = item.blocker ? `<div class="dtl-blocker">Need: ${esc(item.blocker)}</div>` : '';
+    li.innerHTML = `
+      <div class="dtl-text">
+        <div class="dtl-task-text">${esc(item.text)}</div>
+        ${catBadge}${blockerEl}
+      </div>
+      <div class="dtl-item-actions">
+        <button class="dtl-activate-btn" onclick="activateDTLItem('${esc(item.id)}')">Move to active</button>
+        <button class="dtl-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
+      </div>`;
+    list.appendChild(li);
+  });
+}
+function addDTLTask() {
+  const textInput = document.getElementById('dtlAddText');
+  const blockerInput = document.getElementById('dtlAddBlocker');
+  const text = textInput.value.trim();
+  if (!text) { textInput.style.borderColor = 'var(--hot)'; return; }
+  textInput.style.borderColor = 'transparent';
+  const items = getItems(CW);
+  items.push({ id: genId(CW+'_d'), text, cat: 'custom', done: false, note: '', blocker: blockerInput.value.trim(), dtl: true, builtin: false, originWeek: null, originWeekLabel: null });
+  saveItems(CW, items);
+  textInput.value = ''; blockerInput.value = '';
+  renderDTL(CW);
+}
+function activateDTLItem(itemId) {
+  const items = getItems(CW);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  item.dtl = false; delete item.blocker;
+  saveItems(CW, items); render(CW);
+}
+function toggleMgmtDTL() {
+  const btn = document.getElementById('taskMgmtDTLBtn');
+  const row = document.getElementById('taskMgmtBlockerRow');
+  const isDTL = btn.dataset.dtl === 'true';
+  const nowDTL = !isDTL;
+  btn.dataset.dtl = nowDTL ? 'true' : 'false';
+  btn.textContent = nowDTL ? 'Yes' : 'No';
+  btn.classList.toggle('active', nowDTL);
+  row.style.display = nowDTL ? 'block' : 'none';
+}
 
 // ─── ADD TASK ─────────────────────────────────────────────────────────────────
 function addTask() {

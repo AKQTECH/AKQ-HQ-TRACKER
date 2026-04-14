@@ -111,6 +111,7 @@
     .enc-icon { font-size: 22px; margin-bottom: 8px; display: block; color: #eefbd1; }
     .enc-title { font-weight: 800; font-size: 15px; color: var(--ink); display: block; margin-bottom: 4px; }
     .enc-body  { font-size: 12px; color: rgba(0,0,0,0.65); line-height: 1.5; }
+    .enc-attr  { font-size: 11px; color: rgba(0,0,0,0.45); font-style: italic; display: block; margin-top: 5px; }
     .enc-row   { display: flex; justify-content: space-between; align-items: flex-start; }
     .enc-refresh { background: none; border: none; color: rgba(0,0,0,0.35); font-size: 18px; cursor: pointer; padding: 0; flex-shrink: 0; transition: color 0.2s; }
     .enc-refresh:hover { color: var(--ink); }
@@ -179,7 +180,7 @@
     .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: var(--blush); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 3px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 5px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 10px; display: inline-block; }
-    .origin-badge { display: inline-block; background: var(--orange); color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Task actions */
     .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; opacity: 0; transition: opacity 0.15s; }
@@ -197,6 +198,31 @@
       border-radius: 6px; transition: all 0.15s; line-height: 1;
     }
     .task-mgmt-btn:hover { background: var(--blush); color: var(--ink); }
+
+    /* Down the Line section */
+    .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
+    .dtl-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 36px; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
+    .dtl-label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hot); }
+    .dtl-count-badge { background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: none; }
+    .dtl-toggle-indicator { font-size: 13px; color: rgba(0,0,0,0.35); margin-left: 6px; }
+    .dtl-body { padding: 0 36px 16px; }
+    .dtl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .dtl-item:last-of-type { border-bottom: none; }
+    .dtl-text { flex: 1; min-width: 0; }
+    .dtl-task-text { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+    .dtl-blocker { font-size: 11px; color: rgba(0,0,0,0.5); font-style: italic; margin-top: 3px; }
+    .dtl-item-actions { display: flex; gap: 5px; flex-shrink: 0; align-items: flex-start; padding-top: 2px; }
+    .dtl-activate-btn { background: var(--pink); color: white; border: none; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .dtl-mgmt-btn { background: none; border: none; color: rgba(0,0,0,0.3); font-size: 16px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+    .dtl-add-area { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .dtl-add-input { background: var(--off); border: 1.5px solid transparent; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink); outline: none; transition: border-color 0.15s; }
+    .dtl-add-input:focus { border-color: #ffadf7; }
+    .dtl-add-input::placeholder { color: rgba(0,0,0,0.35); }
+    .dtl-add-btn { background: #ffadf7; color: var(--hot); border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; align-self: flex-start; }
+    /* DTL toggle in task modal */
+    .mgmt-dtl-row { display: flex; align-items: center; justify-content: space-between; margin: 4px 0; }
+    .mgmt-dtl-btn { background: var(--blush); color: var(--hot); border: 1.5px solid transparent; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .mgmt-dtl-btn.active { background: #ffadf7; border-color: var(--hot); }
 
     /* Add task */
     .add-row { display: flex; gap: 10px; padding: 14px 36px; background: var(--off); border-top: 1.5px solid var(--blush); }
@@ -240,6 +266,13 @@
     .modal-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px; color: var(--ink); margin-bottom: 4px; }
     .modal-sub { font-size: 13px; color: #888; margin-bottom: 20px; font-style: italic; line-height: 1.4; }
     .modal-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hot); margin-bottom: 8px; display: block; }
+    .modal-lbl-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .modal-lbl-row .modal-lbl { margin-bottom: 0; }
+    .modal-lbl-link { background: none; border: none; color: var(--pink); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; }
+    .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .cat-list-item:last-child { border-bottom: none; }
+    .cat-list-name { font-size: 14px; font-weight: 600; color: var(--ink); text-transform: capitalize; }
+    .cat-del-btn { background: none; border: none; color: #c0392b; font-size: 14px; cursor: pointer; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
     .modal-ta { width: 100%; border: 1.5px solid var(--blush); border-radius: 12px; padding: 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); resize: none; outline: none; margin-bottom: 16px; min-height: 100px; line-height: 1.5; transition: border-color 0.2s; }
     .modal-ta:focus { border-color: var(--hot); }
     .modal-ta::placeholder { color: var(--lavender); }
@@ -252,7 +285,7 @@
     .mbtn-p { background: var(--pink); color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-p:hover { background: #d9689f; }
     .mbtn-s { background: #7A4A6A; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-orange { background: var(--orange); color: var(--blush); border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-orange { background: #f2bdd8; color: #eb268f; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-outline { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger { background: none; color: #c0392b; border: 1.5px solid #c0392b; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger:hover { background: #c0392b; color: white; }
@@ -490,6 +523,7 @@
         <span class="enc-icon" id="encIconD">✦</span>
         <strong class="enc-title" id="encTitleD">Loading...</strong>
         <span class="enc-body" id="encBodyD"></span>
+        <span class="enc-attr" id="encAttrD"></span>
       </div>
       <button class="enc-refresh" onclick="nextEncD()" title="Another">↻</button>
     </div>
@@ -525,6 +559,23 @@
     <div class="add-row">
       <input class="add-input" id="addInputD" type="text" placeholder="Add your own task...">
       <button class="add-btn" onclick="addTaskD()">+ Add</button>
+    </div>
+    <div class="dtl-section" id="dtlSectionD">
+      <button class="dtl-header" onclick="toggleDTLPanelD()">
+        <span class="dtl-label">Down the Line</span>
+        <span style="display:flex;align-items:center;gap:6px;">
+          <span class="dtl-count-badge" id="dtlCountBadgeD"></span>
+          <span class="dtl-toggle-indicator" id="dtlToggleIndD">+</span>
+        </span>
+      </button>
+      <div class="dtl-body" id="dtlBodyD" style="display:none;">
+        <ul class="row-list" id="dtlListD" style="margin-bottom:0;list-style:none;"></ul>
+        <div class="dtl-add-area">
+          <input class="dtl-add-input" id="dtlAddTextD" type="text" placeholder="What needs to wait...">
+          <input class="dtl-add-input" id="dtlAddBlockerD" type="text" placeholder="Need X first... (optional)">
+          <button class="dtl-add-btn" onclick="addDTLTaskD()">+ Add to Down the Line</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -574,25 +625,20 @@
     <div class="modal-sub" id="taskMgmtSubD">—</div>
     <span class="modal-lbl">Task text</span>
     <input class="modal-input" id="taskMgmtTextD" type="text" placeholder="Task description...">
-    <span class="modal-lbl">Category</span>
-    <select class="modal-select" id="taskMgmtCatD">
-      <option value="admin">Admin</option>
-      <option value="writing">Writing</option>
-      <option value="health">Health</option>
-      <option value="wellness">Wellness</option>
-      <option value="legal">Legal</option>
-      <option value="finance">Finance</option>
-      <option value="comms">Comms</option>
-      <option value="career">Career</option>
-      <option value="self-care">Self-Care</option>
-      <option value="spirit">Spirit</option>
-      <option value="social">Social</option>
-      <option value="home">Home</option>
-      <option value="palava">Palava</option>
-      <option value="system">System</option>
-      <option value="standup">Stand-Up</option>
-      <option value="custom">Custom</option>
-    </select>
+    <div class="modal-lbl-row">
+      <span class="modal-lbl">Category</span>
+      <button class="modal-lbl-link" onclick="openCatsModalD()">Edit categories</button>
+    </div>
+    <select class="modal-select" id="taskMgmtCatD"></select>
+    <div class="modal-divider"></div>
+    <div class="mgmt-dtl-row">
+      <span class="modal-lbl" style="margin-bottom:0;">Down the line?</span>
+      <button class="mgmt-dtl-btn" id="taskMgmtDTLBtnD" onclick="toggleMgmtDTLD()">No</button>
+    </div>
+    <div id="taskMgmtBlockerRowD" style="display:none;margin-top:8px;">
+      <span class="modal-lbl">Need X first (blocker note)</span>
+      <input class="modal-input" id="taskMgmtBlockerD" type="text" placeholder="What needs to happen first...">
+    </div>
     <div class="modal-divider"></div>
     <div class="mgmt-reorder">
       <button onclick="mgmtMoveUpD()">↑ Move Up</button>
@@ -609,6 +655,21 @@
       </div>
       <button class="mbtn-danger" onclick="mgmtDeleteD()">Delete this task</button>
       <button class="mbtn-g" onclick="closeModalD('taskMgmtModalD')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES MODAL D -->
+<div class="overlay" id="catsModalD" onclick="bgCloseD(event)">
+  <div class="modal">
+    <div class="modal-title">Manage Categories</div>
+    <ul id="catsListD" style="list-style:none;margin:0 0 14px;padding:0;max-height:260px;overflow-y:auto;"></ul>
+    <div style="display:flex;gap:8px;margin-bottom:4px;">
+      <input class="modal-input" id="catNewInputD" type="text" placeholder="New category name..." style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')addCatD()">
+      <button class="mbtn-p" onclick="addCatD()" style="white-space:nowrap;padding:12px 14px;">Add</button>
+    </div>
+    <div class="modal-acts">
+      <button class="mbtn-p" onclick="closeCatsModalD()">Done</button>
     </div>
   </div>
 </div>
@@ -681,8 +742,17 @@
 
 const DEFAULT_ENC = [
   {icon:"✦",t:"This week is yours to define.",b:"Name it, own it. What gets done this week builds toward what comes next."},
-  {icon:"🌅",t:"Show up, even when it's small.",b:"The version of you you're becoming is built in weeks exactly like this one."},
-  {icon:"✍️",t:"Tap the week name above to give this week a theme.",b:"A named week has intention. An intentioned week gets things done."}
+  {icon:"✦",t:"Show up, even when it's small.",b:"The version of you you're becoming is built in weeks exactly like this one."},
+  {icon:"✦",t:"Tap the week name above to give this week a theme.",b:"A named week has intention. An intentioned week gets things done."},
+  {icon:"✦",t:"Your perfectionism exists to help you.",b:"\"What if your perfectionism exists to help you? Perfectionism does not have to be a struggle. You do not have to stop being a perfectionist to be healthy.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"An excellent servant. A terrible master.",b:"\"Perfectionism makes an excellent servant and a terrible master.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"You are not the problem.",b:"\"Your problem is not that you're a perfectionist. Your problem is that you're not being your full self.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Some gifts feel like a burden first.",b:"\"Some gifts feel like a burden until you understand how they can serve you.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Acknowledging more is boldness.",b:"\"Acknowledging that you want more is an act of boldness.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Not talent. Persistence.",b:"\"It's not mere talent that rises to the top, it's persistence.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Not changing is a deeper loss.",b:"\"While change does always involve loss, not changing involves a much deeper loss.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Champions of possibility.",b:"\"We need messy perfectionists in the world; they are the champions of possibility.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Obedient is not the same as healthy.",b:"\"Subscribing to prepackaged notions of balance and generic wellness when they don't fit who you are isn't being healthy, it's being obedient.\"",attr:"— Katherine Morgan Schafler"}
 ];
 
 const BCY_PLAN = {
@@ -814,10 +884,15 @@ function toggleItemDone(weekId, itemId, x, y) {
 function deleteItem(weekId, itemId) {
   saveItems(weekId, getItems(weekId).filter(it => it.id !== itemId));
 }
-function editItem(weekId, itemId, text, cat) {
+function editItem(weekId, itemId, text, cat, dtl, blocker) {
   const items = getItems(weekId);
   const item = items.find(it => it.id === itemId);
-  if (item) { item.text = text; item.cat = cat; }
+  if (item) {
+    item.text = text; item.cat = cat;
+    if (dtl !== undefined) item.dtl = !!dtl;
+    if (dtl) item.blocker = blocker || '';
+    else delete item.blocker;
+  }
   saveItems(weekId, items);
 }
 function moveItemUp(weekId, itemId) {
@@ -888,8 +963,9 @@ function renderD(weekId) {
   const w = getWeek(weekId);
   if (!w) { console.warn('renderD: week not found', weekId, 'AW.length=', AW.length); return; }
   const items = getItems(weekId);
-  const done = items.filter(it => it.done).length;
-  const total = items.length;
+  const activeItems = items.filter(it => !it.dtl);
+  const done = activeItems.filter(it => it.done).length;
+  const total = activeItems.length;
   const left = total - done;
   const pct = total > 0 ? done/total : 0;
   const wIdx = AW.findIndex(wk => wk.id === weekId);
@@ -928,13 +1004,13 @@ function renderD(weekId) {
   // Tasks
   const tl = document.getElementById('taskListD');
   tl.innerHTML = '';
-  items.filter(it => !it.done).forEach(item => {
+  items.filter(it => !it.done && !it.dtl).forEach(item => {
     const li = document.createElement('li');
     li.className = 'task-row';
 
     let originHTML = '';
     if (item.originWeekLabel) {
-      originHTML = `<span class="origin-badge">carried from ${esc(item.originWeekLabel)}</span>`;
+      originHTML = `<span class="origin-badge">from previous week</span>`;
     }
 
     let noteHTML = `<button class="task-note-btn" onclick="openStatusD('${esc(item.id)}',event)">${item.note ? '📝 update status →' : '+ add status note'}</button>`;
@@ -960,6 +1036,9 @@ function renderD(weekId) {
     tl.appendChild(li);
   });
 
+  // Down the Line section
+  renderDTLD(weekId);
+
   // Practices (editable)
   renderPracticesDisplay(getCurrentPractices(w));
   // Close edit panel when switching weeks
@@ -969,7 +1048,7 @@ function renderD(weekId) {
   // Prompt opts (task chips)
   const opts = document.getElementById('promptOptsD');
   opts.innerHTML = '';
-  const undone = items.filter(it => !it.done);
+  const undone = items.filter(it => !it.done && !it.dtl);
   undone.slice(0,8).forEach(item => {
     const li = document.createElement('li');
     li.className = 'prompt-opt';
@@ -990,6 +1069,8 @@ function renderEncD(w) {
   document.getElementById('encIconD').innerHTML = '<span style="color:#eefbd1;">✦</span>';
   document.getElementById('encTitleD').textContent = item.t;
   document.getElementById('encBodyD').textContent = item.b;
+  const attrEl = document.getElementById('encAttrD');
+  if (attrEl) { attrEl.textContent = item.attr || ''; attrEl.style.display = item.attr ? 'block' : 'none'; }
 }
 function nextEncD() { EID = (EID + 1) % getWeek(CW).enc.length; renderEncD(getWeek(CW)); }
 
@@ -1032,8 +1113,16 @@ function openTaskMgmtD(itemId, e) {
   if (!item) return;
   document.getElementById('taskMgmtSubD').textContent = item.text;
   document.getElementById('taskMgmtTextD').value = item.text;
-  document.getElementById('taskMgmtCatD').value = item.cat || 'custom';
-
+  buildCatSelectD('taskMgmtCatD', item.cat || 'custom');
+  // DTL state
+  const isDTL = !!item.dtl;
+  const dtlBtn = document.getElementById('taskMgmtDTLBtnD');
+  const blockerRow = document.getElementById('taskMgmtBlockerRowD');
+  dtlBtn.textContent = isDTL ? 'Yes' : 'No';
+  dtlBtn.dataset.dtl = isDTL ? 'true' : 'false';
+  dtlBtn.classList.toggle('active', isDTL);
+  blockerRow.style.display = isDTL ? 'block' : 'none';
+  document.getElementById('taskMgmtBlockerD').value = item.blocker || '';
   // Populate reschedule selector
   const sel = document.getElementById('taskReschedSelD');
   sel.innerHTML = '<option value="">— pick a week —</option>';
@@ -1044,7 +1133,6 @@ function openTaskMgmtD(itemId, e) {
       sel.appendChild(opt);
     }
   });
-
   document.getElementById('taskMgmtModalD').classList.add('open');
 }
 function mgmtSaveD() {
@@ -1052,7 +1140,9 @@ function mgmtSaveD() {
   const text = document.getElementById('taskMgmtTextD').value.trim();
   const cat  = document.getElementById('taskMgmtCatD').value;
   if (!text) { document.getElementById('taskMgmtTextD').style.borderColor = 'var(--hot)'; return; }
-  editItem(CW, MGMT_ID, text, cat);
+  const isDTL = document.getElementById('taskMgmtDTLBtnD').dataset.dtl === 'true';
+  const blocker = isDTL ? document.getElementById('taskMgmtBlockerD').value.trim() : '';
+  editItem(CW, MGMT_ID, text, cat, isDTL, blocker);
   const toWeek = document.getElementById('taskReschedSelD').value;
   if (toWeek) {
     rescheduleItem(CW, MGMT_ID, toWeek);
@@ -1094,6 +1184,116 @@ function handleCarryD(itemId, e) {
   e.stopPropagation();
   carryForward(CW, itemId);
   renderD(CW);
+}
+
+// ─── CATEGORY MANAGEMENT ──────────────────────────────────────────────────────
+const DEFAULT_CATS_D = ['admin','writing','health','wellness','legal','finance','comms','career','self-care','spirit','social','home','palava','system','standup','custom'];
+function getCatsD() { try { const c = localStorage.getItem('bcy_cats'); return c ? JSON.parse(c) : [...DEFAULT_CATS_D]; } catch(e) { return [...DEFAULT_CATS_D]; } }
+function saveCatsD(cats) { try { localStorage.setItem('bcy_cats', JSON.stringify(cats)); } catch(e) {} }
+function buildCatSelectD(selId, currentVal) {
+  const sel = document.getElementById(selId);
+  if (!sel) return;
+  sel.innerHTML = '';
+  getCatsD().forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g,' ');
+    sel.appendChild(o);
+  });
+  if (currentVal) sel.value = currentVal;
+}
+function openCatsModalD() {
+  renderCatsListD();
+  document.getElementById('catsModalD').classList.add('open');
+}
+function closeCatsModalD() {
+  closeModalD('catsModalD');
+  const currentCat = document.getElementById('taskMgmtCatD')?.value;
+  buildCatSelectD('taskMgmtCatD', currentCat);
+}
+function renderCatsListD() {
+  const ul = document.getElementById('catsListD');
+  if (!ul) return;
+  ul.innerHTML = '';
+  getCatsD().forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'cat-list-item';
+    li.innerHTML = `<span class="cat-list-name">${esc(cat.replace(/-/g,' '))}</span><button class="cat-del-btn" onclick="deleteCatD('${esc(cat)}')">✕</button>`;
+    ul.appendChild(li);
+  });
+}
+function addCatD() {
+  const input = document.getElementById('catNewInputD');
+  const val = input.value.trim().toLowerCase().replace(/\s+/g, '-');
+  if (!val) { input.style.borderColor = 'var(--hot)'; return; }
+  input.style.borderColor = '';
+  const cats = getCatsD();
+  if (!cats.includes(val)) { cats.push(val); saveCatsD(cats); }
+  input.value = ''; renderCatsListD();
+}
+function deleteCatD(cat) {
+  const cats = getCatsD().filter(c => c !== cat);
+  saveCatsD(cats); renderCatsListD();
+}
+
+// ─── DOWN THE LINE ────────────────────────────────────────────────────────────
+let DTL_OPEN_D = false;
+function toggleDTLPanelD() {
+  DTL_OPEN_D = !DTL_OPEN_D;
+  document.getElementById('dtlBodyD').style.display = DTL_OPEN_D ? 'block' : 'none';
+  document.getElementById('dtlToggleIndD').textContent = DTL_OPEN_D ? '−' : '+';
+}
+function renderDTLD(weekId) {
+  const dtlItems = getItems(weekId).filter(it => it.dtl && !it.done);
+  const badge = document.getElementById('dtlCountBadgeD');
+  if (badge) { badge.textContent = dtlItems.length; badge.style.display = dtlItems.length > 0 ? 'inline-block' : 'none'; }
+  const list = document.getElementById('dtlListD');
+  if (!list) return;
+  list.innerHTML = '';
+  dtlItems.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'dtl-item';
+    const catBadge = item.cat ? `<span class="task-cat" style="margin-top:4px;">${esc(item.cat)}</span>` : '';
+    const blockerEl = item.blocker ? `<div class="dtl-blocker">Need: ${esc(item.blocker)}</div>` : '';
+    li.innerHTML = `
+      <div class="dtl-text">
+        <div class="dtl-task-text">${esc(item.text)}</div>
+        ${catBadge}${blockerEl}
+      </div>
+      <div class="dtl-item-actions">
+        <button class="dtl-activate-btn" onclick="activateDTLItemD('${esc(item.id)}')">Move to active</button>
+        <button class="dtl-mgmt-btn" onclick="openTaskMgmtD('${esc(item.id)}',event)">⋯</button>
+      </div>`;
+    list.appendChild(li);
+  });
+}
+function addDTLTaskD() {
+  const textInput = document.getElementById('dtlAddTextD');
+  const blockerInput = document.getElementById('dtlAddBlockerD');
+  const text = textInput.value.trim();
+  if (!text) { textInput.style.borderColor = 'var(--hot)'; return; }
+  textInput.style.borderColor = 'transparent';
+  const items = getItems(CW);
+  items.push({ id: genId(CW+'_d'), text, cat: 'custom', done: false, note: '', blocker: blockerInput.value.trim(), dtl: true, builtin: false, originWeek: null, originWeekLabel: null });
+  saveItems(CW, items);
+  textInput.value = ''; blockerInput.value = '';
+  renderDTLD(CW);
+}
+function activateDTLItemD(itemId) {
+  const items = getItems(CW);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  item.dtl = false; delete item.blocker;
+  saveItems(CW, items); renderD(CW);
+}
+function toggleMgmtDTLD() {
+  const btn = document.getElementById('taskMgmtDTLBtnD');
+  const row = document.getElementById('taskMgmtBlockerRowD');
+  const isDTL = btn.dataset.dtl === 'true';
+  const nowDTL = !isDTL;
+  btn.dataset.dtl = nowDTL ? 'true' : 'false';
+  btn.textContent = nowDTL ? 'Yes' : 'No';
+  btn.classList.toggle('active', nowDTL);
+  row.style.display = nowDTL ? 'block' : 'none';
 }
 
 // ─── ADD TASK ─────────────────────────────────────────────────────────────────
