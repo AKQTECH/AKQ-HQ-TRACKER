@@ -81,8 +81,8 @@
     .enc-inner { display: flex; align-items: flex-start; gap: 14px; border-left: 3px solid var(--orange); padding-left: 14px; }
     .enc-icon  { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
     .enc-text  { flex: 1; }
-    .enc-title { font-weight: 800; font-size: 15px; color: var(--ink); display: block; margin-bottom: 3px; }
-    .enc-body  { font-size: 13px; color: rgba(0,0,0,0.65); line-height: 1.5; }
+    .enc-title { display: none; }
+    .enc-body  { font-weight: 800; font-size: 15px; color: var(--ink); display: block; line-height: 1.45; margin-bottom: 3px; }
     .enc-attr  { font-size: 11px; color: rgba(0,0,0,0.45); font-style: italic; display: block; margin-top: 5px; }
     .enc-refresh { background: none; border: none; color: rgba(0,0,0,0.35); font-size: 20px; cursor: pointer; flex-shrink: 0; padding: 0; transition: color 0.2s; }
     .enc-refresh:active { color: var(--ink); }
@@ -105,7 +105,7 @@
     .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFD4F4; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
-    .origin-badge { display: inline-block; background: #ffd0ea; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: #FFD4F4; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Down the Line section */
     .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
@@ -545,7 +545,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:center;padding:10px 0 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App v6</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App v6</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
