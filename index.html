@@ -102,10 +102,10 @@
     .task-body { flex: 1; min-width: 0; }
     .task-label { font-size: 14px; color: var(--ink); line-height: 1.4; transition: color 0.15s; }
     .task-row.done .task-label { color: var(--lavender); text-decoration: line-through; text-decoration-color: var(--pink); }
-    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: var(--blush); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
+    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFD4F4; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
-    .origin-badge { display: inline-block; background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: #ffd0ea; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Down the Line section */
     .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
@@ -545,6 +545,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
+<div style="text-align:center;padding:10px 0 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App v6</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1115,7 +1116,7 @@ function render(weekId) {
 function renderEnc(w) {
   const item = w.enc[EI % w.enc.length];
   document.getElementById('encIcon').innerHTML = '<span style="color:#eefbd1;">✦</span>';
-  document.getElementById('encTitle').textContent = item.t;
+  document.getElementById('encTitle').textContent = '';
   document.getElementById('encBody').textContent = item.b;
   const attrEl = document.getElementById('encAttr');
   if (attrEl) { attrEl.textContent = item.attr || ''; attrEl.style.display = item.attr ? 'block' : 'none'; }
@@ -2088,6 +2089,5 @@ function saveNewWeek() {
 }
 
 </script>
-<div style="text-align:center;padding:18px 0 28px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App — Version 6</div>
 </body>
 </html>

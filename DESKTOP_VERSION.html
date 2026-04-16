@@ -181,10 +181,10 @@
     .task-body { flex: 1; }
     .task-label { font-size: 15px; color: var(--ink); line-height: 1.4; transition: color 0.15s; }
     .task-row.done .task-label { color: var(--lavender); text-decoration: line-through; text-decoration-color: var(--pink); }
-    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: var(--blush); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
+    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFD4F4; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 3px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 5px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 10px; display: inline-block; }
-    .origin-badge { display: inline-block; background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: #ffd0ea; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Task actions */
     .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; opacity: 0; transition: opacity 0.15s; }
@@ -545,7 +545,7 @@
       <button class="d-btn d-btn-im" onclick="document.getElementById('importInputD').click()">↑ Load JSON</button>
       <input type="file" id="importInputD" accept=".json" onchange="importDataD(event)">
     </div>
-
+    <div style="text-align:center;padding:10px 0 4px;font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App v6 Desktop</div>
   </div>
 </aside>
 
@@ -1143,7 +1143,7 @@ function renderD(weekId) {
 function renderEncD(w) {
   const item = w.enc[EID % w.enc.length];
   document.getElementById('encIconD').innerHTML = '<span style="color:#eefbd1;">✦</span>';
-  document.getElementById('encTitleD').textContent = item.t;
+  document.getElementById('encTitleD').textContent = '';
   document.getElementById('encBodyD').textContent = item.b;
   const attrEl = document.getElementById('encAttrD');
   if (attrEl) { attrEl.textContent = item.attr || ''; attrEl.style.display = item.attr ? 'block' : 'none'; }
@@ -2169,6 +2169,5 @@ function saveNewWeekD() {
   showToast('Week added ✦');
 }
 </script>
-<div style="text-align:center;padding:18px 0 28px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App — Version 6 (Desktop)</div>
 </body>
 </html>
