@@ -23,7 +23,7 @@
       --mist: #CACBDF;
       --ink: #111111;
       --white: #FFFFFF;
-      --off: #FBF8FC;
+      --off: #FFF4F8;
       --row-border: rgba(0,0,0,0.09);
     }
 
@@ -89,7 +89,11 @@
 
     /* ── TASK ROWS ── */
     .row-list { list-style: none; }
-    .task-row { display: flex; align-items: flex-start; gap: 14px; padding: 15px 22px; border-bottom: 1px solid var(--row-border); transition: background 0.12s; -webkit-user-select: none; user-select: none; }
+    .task-row { display: flex; align-items: flex-start; gap: 10px; padding: 15px 22px 15px 14px; border-bottom: 1px solid var(--row-border); transition: background 0.12s, opacity 0.12s; -webkit-user-select: none; user-select: none; }
+    .task-drag-handle { display: flex; align-items: center; justify-content: center; width: 14px; flex-shrink: 0; cursor: grab; color: var(--blush); align-self: stretch; padding: 0; touch-action: none; }
+    .task-drag-handle:active { cursor: grabbing; }
+    .task-row.dragging { opacity: 0.35; }
+    .task-row.drag-over { border-top: 2px solid var(--hot) !important; }
     .task-row:last-child { border-bottom: none; }
     .task-cb { width: 22px; height: 22px; border: 2px solid var(--blush); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.18s; background: white; }
     .task-row.done .task-cb { background: var(--hot); border-color: var(--hot); }
@@ -962,7 +966,7 @@ function setItemNote(weekId, itemId, note) {
 }
 
 // ─── GLOBALS ──────────────────────────────────────────────────────────────────
-let CW = null, EI = 0, MI = null, MGMT_ID = null;
+let CW = null, EI = 0, MI = null, MGMT_ID = null, _dragId = null;
 function getWeek(id) { return AW.find(w => w.id === id); }
 
 function autoWeekId() {
@@ -1026,13 +1030,15 @@ function render(weekId) {
   items.filter(it => !it.done && !it.dtl).forEach(item => {
     const li = document.createElement('li');
     li.className = 'task-row';
+    li.setAttribute('draggable', 'true');
 
-    let originHTML = item.originWeekLabel ? `<span class="origin-badge">from previous week</span>` : '';
-    let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '📝 update status →' : '+ add status note'}</button>`;
+    let originHTML = item.originWeekLabel ? `<span class="origin-badge">moved from ${esc(item.originWeekLabel)}</span>` : '';
+    let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '+ update status' : '+ add status note'}</button>`;
     if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
     let carryHTML = hasNextWeek ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
 
     li.innerHTML = `
+      <div class="task-drag-handle" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 10 14" fill="none"><circle cx="3" cy="2.5" r="1.5" fill="currentColor"/><circle cx="7" cy="2.5" r="1.5" fill="currentColor"/><circle cx="3" cy="7" r="1.5" fill="currentColor"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/><circle cx="3" cy="11.5" r="1.5" fill="currentColor"/><circle cx="7" cy="11.5" r="1.5" fill="currentColor"/></svg></div>
       <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
       <div class="task-body">
         <div class="task-label">${esc(item.text)}</div>
@@ -1044,6 +1050,36 @@ function render(weekId) {
         ${carryHTML}
         <button class="task-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
       </div>`;
+
+    li.addEventListener('dragstart', e => {
+      _dragId = item.id;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => li.classList.add('dragging'), 0);
+    });
+    li.addEventListener('dragend', () => {
+      li.classList.remove('dragging');
+      document.querySelectorAll('#taskList .drag-over').forEach(el => el.classList.remove('drag-over'));
+      _dragId = null;
+    });
+    li.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (_dragId && _dragId !== item.id) li.classList.add('drag-over');
+    });
+    li.addEventListener('dragleave', () => li.classList.remove('drag-over'));
+    li.addEventListener('drop', e => {
+      e.preventDefault();
+      li.classList.remove('drag-over');
+      if (!_dragId || _dragId === item.id) return;
+      const its = getItems(weekId);
+      const fi = its.findIndex(it => it.id === _dragId);
+      const ti = its.findIndex(it => it.id === item.id);
+      if (fi < 0 || ti < 0) return;
+      const [moved] = its.splice(fi, 1);
+      its.splice(ti, 0, moved);
+      saveItems(weekId, its);
+      render(weekId);
+    });
+
     tl.appendChild(li);
   });
 
@@ -1173,7 +1209,7 @@ function buildCatSelect(selId, currentVal) {
   sel.innerHTML = '';
   getCats().forEach(c => {
     const o = document.createElement('option');
-    o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g,' ');
+    o.value = c; o.textContent = c.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
     sel.appendChild(o);
   });
   if (currentVal) sel.value = currentVal;
@@ -1194,7 +1230,7 @@ function renderCatsList() {
   getCats().forEach(cat => {
     const li = document.createElement('li');
     li.className = 'cat-list-item';
-    li.innerHTML = `<span class="cat-list-name">${esc(cat.replace(/-/g,' '))}</span><button class="cat-del-btn" onclick="deleteCat('${esc(cat)}')">✕</button>`;
+    li.innerHTML = `<span class="cat-list-name">${esc(cat.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '))}</span><button class="cat-del-btn" onclick="deleteCat('${esc(cat)}')">✕</button>`;
     ul.appendChild(li);
   });
 }
@@ -2052,5 +2088,6 @@ function saveNewWeek() {
 }
 
 </script>
+<div style="text-align:center;padding:18px 0 28px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">AKQ HQ App — Version 6</div>
 </body>
 </html>
