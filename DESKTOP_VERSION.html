@@ -836,9 +836,10 @@ let AW = [];
 function refreshAW() {
   const v4 = gs4() || {};
   const deleted = new Set(v4.deletedWeeks || []);
+  const archived = new Set(v4.archivedWeeks || []);
   const custom = (v4.customWeeks || []);
-  AW = [...WEEKS.filter(w => !deleted.has(w.id)),
-        ...custom.map(cw => ({ ...cw, tasks:[], practices:[], enc:cw.enc||DEFAULT_ENC }))]
+  AW = [...WEEKS.filter(w => !deleted.has(w.id) && !archived.has(w.id)),
+        ...custom.map(cw => ({ ...cw, tasks:[], practices:[], enc:cw.enc||DEFAULT_ENC })).filter(cw => !archived.has(cw.id))]
        .sort((a, b) => a.start.localeCompare(b.start));
 }
 
@@ -1007,6 +1008,7 @@ function autoWeek() {
 function renderD(weekId) {
   CW = weekId;
   _currentWeekId = weekId;
+  updateTlD(weekId);
   const w = getWeek(weekId);
   if (!w) { console.warn('renderD: week not found', weekId, 'AW.length=', AW.length); return; }
   const items = getItems(weekId);
@@ -1619,6 +1621,15 @@ function buildTimeline() {
   addEl.innerHTML = '<span style="font-size:11px;font-weight:700;color:var(--hot);">+ Add Week</span>';
   addEl.onclick = openAddWeek;
   c.appendChild(addEl);
+  // Archived chip
+  const archivedIds = (gs4() || {}).archivedWeeks || [];
+  if (archivedIds.length > 0) {
+    const archEl = document.createElement('div');
+    archEl.style.cssText = 'padding:6px 10px;margin-top:6px;cursor:pointer;border:1.5px dashed var(--pink);border-radius:8px;text-align:center;opacity:0.65;';
+    archEl.innerHTML = `<span style="font-size:11px;font-weight:700;color:var(--hot);">Archived (${archivedIds.length})</span>`;
+    archEl.onclick = openArchivedModalD;
+    c.appendChild(archEl);
+  }
 }
 function updateTlD(weekId) {
   document.querySelectorAll('.tl-item').forEach(el => { el.classList.remove('active'); if (el.dataset.id === weekId) el.classList.add('active'); });
@@ -2071,9 +2082,21 @@ if (document.readyState === 'loading') {
     <div style="font-family:'Playfair Display',serif;font-size:22px;color:#111;margin-bottom:4px;">Week Settings</div>
     <div style="font-size:13px;color:#888;margin-bottom:20px;font-style:italic;" id="weekMgmtSubD">—</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button style="background:none;color:#c0392b;border:1.5px solid #c0392b;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="confirmDeleteWeekD()">🗑 Delete this week from the year</button>
+      <button style="background:#FFD4F4;color:#EA258D;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="archiveWeekD()">Archive this week</button>
+      <button style="background:none;color:#c0392b;border:1.5px solid #c0392b;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="confirmDeleteWeekD()">Delete this week from the year</button>
       <button style="background:none;color:#D9AED0;border:none;padding:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="document.getElementById('weekMgmtModalD').style.display='none'">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- ARCHIVED WEEKS MODAL (Desktop) -->
+<div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;backdrop-filter:blur(3px);" id="archivedModalD" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:20px 20px 0 0;padding:24px 22px 44px;width:100%;max-width:520px;margin:0 auto;">
+    <div style="width:36px;height:4px;background:#CACBDF;border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;color:#111;margin-bottom:4px;">Archived Weeks</div>
+    <div style="font-size:13px;color:#888;margin-bottom:16px;font-style:italic;">Your tasks are safe — restore any week to see it in the timeline.</div>
+    <div id="archivedListD" style="max-height:320px;overflow-y:auto;margin-bottom:16px;"></div>
+    <button style="background:none;color:#D9AED0;border:none;padding:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;" onclick="document.getElementById('archivedModalD').style.display='none'">Done</button>
   </div>
 </div>
 
@@ -2123,6 +2146,52 @@ function confirmDeleteWeekD() {
   buildTimeline();
   EID = 0; renderD(autoWeek());
   showToast('Week deleted');
+}
+function archiveWeekD() {
+  document.getElementById('weekMgmtModalD').style.display = 'none';
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], archivedWeeks:[], customWeeks:[] };
+  if (!v4.archivedWeeks) v4.archivedWeeks = [];
+  if (!v4.archivedWeeks.includes(CW)) v4.archivedWeeks.push(CW);
+  ss4(v4);
+  refreshAW();
+  buildTimeline();
+  EID = 0; renderD(autoWeek());
+  showToast('Week archived — tasks preserved');
+}
+function openArchivedModalD() {
+  const v4 = gs4() || {};
+  const archivedIds = v4.archivedWeeks || [];
+  const list = document.getElementById('archivedListD');
+  if (archivedIds.length === 0) {
+    list.innerHTML = '<p style="color:rgba(0,0,0,0.4);font-size:13px;text-align:center;padding:16px 0;">No archived weeks</p>';
+  } else {
+    const allWeeks = [...WEEKS, ...(v4.customWeeks||[])];
+    list.innerHTML = archivedIds.map(id => {
+      const w = allWeeks.find(wk => wk.id === id);
+      const theme = (v4.weekThemes||{})[id] || w?.name || id;
+      const label = w?.label || id;
+      const tasks = ((v4.weeks||{})[id]||{}).items || [];
+      const done = tasks.filter(t=>t.done).length;
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#111;">${esc(theme)}</div>
+          <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">${esc(label)} &middot; ${done} of ${tasks.length} done</div>
+        </div>
+        <button onclick="unarchiveWeekD('${id}')" style="background:#FFD4F4;color:#EA258D;border:none;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;">Restore</button>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('archivedModalD').style.display = 'flex';
+}
+function unarchiveWeekD(id) {
+  const v4 = gs4() || {};
+  v4.archivedWeeks = (v4.archivedWeeks || []).filter(i => i !== id);
+  ss4(v4);
+  document.getElementById('archivedModalD').style.display = 'none';
+  refreshAW();
+  buildTimeline();
+  EID = 0; renderD(id);
+  showToast('Week restored to timeline');
 }
 function openAddWeek() {
   const today = new Date();

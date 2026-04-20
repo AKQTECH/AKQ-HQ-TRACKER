@@ -676,8 +676,22 @@
     <div class="modal-title">Week Settings</div>
     <div class="modal-sub" id="weekMgmtSub">—</div>
     <div class="modal-acts">
-      <button class="mbtn-danger" onclick="confirmDeleteWeek()">🗑 Delete this week from the year</button>
+      <button class="mbtn-secondary" onclick="archiveWeek()" style="background:var(--blush);color:var(--hot);">Archive this week</button>
+      <button class="mbtn-danger" onclick="confirmDeleteWeek()">Delete this week from the year</button>
       <button class="mbtn-ghost" onclick="closeModal('weekMgmtModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHIVED WEEKS MODAL -->
+<div class="overlay" id="archivedModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Archived Weeks</div>
+    <div class="modal-sub">Your tasks are safe — restore any week to see it in the timeline.</div>
+    <div id="archivedList" style="margin:12px 0;max-height:300px;overflow-y:auto;"></div>
+    <div class="modal-acts">
+      <button class="mbtn-ghost" onclick="closeModal('archivedModal')">Done</button>
     </div>
   </div>
 </div>
@@ -854,9 +868,10 @@ let AW = [];
 function refreshAW() {
   const v4 = gs4() || {};
   const deleted = new Set(v4.deletedWeeks || []);
+  const archived = new Set(v4.archivedWeeks || []);
   const custom = (v4.customWeeks || []);
-  AW = [...WEEKS.filter(w => !deleted.has(w.id)),
-        ...custom.map(cw => ({ ...cw, tasks:[], practices:[], enc:cw.enc||DEFAULT_ENC }))]
+  AW = [...WEEKS.filter(w => !deleted.has(w.id) && !archived.has(w.id)),
+        ...custom.map(cw => ({ ...cw, tasks:[], practices:[], enc:cw.enc||DEFAULT_ENC })).filter(cw => !archived.has(cw.id))]
        .sort((a, b) => a.start.localeCompare(b.start));
 }
 
@@ -984,6 +999,7 @@ function autoWeekId() {
 function render(weekId) {
   CW = weekId;
   _currentWeekId = weekId;
+  updateTimeline(weekId);
   const w = getWeek(weekId);
   if (!w) { console.warn('render: week not found', weekId); return; }
   const items = getItems(weekId);
@@ -1533,6 +1549,16 @@ function buildTimeline() {
   addChip.innerHTML = '<span class="tl-add-name">+ Add</span><span class="tl-add-wk">new week</span>';
   addChip.onclick = openAddWeek;
   c.appendChild(addChip);
+  // Archived weeks chip (shown only when there are archived weeks)
+  const archivedIds = (gs4() || {}).archivedWeeks || [];
+  if (archivedIds.length > 0) {
+    const archChip = document.createElement('div');
+    archChip.className = 'tl-add-chip';
+    archChip.style.opacity = '0.65';
+    archChip.innerHTML = `<span class="tl-add-name">Archived</span><span class="tl-add-wk">${archivedIds.length} week${archivedIds.length===1?'':'s'}</span>`;
+    archChip.onclick = openArchivedModal;
+    c.appendChild(archChip);
+  }
 }
 function updateTimeline(weekId) {
   document.querySelectorAll('.tl-chip').forEach(el => { el.classList.remove('active'); if (el.dataset.id === weekId) el.classList.add('active'); });
@@ -2033,6 +2059,53 @@ function confirmDeleteWeek() {
   const newId = autoWeekId();
   EI = 0; render(newId);
   showToast('Week deleted');
+}
+function archiveWeek() {
+  closeModal('weekMgmtModal');
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], archivedWeeks:[], customWeeks:[] };
+  if (!v4.archivedWeeks) v4.archivedWeeks = [];
+  if (!v4.archivedWeeks.includes(CW)) v4.archivedWeeks.push(CW);
+  ss4(v4);
+  refreshAW();
+  buildTimeline();
+  const newId = autoWeekId();
+  EI = 0; render(newId);
+  showToast('Week archived — tasks preserved');
+}
+function openArchivedModal() {
+  const v4 = gs4() || {};
+  const archivedIds = v4.archivedWeeks || [];
+  const list = document.getElementById('archivedList');
+  if (archivedIds.length === 0) {
+    list.innerHTML = '<p style="color:rgba(0,0,0,0.4);font-size:13px;text-align:center;padding:16px 0;">No archived weeks</p>';
+  } else {
+    const allWeeks = [...WEEKS, ...(v4.customWeeks||[])];
+    list.innerHTML = archivedIds.map(id => {
+      const w = allWeeks.find(wk => wk.id === id);
+      const theme = (v4.weekThemes||{})[id] || w?.name || id;
+      const label = w?.label || id;
+      const tasks = ((v4.weeks||{})[id]||{}).items || [];
+      const done = tasks.filter(t=>t.done).length;
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+        <div>
+          <div style="font-weight:700;font-size:13px;color:var(--ink);">${esc(theme)}</div>
+          <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">${esc(label)} &middot; ${done} of ${tasks.length} done</div>
+        </div>
+        <button onclick="unarchiveWeek('${id}')" style="background:#FFD4F4;color:var(--hot);border:none;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;">Restore</button>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('archivedModal').classList.add('open');
+}
+function unarchiveWeek(id) {
+  const v4 = gs4() || {};
+  v4.archivedWeeks = (v4.archivedWeeks || []).filter(i => i !== id);
+  ss4(v4);
+  closeModal('archivedModal');
+  refreshAW();
+  buildTimeline();
+  EI = 0; render(id);
+  showToast('Week restored to timeline');
 }
 function openAddWeek() {
   // Pre-fill start date to today
