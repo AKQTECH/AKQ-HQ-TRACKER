@@ -17,16 +17,17 @@
 </head>
 <body>
   <div>
-    <div class="msg">Connected! Returning to HQ...</div>
-    <div class="sub">You can close this window if it doesn't close automatically.</div>
+    <div class="msg" id="msg">Connected! Returning to HQ...</div>
+    <div class="sub" id="sub">You can close this window if it doesn't close automatically.</div>
   </div>
   <script>
     const params = new URLSearchParams(location.search);
     const code  = params.get('code');
     const error = params.get('error');
+    const state = params.get('state');
 
     if (window.opener) {
-      // Opened as popup by desktop app — send code back via postMessage then close
+      // Popup flow — send code back to PWA via postMessage then close
       try {
         window.opener.postMessage(
           { type: 'dropbox_oauth_callback', code: code || null, error: error || null },
@@ -35,13 +36,23 @@
       } catch(e) {}
       setTimeout(() => window.close(), 1200);
     } else {
-      // Main window redirect (mobile) — pass code back to app URL
-      const appUrl = new URL(location.href);
-      appUrl.pathname = appUrl.pathname.replace('/relay.html', '/');
-      appUrl.search = '';
-      if (code)  appUrl.searchParams.set('code', code);
-      if (error) appUrl.searchParams.set('error', error);
-      location.replace(appUrl.href);
+      // window.opener is null (some iOS versions strip it on popup).
+      // Store the code in localStorage so the PWA picks it up on visibilitychange.
+      if (code) {
+        try {
+          localStorage.setItem('akq_hq_dbx_pending_code', JSON.stringify({
+            code, state, ts: Date.now()
+          }));
+          document.getElementById('msg').textContent = 'Connected! Return to your HQ app.';
+          document.getElementById('sub').textContent = 'Tap the HQ icon on your homescreen to finish connecting.';
+        } catch(e) {
+          document.getElementById('msg').textContent = 'Something went wrong.';
+          document.getElementById('sub').textContent = 'Close this and try connecting again.';
+        }
+      } else if (error) {
+        document.getElementById('msg').textContent = 'Dropbox cancelled.';
+        document.getElementById('sub').textContent = 'Close this and try connecting again.';
+      }
     }
   </script>
 </body>

@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.5-debug</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.7</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2080,6 +2080,8 @@ const DBX = (() => {
   const KEY_PKCE   = 'akq_hq_dbx_pkce';
   const KEY_FILEID = 'akq_hq_dbx_fileid';
   const AKQ_PATH   = '/AKQ HQ/akq-data.json';
+  // relay.html is registered in Dropbox app settings and handles postMessage back to this window
+  const RELAY_URI  = 'https://akqtech.github.io/AKQ-HQ-TRACKER/relay.html';
   let st = { accessToken:null, refreshToken:null, expiresAt:0, account:null, fileId:null };
   function b64url(buf) { return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
   async function sha256(str) { return b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))); }
@@ -2093,41 +2095,53 @@ const DBX = (() => {
   function isConfigured() { return APP_KEY && APP_KEY !== '__DROPBOX_APP_KEY__'; }
   function isConnected()   { return !!st.refreshToken; }
   function account()       { return st.account; }
-  // Mobile: full-page redirect to Dropbox, reads code from URL on return
   async function startOAuth() {
-    if (!isConfigured()) { alert("Dropbox not set up.\n\nPaste your App Key into this file (search fu1in22nni46kx6)."); return; }
+    if (!isConfigured()) { alert("Dropbox not set up."); return; }
+    // Open blank popup SYNCHRONOUSLY within the user gesture so iOS doesn't block it.
+    // We navigate it to Dropbox after computing the PKCE challenge asynchronously.
+    const popup = window.open('about:blank', 'dropbox_auth', 'width=600,height=700');
     const verifier=randVerifier(); const challenge=await sha256(verifier);
     sessionStorage.setItem(KEY_PKCE, verifier);
     localStorage.setItem(KEY_PKCE, verifier);
     const state=btoa(verifier);
-    const redirectUri=getRedirectUri();
-    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:redirectUri,token_access_type:'offline',state});
-    // DEBUG: confirm what redirect URI we're sending
-    alert('DBX DEBUG 1/3\nRedirect URI: ' + redirectUri + '\nVerifier stored: yes\nNavigating to Dropbox now...');
-    location.href=`https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
+    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:RELAY_URI,token_access_type:'offline',state});
+    const authUrl=`https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
+    if (popup && !popup.closed) {
+      popup.location.href = authUrl;
+    } else {
+      // Popup blocked (rare) — fall back to full page redirect
+      localStorage.setItem('akq_hq_dbx_used_relay', '1');
+      location.href = authUrl;
+    }
   }
+  // Called when relay.html sends the code back via postMessage
+  async function completeOAuthFromCode(code) {
+    let verifier=sessionStorage.getItem(KEY_PKCE)||localStorage.getItem(KEY_PKCE);
+    sessionStorage.removeItem(KEY_PKCE); localStorage.removeItem(KEY_PKCE);
+    if(!verifier){alert('Dropbox: session expired — tap Connect again.');return false;}
+    const body=new URLSearchParams({code,grant_type:'authorization_code',client_id:APP_KEY,redirect_uri:RELAY_URI,code_verifier:verifier});
+    const r=await fetch('https://api.dropbox.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+    if(!r.ok){let j={};try{j=await r.json();}catch(e){}alert('Dropbox connection failed: '+(j.error_description||j.error||r.status));return false;}
+    const t=await r.json(); st.accessToken=t.access_token;st.refreshToken=t.refresh_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000;
+    try{const acct=await apiCall('/users/get_current_account',null);st.account={name:acct.name?.display_name||'—',email:acct.email||''};}catch(e){st.account=null;}
+    saveTokens(); return true;
+  }
+  // Fallback: handle code from URL params (popup-blocked redirect path)
   async function handleCallback() {
     const url=new URL(location.href); const code=url.searchParams.get('code'); const error=url.searchParams.get('error'); const stateParam=url.searchParams.get('state');
     if(error){url.searchParams.delete('error');url.searchParams.delete('error_description');history.replaceState(null,'',url.href);alert('Dropbox cancelled: '+error);return false;}
-    if(!code) { return false; }
-    // DEBUG: we got a code back
-    alert('DBX DEBUG 2/3\nGot code back from Dropbox.\nCode (first 8): ' + code.slice(0,8) + '\nState present: ' + !!stateParam + '\nsessionStorage verifier: ' + !!sessionStorage.getItem(KEY_PKCE) + '\nlocalStorage verifier: ' + !!localStorage.getItem(KEY_PKCE));
+    if(!code) return false;
     let verifier=sessionStorage.getItem(KEY_PKCE)||localStorage.getItem(KEY_PKCE);
     sessionStorage.removeItem(KEY_PKCE); localStorage.removeItem(KEY_PKCE);
-    if(!verifier && stateParam){try{verifier=atob(stateParam);}catch(e){alert('DBX: could not decode state: '+e.message);}}
+    if(!verifier&&stateParam){try{verifier=atob(stateParam);}catch(e){}}
     url.searchParams.delete('code');url.searchParams.delete('state');history.replaceState(null,'',url.href);
-    if(!verifier){alert('DBX: no verifier found — cannot complete connection');return false;}
-    const redirectUri=getRedirectUri();
+    if(!verifier) return false;
+    const usedRelay=localStorage.getItem('akq_hq_dbx_used_relay'); localStorage.removeItem('akq_hq_dbx_used_relay');
+    const redirectUri=usedRelay?RELAY_URI:getRedirectUri();
     const body=new URLSearchParams({code,grant_type:'authorization_code',client_id:APP_KEY,redirect_uri:redirectUri,code_verifier:verifier});
     const r=await fetch('https://api.dropbox.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-    if(!r.ok){
-      let errText=''; try{const j=await r.json();errText=JSON.stringify(j);}catch(e){errText=r.status+' '+r.statusText;}
-      alert('DBX DEBUG 3/3 — TOKEN EXCHANGE FAILED\nStatus: '+r.status+'\nError: '+errText+'\nRedirect URI used: '+redirectUri);
-      return false;
-    }
-    const t=await r.json();
-    alert('DBX DEBUG 3/3 — TOKEN EXCHANGE SUCCEEDED\nAccess token: ' + (t.access_token?'yes':'no') + '\nRefresh token: ' + (t.refresh_token?'yes':'no'));
-    st.accessToken=t.access_token;st.refreshToken=t.refresh_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000;
+    if(!r.ok){let j={};try{j=await r.json();}catch(e){}alert('Dropbox connection failed: '+(j.error_description||j.error||r.status));return false;}
+    const t=await r.json(); st.accessToken=t.access_token;st.refreshToken=t.refresh_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000;
     try{const acct=await apiCall('/users/get_current_account',null);st.account={name:acct.name?.display_name||'—',email:acct.email||''};}catch(e){st.account=null;}
     saveTokens(); return true;
   }
@@ -2173,9 +2187,18 @@ const DBX = (() => {
     return txt;
   }
   async function disconnect() { try{await apiCall('/auth/token/revoke',null);}catch(e){} clearTokens(); }
-  return {load,isConfigured,isConnected,account,startOAuth,handleCallback,uploadSmart,downloadData,disconnect};
+  return {load,isConfigured,isConnected,account,startOAuth,handleCallback,completeOAuthFromCode,uploadSmart,downloadData,disconnect};
 })();
 DBX.load();
+
+// Receive OAuth code from relay.html (popup postMessage flow)
+window.addEventListener('message', async (e) => {
+  if (!e.data || e.data.type !== 'dropbox_oauth_callback') return;
+  if (e.data.error) { showToast('Dropbox cancelled'); return; }
+  if (!e.data.code) return;
+  const ok = await DBX.completeOAuthFromCode(e.data.code);
+  if (ok) { updateSyncUI(); showToast('Dropbox connected'); performDropboxPull(); }
+});
 
 // ─── AUTO SYNC ────────────────────────────────────────────────────────────────
 let _isFirstRender = true;
@@ -2315,9 +2338,22 @@ renderMorning();
   }
   _isFirstRender = false;
   setInterval(performDropboxPull, 10000);
-  document.addEventListener('visibilitychange', () => {
+  document.addEventListener('visibilitychange', async () => {
     if (!document.hidden) {
-      // Re-read localStorage in case OAuth completed in a Safari tab while app was backgrounded
+      // Check for pending OAuth code stored by relay.html (when window.opener was stripped by iOS)
+      const pendingRaw = localStorage.getItem('akq_hq_dbx_pending_code');
+      if (pendingRaw) {
+        localStorage.removeItem('akq_hq_dbx_pending_code');
+        try {
+          const pending = JSON.parse(pendingRaw);
+          if (pending.code && (Date.now() - pending.ts) < 300000) {
+            const ok = await DBX.completeOAuthFromCode(pending.code);
+            if (ok) { updateSyncUI(); showToast('Dropbox connected'); performDropboxPull(); }
+            return;
+          }
+        } catch(e) {}
+      }
+      // Re-read localStorage in case tokens appeared from any other context
       const wasConnected = DBX.isConnected();
       DBX.load();
       if (!wasConnected && DBX.isConnected()) {
