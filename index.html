@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#F1BCD7">
+  <title>HQ</title>
+  <link rel="manifest" href="manifest.json">
+  <meta http-equiv="Content-Security-Policy" content="connect-src https://api.dropboxapi.com https://content.dropboxapi.com https://api.dropbox.com https://www.dropbox.com;">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M15 52 L38 75 L85 25' stroke='%23EFFBD5' stroke-width='13' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --hot: #EA258D;
+      --pink: #F37EB3;
+      --blush: #F1BCD7;
+      --orange: #F5952D;
+      --lavender: #D9AED0;
+      --mist: #CACBDF;
+      --ink: #111111;
+      --white: #FFFFFF;
+      --off: #FFF4F8;
+      --row-border: rgba(0,0,0,0.09);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: auto; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .band { width: 100%; }
+    .pad { padding: 28px 22px; }
+    .pad-sm { padding: 20px 22px; }
+    .pad-lg { padding: 36px 22px; }
+
+    .eyebrow { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; display: block; }
+    .eyebrow-white  { color: rgba(255,255,255,0.65); }
+    .eyebrow-hot    { color: var(--hot); }
+    .eyebrow-ink    { color: var(--ink); opacity: 0.45; }
+
+    .mix-head { line-height: 0.95; margin-bottom: 22px; }
+    .mix-sans { display: block; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 32px; text-transform: uppercase; letter-spacing: -0.01em; }
+    .mix-serif { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 32px; }
+    .mix-ink .mix-sans  { color: var(--ink); }
+    .mix-ink .mix-serif { color: var(--hot); }
+    .mix-pink .mix-sans  { color: var(--ink); }
+    .mix-pink .mix-serif { color: var(--hot); }
+    .mix-lav .mix-sans  { color: var(--ink); }
+    .mix-lav .mix-serif { color: #7A4A6A; }
+
+    /* ── HERO ── */
+    .hero-week-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 72px; color: var(--ink); line-height: 0.85; letter-spacing: -0.02em; display: block; }
+    .hero-phase { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 26px; color: var(--hot); display: block; margin-top: 6px; margin-bottom: 14px; cursor: pointer; }
+    .hero-phase-input { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 26px; color: var(--hot); background: rgba(255,255,255,0.7); border: 1.5px solid var(--hot); border-radius: 8px; padding: 4px 10px; outline: none; display: none; width: 100%; max-width: 280px; }
+    .hero-dates { font-size: 11px; color: rgba(0,0,0,0.45); letter-spacing: 0.1em; }
+    .hero-done-pill { display: inline-block; background: var(--orange); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-top: 16px; margin-right: 44px; }
+
+    /* ── PROGRESS ── */
+    .progress-row { display: flex; align-items: center; gap: 20px; }
+    .ring-wrap { flex-shrink: 0; position: relative; width: 76px; height: 76px; }
+    .ring-wrap svg { transform: rotate(-90deg); width: 76px; height: 76px; }
+    .ring-bg   { fill: none; stroke: var(--blush); stroke-width: 6; }
+    .ring-fill { fill: none; stroke: var(--hot); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 207; stroke-dashoffset: 207; transition: stroke-dashoffset 0.7s cubic-bezier(.4,0,.2,1); }
+    .ring-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+    .ring-n { font-size: 22px; font-weight: 800; color: var(--ink); display: block; line-height: 1; }
+    .ring-d { font-size: 10px; color: #9a6a7a; }
+    .progress-text h2 { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 18px; color: var(--ink); line-height: 1.2; }
+    .progress-text p { font-size: 12px; color: #7a5566; margin-top: 3px; line-height: 1.4; }
+
+    /* ── ENCOURAGEMENT ── */
+    .enc-inner { display: flex; align-items: flex-start; gap: 14px; border-left: 3px solid var(--orange); padding-left: 14px; }
+    .enc-icon  { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .enc-text  { flex: 1; }
+    .enc-title { display: none; }
+    .enc-body  { font-weight: 800; font-size: 15px; color: var(--ink); display: block; line-height: 1.45; margin-bottom: 3px; }
+    .enc-attr  { font-size: 11px; color: rgba(0,0,0,0.45); font-style: italic; display: block; margin-top: 5px; }
+    .enc-refresh { background: none; border: none; color: rgba(0,0,0,0.35); font-size: 20px; cursor: pointer; flex-shrink: 0; padding: 0; transition: color 0.2s; }
+    .enc-refresh:active { color: var(--ink); }
+
+    /* ── TASK ROWS ── */
+    .row-list { list-style: none; }
+    .task-row { display: flex; align-items: flex-start; gap: 10px; padding: 15px 22px 15px 14px; border-bottom: 1px solid var(--row-border); transition: background 0.12s, opacity 0.12s; -webkit-user-select: none; user-select: none; }
+    .task-drag-handle { display: flex; align-items: center; justify-content: center; width: 14px; flex-shrink: 0; cursor: grab; color: var(--blush); align-self: stretch; padding: 0; touch-action: none; }
+    .task-drag-handle:active { cursor: grabbing; }
+    .task-row.dragging { opacity: 0.35; }
+    .task-row.drag-over { border-top: 2px solid var(--hot) !important; }
+    .task-row:last-child { border-bottom: none; }
+    .task-cb { width: 22px; height: 22px; border: 2px solid var(--blush); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.18s; background: white; }
+    .task-row.done .task-cb { background: var(--hot); border-color: var(--hot); }
+    .cb-check { color: white; font-size: 12px; font-weight: 800; opacity: 0; transition: opacity 0.15s; }
+    .task-row.done .cb-check { opacity: 1; }
+    .task-body { flex: 1; min-width: 0; }
+    .task-label { font-size: 14px; color: var(--ink); line-height: 1.4; transition: color 0.15s; }
+    .task-row.done .task-label { color: var(--lavender); text-decoration: line-through; text-decoration-color: var(--pink); }
+    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFD4F4; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
+    .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
+    .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
+    .origin-badge { display: inline-block; background: #FFD4F4; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+
+    /* Down the Line section */
+    .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
+    .dtl-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
+    .dtl-label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hot); }
+    .dtl-count-badge { background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: none; }
+    .dtl-toggle-indicator { font-size: 13px; color: rgba(0,0,0,0.35); margin-left: 6px; }
+    .dtl-body { padding: 0 20px 16px; }
+    .dtl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .dtl-item:last-of-type { border-bottom: none; }
+    .dtl-text { flex: 1; min-width: 0; }
+    .dtl-task-text { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+    .dtl-blocker { font-size: 11px; color: rgba(0,0,0,0.5); font-style: italic; margin-top: 3px; }
+    .dtl-item-actions { display: flex; gap: 5px; flex-shrink: 0; align-items: flex-start; padding-top: 2px; }
+    .dtl-activate-btn { background: var(--pink); color: white; border: none; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .dtl-mgmt-btn { background: none; border: none; color: rgba(0,0,0,0.3); font-size: 18px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+    .dtl-add-area { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .dtl-add-input { background: var(--blush); border: 1.5px solid transparent; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink); outline: none; transition: border-color 0.15s; }
+    .dtl-add-input:focus { border-color: #ffadf7; }
+    .dtl-add-input::placeholder { color: rgba(0,0,0,0.35); }
+    .dtl-add-btn { background: #ffadf7; color: var(--hot); border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; align-self: flex-start; }
+    /* Category list in manage-cats modal */
+    .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .cat-list-item:last-child { border-bottom: none; }
+    .cat-list-name { font-size: 14px; font-weight: 600; color: var(--ink); text-transform: capitalize; }
+    .cat-del-btn { background: none; border: none; color: #c0392b; font-size: 14px; cursor: pointer; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+    .modal-lbl-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .modal-lbl-row .modal-lbl { margin-bottom: 0; }
+    .modal-lbl-link { background: none; border: none; color: var(--pink); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; }
+    /* DTL toggle in task modal */
+    .mgmt-dtl-row { display: flex; align-items: center; justify-content: space-between; margin: 4px 0; }
+    .mgmt-dtl-btn { background: var(--blush); color: var(--hot); border: 1.5px solid transparent; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .mgmt-dtl-btn.active { background: #ffadf7; border-color: var(--hot); }
+
+    /* Task action controls */
+    .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .task-carry-btn { background: none; border: 1.5px solid var(--orange); color: var(--orange); border-radius: 8px; padding: 3px 7px; font-size: 10px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .task-carry-btn:active { background: var(--orange); color: #fff; }
+    .task-mgmt-btn { background: none; border: none; color: rgba(0,0,0,0.3); font-size: 20px; cursor: pointer; padding: 2px 4px; border-radius: 6px; line-height: 1; }
+    .task-mgmt-btn:active { color: var(--ink); }
+
+    /* ── ADD TASK ── */
+    .add-row { display: flex; gap: 8px; padding: 14px 22px; border-top: 1.5px solid var(--blush); background: var(--off); }
+    .add-input { flex: 1; border: 1.5px solid var(--blush); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; }
+    .add-input:focus { border-color: var(--hot); }
+    .add-input::placeholder { color: var(--lavender); }
+    .add-btn { background: var(--pink); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .add-btn:active { background: #d9689f; }
+
+    /* ── PRACTICES ── */
+    .practice-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 22px; border-bottom: 1px solid rgba(234,37,141,0.1); }
+    .practice-row:last-child { border-bottom: none; }
+    .pr-dot { width: 7px; height: 7px; border-radius: 50%; background: #f6d0f6; flex-shrink: 0; margin-top: 7px; }
+    .pr-text { font-size: 14px; color: #5a3348; line-height: 1.5; }
+
+    /* ── QUOTE ── */
+    .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 18px; color: #7A4A6A; line-height: 1.6; margin-bottom: 14px; }
+    .quote-attr { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,0,0,0.35); font-weight: 600; }
+
+    /* ── PROMPT BUILDER — single area ── */
+    .prompt-note { font-size: 12px; color: #7a5566; margin-bottom: 16px; line-height: 1.5; padding: 10px 12px; background: var(--blush); border-radius: 8px; }
+    .prompt-note strong { color: var(--hot); }
+    .prompt-opt-list { list-style: none; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .prompt-opt { display: flex; align-items: center; padding: 7px 12px; border: 1.5px solid var(--row-border); border-radius: 20px; cursor: pointer; transition: all 0.15s; background: var(--off); font-size: 12px; color: var(--ink); }
+    .prompt-opt.selected { border-color: var(--hot); background: var(--blush); color: var(--hot); font-weight: 700; }
+    .prompt-custom { width: 100%; border: 1.5px solid var(--blush); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; resize: none; margin-bottom: 14px; transition: border-color 0.2s; }
+    .prompt-custom:focus { border-color: var(--hot); }
+    .prompt-custom::placeholder { color: var(--lavender); }
+    .gen-btn { width: 100%; background: var(--orange); color: white; border: none; border-radius: 12px; padding: 16px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .gen-btn:active { background: #d47a1f; }
+
+    /* ── DATA ── */
+    .data-row { display: flex; gap: 10px; }
+    .data-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 12px; border-radius: 12px; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .data-btn-export { background: var(--pink); color: white; }
+    .data-btn-export:active { background: #d9689f; }
+    .data-btn-import { background: white; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.12); }
+    .data-btn-import:active { background: var(--off); }
+    .data-note { font-size: 11px; color: #7a5a6a; margin-top: 12px; line-height: 1.6; }
+    .data-note strong { color: var(--ink); }
+    #importInput { display: none; }
+    .import-success { display: none; background: var(--hot); color: white; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; text-align: center; margin-top: 10px; }
+
+    /* ── TIMELINE ── */
+    .tl-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .tl-scroll::-webkit-scrollbar { display: none; }
+    .tl-chip { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; border: 1.5px solid rgba(0,0,0,0.1); background: white; cursor: pointer; text-align: center; transition: all 0.15s; }
+    .tl-chip.active { background: var(--hot); border-color: var(--hot); }
+    .tl-chip.past  { background: var(--blush); border-color: var(--pink); }
+    .tl-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; display: block; }
+    .tl-chip.active .tl-name { color: white; }
+    .tl-chip.past  .tl-name  { color: var(--hot); }
+    .tl-wk { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; display: block; margin-top: 2px; }
+    .tl-chip.active .tl-wk { color: rgba(255,255,255,0.65); }
+
+    /* ── YOU DID THAT button band ── */
+    .ydt-band { background: #f2ffd5; padding: 16px 22px; }
+    .ydt-band-btn { width: 100%; background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
+    .ydt-band-btn:active { opacity: 0.85; }
+
+    /* ── MODALS ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end; backdrop-filter: blur(3px); }
+    .overlay.open { display: flex; }
+    .modal { background: white; border-radius: 20px 20px 0 0; padding: 24px 22px 44px; width: 100%; max-height: 90vh; overflow-y: auto; animation: up 0.28s cubic-bezier(.4,0,.2,1); }
+    @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 36px; height: 4px; background: var(--mist); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px; color: var(--ink); margin-bottom: 4px; }
+    .modal-sub { font-size: 13px; color: #888; margin-bottom: 20px; font-style: italic; line-height: 1.4; }
+    .modal-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hot); margin-bottom: 8px; display: block; }
+    .modal-ta { width: 100%; border: 1.5px solid var(--blush); border-radius: 12px; padding: 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); resize: none; outline: none; margin-bottom: 16px; min-height: 100px; transition: border-color 0.2s; line-height: 1.5; }
+    .modal-ta:focus { border-color: var(--hot); }
+    .modal-ta::placeholder { color: var(--lavender); }
+    .modal-input { width: 100%; border: 1.5px solid var(--blush); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; transition: border-color 0.2s; margin-bottom: 14px; }
+    .modal-input:focus { border-color: var(--hot); }
+    .modal-select { width: 100%; border: 1.5px solid var(--blush); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; cursor: pointer; margin-bottom: 14px; }
+    .modal-acts { display: flex; flex-direction: column; gap: 8px; }
+    .modal-row-btns { display: flex; gap: 8px; }
+    .modal-row-btns button { flex: 1; }
+    .modal-divider { height: 1px; background: var(--blush); margin: 14px 0; }
+    .mbtn-primary   { background: var(--pink); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-primary:active { background: #d9689f; }
+    .mbtn-secondary { background: #7A4A6A; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-orange    { background: #f2bdd8; color: #eb268f; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-outline   { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-danger    { background: none; color: #c0392b; border: 1.5px solid #c0392b; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-danger:active { background: #c0392b; color: white; }
+    .mbtn-ghost     { background: none; color: var(--lavender); border: none; padding: 10px; font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .prompt-display { background: var(--off); border: 1.5px solid var(--blush); border-radius: 12px; padding: 16px; font-size: 13px; color: var(--ink); line-height: 1.7; white-space: pre-wrap; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
+    .mgmt-reorder { display: flex; gap: 8px; margin-bottom: 10px; }
+    .mgmt-reorder button { flex: 1; background: var(--off); border: 1.5px solid var(--row-border); border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+
+    /* ── YOU DID THAT overlay ── */
+    .ydt-overlay { display: none; position: fixed; inset: 0; background: #f2ffd5; z-index: 300; overflow-y: auto; }
+    .ydt-overlay.open { display: block; }
+    .ydt-inner { padding: 36px 22px 60px; }
+    .ydt-back { background: none; border: none; color: var(--hot); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; padding: 0; margin-bottom: 28px; display: flex; align-items: center; gap: 6px; }
+    .ydt-heading { margin-bottom: 32px; }
+    .ydt-eyebrow { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.35); display: block; margin-bottom: 8px; }
+    .ydt-title-sans { display: block; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 44px; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); line-height: 0.9; }
+    .ydt-title-serif { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 44px; color: var(--hot); line-height: 0.9; margin-bottom: 14px; }
+    .ydt-count-badge { display: inline-block; background: var(--orange); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; }
+    .ydt-week-group { margin-bottom: 28px; }
+    .ydt-week-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: var(--hot); display: block; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px solid var(--blush); }
+    .ydt-task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .ydt-task-item:last-child { border-bottom: none; }
+    .ydt-check { width: 18px; height: 18px; background: var(--hot); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 800; margin-top: 2px; }
+    .ydt-task-text { font-size: 13px; color: var(--ink); line-height: 1.4; }
+    .ydt-empty { text-align: center; padding: 50px 20px; }
+    .ydt-empty-serif { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #7A4A6A; line-height: 1.6; }
+    .ydt-section { margin-bottom: 36px; }
+    .ydt-section-title { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 16px; color: var(--hot); letter-spacing: -0.01em; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--blush); display: flex; align-items: center; gap: 6px; }
+    .ydt-section-title--past { font-size: 10px; font-weight: 700; color: rgba(0,0,0,0.3); letter-spacing: 0.18em; text-transform: uppercase; border-bottom-color: rgba(0,0,0,0.06); }
+
+    /* ── DONE BANNER ── */
+    .done-banner { display: none; background: var(--hot); color: #f6d0f6; text-align: center; padding: 14px 22px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--blush); }
+
+    /* ── GOOD MORNING ── */
+    .gm-band { background: #F37EB3; border-bottom: 2px solid rgba(255,255,255,0.3); padding: 18px 22px; }
+    .gm-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #F8A96C; display: block; margin-bottom: 14px; }
+    .gm-items { display: flex; flex-direction: column; gap: 0; }
+    .gm-item { cursor: pointer; user-select: none; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.35); }
+    .gm-item:last-child { border-bottom: none; }
+    .gm-check-row { display: flex; align-items: flex-start; gap: 10px; }
+    .gm-box { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.7); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
+    .gm-box.checked { background: #fff; border-color: #fff; }
+    .gm-box.checked::after { content: '✓'; color: #F37EB3; font-size: 11px; font-weight: 900; }
+    .gm-label { font-size: 13px; font-weight: 800; color: #eefbd1; text-transform: uppercase; letter-spacing: 0.07em; }
+    .gm-label.checked { color: rgba(238,251,209,0.4); text-decoration: line-through; }
+    .gm-reminder { font-size: 12px; color: #fff; font-style: italic; line-height: 1.5; margin-top: 8px; padding-left: 30px; display: none; opacity: 0.9; }
+    .gm-reminder.show { display: block; }
+    .gm-all-done { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #fff; margin-top: 14px; display: none; text-align: center; }
+    .gm-all-done.show { display: block; }
+    .gm-edit-toggle { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 0; transition: color 0.2s; }
+    .gm-edit-toggle:active { color: #fff; }
+    .gm-edit-panel { display: none; margin-top: 14px; }
+    .gm-edit-panel.open { display: block; }
+    .gm-edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .gm-edit-input { flex: 1; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.4); background: transparent; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 0; outline: none; }
+    .gm-edit-input:focus { border-color: #fff; }
+    .gm-edit-input::placeholder { color: rgba(255,255,255,0.35); }
+    .gm-edit-del { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 16px; cursor: pointer; padding: 2px 6px; }
+    .gm-edit-del:active { color: #fff; }
+    .gm-edit-add { display: flex; gap: 8px; margin-top: 10px; }
+    .gm-edit-add input { flex: 1; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; background: transparent; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; outline: none; }
+    .gm-edit-add input::placeholder { color: rgba(255,255,255,0.35); }
+    .gm-edit-add button { background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 800; padding: 8px 14px; cursor: pointer; }
+
+    /* ── PRACTICES EDIT ── */
+    .pr-edit-toggle { background: none; border: none; color: var(--hot); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 0; opacity: 0.5; transition: opacity 0.2s; }
+    .pr-edit-toggle:active { opacity: 1; }
+    .pr-edit-panel { display: none; padding: 0 22px 16px; }
+    .pr-edit-panel.open { display: block; }
+    .pr-edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .pr-edit-input { flex: 1; border: none; border-bottom: 1.5px solid var(--pink); background: transparent; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 6px 0; outline: none; line-height: 1.4; }
+    .pr-edit-input:focus { border-color: var(--hot); }
+    .pr-edit-input::placeholder { color: var(--lavender); }
+    .pr-edit-del { background: none; border: none; color: var(--lavender); font-size: 16px; cursor: pointer; padding: 2px 6px; }
+    .pr-edit-del:active { color: var(--hot); }
+    .pr-edit-add { display: flex; gap: 8px; margin-top: 6px; }
+    .pr-edit-add input { flex: 1; border: 1.5px solid var(--blush); border-radius: 8px; background: transparent; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 8px 10px; outline: none; }
+    .pr-edit-add input::placeholder { color: var(--lavender); }
+    .pr-edit-add button { background: var(--pink); border: none; border-radius: 8px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 800; padding: 8px 14px; cursor: pointer; }
+
+    /* ── IDEA BANK ── */
+    .ib-overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 5000; overflow-y: auto; }
+    .ib-overlay.open { display: block; }
+    .ib-inner { padding: 36px 22px 80px; }
+    .ib-back { background: none; border: none; color: var(--hot); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; padding: 0; margin-bottom: 28px; display: flex; align-items: center; gap: 6px; }
+    .ib-eyebrow { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.35); display: block; margin-bottom: 8px; }
+    .ib-title-sans { display: block; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 42px; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); line-height: 0.9; }
+    .ib-title-serif { display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 42px; color: var(--hot); line-height: 0.9; margin-bottom: 20px; }
+    .ib-capture { background: var(--off); border-radius: 14px; padding: 18px; margin-bottom: 24px; border: 1.5px solid var(--blush); }
+    .ib-input { width: 100%; border: none; background: transparent; font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: var(--ink); resize: none; outline: none; line-height: 1.5; }
+    .ib-input::placeholder { color: rgba(0,0,0,0.25); }
+    .ib-tags { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+    .ib-tag-btn { border: 1.5px solid; background: transparent; border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; padding: 5px 12px; font-family: 'DM Sans', sans-serif; transition: background 0.15s, color 0.15s; }
+    .ib-tag-btn[data-tag="Stand Up"]        { border-color: var(--hot);      color: var(--hot); }
+    .ib-tag-btn[data-tag="TV / Pilot"]      { border-color: #b2c0f9;         color: #3b4a8c; }
+    .ib-tag-btn[data-tag="Film"]            { border-color: var(--pink);     color: var(--hot); }
+    .ib-tag-btn[data-tag="Podcast"]         { border-color: var(--lavender); color: #7a5a8c; }
+    .ib-tag-btn[data-tag="Music"]           { border-color: var(--orange);   color: #b06030; }
+    .ib-tag-btn[data-tag="Business"]        { border-color: var(--mist);     color: #555; }
+    .ib-tag-btn[data-tag="Online / Social"] { border-color: #a8d8a0;         color: #3a7a3a; }
+    .ib-tag-btn[data-tag="Other"]           { border-color: #ccc;            color: #888; }
+    .ib-tag-btn[data-tag="Stand Up"].active        { background: var(--hot);      color: #fff; }
+    .ib-tag-btn[data-tag="TV / Pilot"].active      { background: #b2c0f9;         color: #3b4a8c; }
+    .ib-tag-btn[data-tag="Film"].active            { background: var(--pink);     color: #fff; }
+    .ib-tag-btn[data-tag="Podcast"].active         { background: var(--lavender); color: var(--ink); }
+    .ib-tag-btn[data-tag="Music"].active           { background: var(--orange);   color: #b06030; }
+    .ib-tag-btn[data-tag="Business"].active        { background: var(--mist);     color: var(--ink); }
+    .ib-tag-btn[data-tag="Online / Social"].active { background: #a8d8a0;         color: #3a7a3a; }
+    .ib-tag-btn[data-tag="Other"].active           { background: #ccc;            color: var(--ink); }
+    .ib-save-btn { width: 100%; padding: 16px; background: var(--hot); color: #fff; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; margin-top: 4px; }
+    .ib-save-btn:active { opacity: 0.85; }
+    .ib-list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .ib-list-eyebrow { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700; color: rgba(0,0,0,0.35); }
+    .ib-send-all-btn { background: transparent; border: 1.5px solid var(--hot); color: var(--hot); border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .ib-notion-row { margin-bottom: 16px; }
+    .ib-notion-input { width: 100%; border: 1px solid var(--blush); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--ink); font-family: 'DM Sans', sans-serif; outline: none; }
+    .ib-settings-toggle { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; opacity: 0.4; transition: opacity 0.2s; }
+    .ib-settings-toggle:active { opacity: 1; }
+    .ib-settings-panel { display: none; background: var(--off); border: 1.5px solid var(--blush); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .ib-settings-panel.open { display: block; }
+    .ib-settings-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: var(--hot); display: block; margin-bottom: 8px; }
+    .ib-token-input { width: 100%; border: 1.5px solid var(--blush); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--ink); font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 10px; }
+    .ib-token-input:focus { border-color: var(--hot); }
+    .ib-token-btns { display: flex; gap: 8px; }
+    .ib-token-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.04em; }
+    .ib-token-save { background: var(--pink); color: white; }
+    .ib-token-test { background: white; color: var(--ink); border: 1.5px solid var(--blush) !important; }
+    .ib-sync-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 12px; margin-left: 8px; }
+    .ib-sync-on { background: #dcfce7; color: #166534; }
+    .ib-sync-off { background: var(--off); color: rgba(0,0,0,0.35); border: 1px solid var(--blush); }
+    .ib-card { background: #fff; border-left: 4px solid; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .ib-card-text { font-size: 14px; color: var(--ink); line-height: 1.5; margin-bottom: 8px; }
+    .ib-card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .ib-tag-badge { font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+    .ib-ts { font-size: 10px; color: rgba(0,0,0,0.4); }
+    .ib-sent { font-size: 10px; color: #7a7; font-weight: 700; }
+    .ib-card-acts { display: flex; gap: 8px; }
+    .ib-notion-btn { background: var(--ink); color: #fff; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 6px 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .ib-del-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 6px; font-size: 12px; color: rgba(0,0,0,0.4); cursor: pointer; padding: 6px 10px; }
+    .ib-empty { text-align: center; padding: 40px 20px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: rgba(0,0,0,0.3); }
+    .ib-band { background: transparent; padding: 8px 22px 16px; }
+    .ib-band-btn { background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; display: inline-block; }
+
+    /* ── TOAST ── */
+    .bcy-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--hot); color: white; padding: 12px 24px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 8px 24px rgba(234,37,141,0.3); transition: transform 0.35s cubic-bezier(0.23,1,0.32,1); z-index: 9998; pointer-events: none; white-space: nowrap; }
+    .bcy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── GLITTER ── */
+    @keyframes glitter-fly { 0% { transform: translate(0,0) scale(1.2); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+    .glitter-particle { position: fixed; pointer-events: none; z-index: 9999; animation: glitter-fly 0.95s ease-out forwards; font-style: normal; line-height: 1; }
+
+    /* ── WEEK MANAGEMENT ── */
+    .week-mgmt-btn { background: none; border: none; color: rgba(0,0,0,0.35); font-size: 22px; cursor: pointer; padding: 0 0 0 8px; line-height: 1; flex-shrink: 0; }
+    .week-mgmt-btn:active { color: var(--ink); }
+    .tl-add-chip { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; border: 1.5px dashed var(--pink); background: white; cursor: pointer; text-align: center; transition: all 0.15s; }
+    .tl-add-chip:active { background: var(--blush); }
+    .tl-add-name { font-size: 11px; font-weight: 700; color: var(--hot); white-space: nowrap; display: block; }
+    .tl-add-wk { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); display: block; margin-top: 2px; }
+
+    .sync-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; transition:background 0.3s; cursor:pointer; }
+    .sync-idle { background:#4CAF50; }
+    .sync-syncing { background:var(--hot); animation:syncpulse 1s ease-in-out infinite; }
+    .sync-error { background:#e74c3c; }
+    .sync-off { background:rgba(0,0,0,0.15); }
+    @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  </style>
+</head>
+<body>
+
+<!-- FULLSCREEN BUTTON -->
+
+<!-- 0. GOOD MORNING RITUAL -->
+<section class="gm-band" id="gmBand">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+    <span class="gm-title" style="margin-bottom:0;">Good Morning ✨</span>
+    <button class="gm-edit-toggle" id="gmEditBtn" onclick="toggleGmEdit()">edit</button>
+  </div>
+  <div class="gm-items" id="gmItems"></div>
+  <div class="gm-all-done" id="gmAllDone">The morning is done. The rest of the day answers to you now.</div>
+  <div class="gm-edit-panel" id="gmEditPanel">
+    <div id="gmEditList"></div>
+    <div class="gm-edit-add">
+      <input id="gmAddInput" type="text" placeholder="New morning item...">
+      <button onclick="addMorningItem()">+ Add</button>
+    </div>
+  </div>
+</section>
+
+<!-- 1. HERO -->
+<div class="band pad" style="background:#f1bcd7;">
+  <div style="display:flex;align-items:center;justify-content:space-between;"><span class="eyebrow eyebrow-hot" style="margin-bottom:0;">week by week · april korto quioh</span><div style="display:flex;align-items:center;gap:10px;"><button onclick="openSyncSettings()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 0;" title="Sync settings"><div id="syncDot" class="sync-dot sync-off"></div></button><button class="week-mgmt-btn" onclick="openWeekMgmt()" title="Manage this week">⋯</button></div></div>
+  <span class="hero-week-num" id="heroNum">1</span>
+  <span class="hero-phase" id="heroPhase" onclick="startEditTheme()" title="Tap to rename">The Floor</span>
+  <input class="hero-phase-input" id="heroPhaseInput" onblur="saveEditTheme()" onkeydown="themeKeydown(event)">
+  <div class="hero-dates" id="heroDates">Mar 31 – Apr 6</div>
+  <div class="hero-done-pill" id="heroPill">0 of 0 done</div>
+</div>
+
+<!-- DONE BANNER -->
+<div class="done-banner" id="doneBanner">✦ you did that ✓ ✦</div>
+
+<!-- 2. PROGRESS -->
+<div class="band band pad-sm" style="background:white;">
+  <div class="progress-row">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 76 76">
+        <circle class="ring-bg" cx="38" cy="38" r="33"/>
+        <circle class="ring-fill" id="ringFill" cx="38" cy="38" r="33"/>
+      </svg>
+      <div class="ring-label">
+        <span class="ring-n" id="ringN">0</span>
+        <span class="ring-d" id="ringD">of 0</span>
+      </div>
+    </div>
+    <div class="progress-text">
+      <h2 id="progHead">Let's get into it.</h2>
+      <p id="progSub"></p>
+    </div>
+  </div>
+  <div class="ib-band" style="text-align:right;">
+    <button class="ib-band-btn" onclick="showIdeaBank()"><span style="color:#eefbd1;">✦</span> Idea Bank</button>
+  </div>
+</div>
+
+<!-- 3. ENCOURAGEMENT -->
+<div class="band pad-sm" style="background:#b2c0f9;">
+  <div class="enc-inner">
+    <div class="enc-icon" id="encIcon">✦</div>
+    <div class="enc-text">
+      <strong class="enc-title" id="encTitle">Loading...</strong>
+      <span class="enc-body" id="encBody"></span>
+      <span class="enc-attr" id="encAttr"></span>
+    </div>
+    <button class="enc-refresh" onclick="nextEnc()" title="Another">↻</button>
+  </div>
+</div>
+
+<!-- 4. TASKS -->
+<div class="band" style="background:white;">
+  <div class="pad" style="padding-bottom:0;">
+    <span class="eyebrow eyebrow-ink">This Week</span>
+    <div class="mix-head mix-pink">
+      <span class="mix-sans">What Gets</span>
+      <span class="mix-serif">Done.</span>
+    </div>
+  </div>
+  <ul class="row-list" id="taskList"></ul>
+  <div class="add-row">
+    <input class="add-input" id="addInput" type="text" placeholder="Add your own task...">
+    <button class="add-btn" onclick="addTask()">+ Add</button>
+  </div>
+  <div class="dtl-section" id="dtlSection">
+    <button class="dtl-header" onclick="toggleDTLPanel()">
+      <span class="dtl-label">Down the Line</span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="dtl-count-badge" id="dtlCountBadge"></span>
+        <span class="dtl-toggle-indicator" id="dtlToggleInd">+</span>
+      </span>
+    </button>
+    <div class="dtl-body" id="dtlBody" style="display:none;">
+      <ul class="row-list" id="dtlList" style="margin-bottom:0;"></ul>
+      <div class="dtl-add-area">
+        <input class="dtl-add-input" id="dtlAddText" type="text" placeholder="What needs to wait...">
+        <input class="dtl-add-input" id="dtlAddBlocker" type="text" placeholder="Need X first... (optional)">
+        <button class="dtl-add-btn" onclick="addDTLTask()">+ Add to Down the Line</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. PRACTICES -->
+<div class="band" style="background:var(--blush);">
+  <div class="pad" style="padding-bottom:0;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div>
+        <span class="eyebrow eyebrow-hot">Alongside The Tasks</span>
+        <div class="mix-head mix-pink">
+          <span class="mix-sans">The Real</span>
+          <span class="mix-serif">Work.</span>
+        </div>
+      </div>
+      <button class="pr-edit-toggle" onclick="togglePrEdit()">edit</button>
+    </div>
+  </div>
+  <div id="practiceList"></div>
+  <div class="pr-edit-panel" id="prEditPanel">
+    <div id="prEditList"></div>
+    <div class="pr-edit-add">
+      <input id="prAddInput" type="text" placeholder="Add a practice...">
+      <button onclick="addPractice()">+ Add</button>
+    </div>
+  </div>
+  <div style="height:22px;"></div>
+</div>
+
+<!-- 8. YOU DID THAT button -->
+<div class="ydt-band">
+  <button class="ydt-band-btn" onclick="showYouDidThat()"><span style="color:#eefbd1;">✦</span> You Did That</button>
+</div>
+
+<!-- 9. DATA -->
+<div class="band pad" style="background:var(--lavender);">
+  <span class="eyebrow eyebrow-ink" style="opacity:0.6;">Your Data</span>
+  <div class="mix-head mix-lav" style="margin-bottom:18px;">
+    <span class="mix-sans">Save &amp;</span>
+    <span class="mix-serif">Transfer.</span>
+  </div>
+  <div class="data-row">
+    <button class="data-btn data-btn-export" onclick="exportData()">↓ Export JSON</button>
+    <button class="data-btn data-btn-import" onclick="document.getElementById('importInput').click()">↑ Load JSON</button>
+    <input type="file" id="importInput" accept=".json" onchange="importData(event)">
+  </div>
+  <div class="import-success" id="importSuccess">✓ Data loaded successfully</div>
+</div>
+
+<!-- 10. TIMELINE -->
+<div class="band pad-sm" style="background:var(--mist);">
+  <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
+  <div class="tl-scroll" id="tlScroll"></div>
+</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.1</div>
+
+<!-- STATUS MODAL -->
+<div class="overlay" id="statusModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">What's the status?</div>
+    <div class="modal-sub" id="modalSub">—</div>
+    <span class="modal-lbl">What happened / where things stand</span>
+    <textarea class="modal-ta" id="modalTa" placeholder="Still working on... / Waiting on... / Blocked because..."></textarea>
+    <div class="modal-acts">
+      <button class="mbtn-primary" onclick="saveNote()">Save note</button>
+      <button class="mbtn-secondary" onclick="saveAndPrompt()">Save + build Cowork prompt</button>
+      <button class="mbtn-ghost" onclick="closeModal('statusModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TASK MANAGEMENT MODAL -->
+<div class="overlay" id="taskMgmtModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit Task</div>
+    <div class="modal-sub" id="taskMgmtSub">—</div>
+    <span class="modal-lbl">Task text</span>
+    <input class="modal-input" id="taskMgmtText" type="text" placeholder="Task description...">
+    <div class="modal-lbl-row">
+      <span class="modal-lbl">Category</span>
+      <button class="modal-lbl-link" onclick="openCatsModal()">Edit categories</button>
+    </div>
+    <select class="modal-select" id="taskMgmtCat"></select>
+    <div class="modal-divider"></div>
+    <div class="mgmt-dtl-row">
+      <span class="modal-lbl" style="margin-bottom:0;">Down the line?</span>
+      <button class="mgmt-dtl-btn" id="taskMgmtDTLBtn" onclick="toggleMgmtDTL()">No</button>
+    </div>
+    <div id="taskMgmtBlockerRow" style="display:none;margin-top:8px;">
+      <span class="modal-lbl">Need X first (blocker note)</span>
+      <input class="modal-input" id="taskMgmtBlocker" type="text" placeholder="What needs to happen first...">
+    </div>
+    <div class="modal-divider"></div>
+    <div class="mgmt-reorder">
+      <button onclick="mgmtMoveUp()">↑ Move Up</button>
+      <button onclick="mgmtMoveDown()">↓ Move Down</button>
+    </div>
+    <span class="modal-lbl">Reschedule to another week</span>
+    <select class="modal-select" id="taskReschedSel">
+      <option value="">— pick a week —</option>
+    </select>
+    <div class="modal-acts">
+      <div class="modal-row-btns">
+        <button class="mbtn-primary" onclick="mgmtSave()">Save changes</button>
+        <button class="mbtn-orange" onclick="mgmtCarry()">→ Next Week</button>
+      </div>
+      <button class="mbtn-danger" onclick="mgmtDelete()">Delete this task</button>
+      <button class="mbtn-ghost" onclick="closeModal('taskMgmtModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES MODAL -->
+<div class="overlay" id="catsModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Manage Categories</div>
+    <ul id="catsList" style="list-style:none;margin:0 0 14px;padding:0;max-height:260px;overflow-y:auto;"></ul>
+    <div style="display:flex;gap:8px;margin-bottom:4px;">
+      <input class="modal-input" id="catNewInput" type="text" placeholder="New category name..." style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')addCat()">
+      <button class="mbtn-primary" onclick="addCat()" style="white-space:nowrap;padding:12px 14px;">Add</button>
+    </div>
+    <div class="modal-acts">
+      <button class="mbtn-primary" onclick="closeCatsModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- IDEA BANK OVERLAY -->
+<div class="ib-overlay" id="ibOverlay">
+  <div class="ib-inner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <button class="ib-back" onclick="closeIdeaBank()" style="margin-bottom:0;">← Back</button>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="ib-sync-badge" id="ibSyncBadge">offline</span>
+        <button class="ib-settings-toggle" onclick="toggleIbSettings()" title="Notion settings">⚙️</button>
+      </div>
+    </div>
+    <span class="ib-eyebrow">Creative captures · AKQ HQ</span>
+    <span class="ib-title-sans">Idea</span>
+    <span class="ib-title-serif">Bank.</span>
+
+    <!-- NOTION SETTINGS (hidden by default) -->
+    <div class="ib-settings-panel" id="ibSettingsPanel">
+      <span class="ib-settings-label">Notion Integration Token</span>
+      <input class="ib-token-input" id="ibTokenInput" type="password" placeholder="Paste your ntn_xxx or secret_xxx token">
+      <div class="ib-token-btns">
+        <button class="ib-token-btn ib-token-save" onclick="saveIbToken()">Save Token</button>
+        <button class="ib-token-btn ib-token-test" onclick="testIbToken()">Test Connection</button>
+      </div>
+    </div>
+
+    <div class="ib-capture">
+      <input class="ib-input" id="ibName" type="text" placeholder="ENTRY NAME (optional)" style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;font-style:normal;margin-bottom:10px;border-bottom:1.5px solid var(--blush);padding-bottom:10px;">
+      <textarea class="ib-input" id="ibInput" rows="3" placeholder="full idea details"></textarea>
+      <div class="ib-tags">
+        <button class="ib-tag-btn" data-tag="Stand Up"        onclick="ibTagSelect(this)">STAND UP</button>
+        <button class="ib-tag-btn" data-tag="TV / Pilot"      onclick="ibTagSelect(this)">TV / PILOT</button>
+        <button class="ib-tag-btn" data-tag="Film"            onclick="ibTagSelect(this)">FILM</button>
+        <button class="ib-tag-btn" data-tag="Podcast"         onclick="ibTagSelect(this)">PODCAST</button>
+        <button class="ib-tag-btn" data-tag="Music"           onclick="ibTagSelect(this)">MUSIC</button>
+        <button class="ib-tag-btn" data-tag="Business"        onclick="ibTagSelect(this)">BUSINESS</button>
+        <button class="ib-tag-btn" data-tag="Online / Social" onclick="ibTagSelect(this)">ONLINE</button>
+        <button class="ib-tag-btn" data-tag="Other"           onclick="ibTagSelect(this)">OTHER</button>
+      </div>
+      <button class="ib-save-btn" id="ibSaveBtn" onclick="saveIdea()">Save to Idea Bank</button>
+    </div>
+    <div class="ib-list-header">
+      <span class="ib-list-eyebrow">Captured Ideas</span>
+      <button class="ib-send-all-btn" id="ibSendAllBtn" onclick="sendAllToNotion()" style="display:none;">✦ Sync All to Notion</button>
+    </div>
+    <div id="ibList"></div>
+  </div>
+</div>
+
+
+<!-- WEEK MANAGEMENT MODAL -->
+<div class="overlay" id="weekMgmtModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Week Settings</div>
+    <div class="modal-sub" id="weekMgmtSub">—</div>
+    <div class="modal-acts">
+      <button class="mbtn-secondary" onclick="archiveWeek()" style="background:var(--blush);color:var(--hot);">Archive this week</button>
+      <button class="mbtn-danger" onclick="confirmDeleteWeek()">Delete this week from the year</button>
+      <button class="mbtn-ghost" onclick="closeModal('weekMgmtModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SYNC SETTINGS MODAL -->
+<div class="overlay" id="syncModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Dropbox Sync</div>
+    <div class="modal-sub" id="dbxConnStatus">Checking...</div>
+    <div id="dbxAcct" style="font-size:11px;color:#aaa;margin:-12px 0 8px;font-style:italic;"></div>
+    <div style="background:#FFF4F8;border-radius:12px;padding:12px 16px;margin:4px 0 8px;font-size:12px;color:rgba(0,0,0,0.5);line-height:1.55;">Desktop and mobile stay in sync through one Dropbox file. Changes push automatically after 2 seconds.</div>
+    <div id="dbxSyncMsg" style="font-size:11px;color:var(--hot);text-align:center;padding:4px 0 10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;"></div>
+    <div class="modal-acts">
+      <button id="dbxConnectBtn" class="mbtn-primary" onclick="dbxConnect()">Connect Dropbox</button>
+      <button id="dbxDisconnectBtn" class="mbtn-ghost" onclick="dbxDisconnect()" style="color:#e74c3c;display:none;">Disconnect Dropbox</button>
+      <button class="mbtn-secondary" onclick="dbxForcePush()" style="background:var(--blush);color:var(--hot);">Force Push</button>
+      <button class="mbtn-secondary" onclick="dbxForcePull()" style="background:var(--blush);color:var(--hot);">Force Pull</button>
+      <button class="mbtn-ghost" onclick="dbxReset()" style="font-size:11px;color:#ccc;">Reset connection</button>
+      <button class="mbtn-ghost" onclick="closeModal('syncModal')">Done</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ARCHIVED WEEKS MODAL -->
+<div class="overlay" id="archivedModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Archived Weeks</div>
+    <div class="modal-sub">Your tasks are safe — restore any week to see it in the timeline.</div>
+    <div id="archivedList" style="margin:12px 0;max-height:300px;overflow-y:auto;"></div>
+    <div class="modal-acts">
+      <button class="mbtn-ghost" onclick="closeModal('archivedModal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD WEEK MODAL -->
+<div class="overlay" id="addWeekModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add a Week</div>
+    <div class="modal-sub">Custom weeks appear in the timeline alongside the regular year.</div>
+    <span class="modal-lbl">Week theme / name (optional)</span>
+    <input class="modal-input" id="addWeekName" type="text" placeholder="e.g. The Deep Work Sprint">
+    <span class="modal-lbl">Start date</span>
+    <input class="modal-input" id="addWeekStart" type="date">
+    <span class="modal-lbl">End date</span>
+    <input class="modal-input" id="addWeekEnd" type="date">
+    <div class="modal-acts">
+      <button class="mbtn-primary" onclick="saveNewWeek()">Add Week</button>
+      <button class="mbtn-ghost" onclick="closeModal('addWeekModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- YOU DID THAT OVERLAY -->
+<div class="ydt-overlay" id="ydtOverlay">
+  <div class="ydt-inner">
+    <button class="ydt-back" onclick="closeYouDidThat()">← Back</button>
+    <div class="ydt-heading">
+      <span class="ydt-eyebrow">Your completed work · AKQ HQ</span>
+      <span class="ydt-title-sans">You Did</span>
+      <span class="ydt-title-serif">That.</span>
+      <span class="ydt-count-badge" id="ydtCount">0 tasks complete</span>
+    </div>
+    <div id="ydtContent"></div>
+  </div>
+</div>
+
+<script>
+// ─── WEEKS DATA ───────────────────────────────────────────────────────────────
+const DEFAULT_ENC = [
+  // — Original —
+  {icon:"✦",t:"This week is yours to define.",b:"Name it, own it. What gets done this week builds toward what comes next."},
+  {icon:"✦",t:"Show up, even when it's small.",b:"The version of you you're becoming is built in weeks exactly like this one."},
+  {icon:"✦",t:"Give this week a name.",b:"Tap the week name above to set a theme. A named week has intention. An intentioned week gets things done."},
+  // — Katherine Morgan Schafler —
+  {icon:"✦",t:"Your perfectionism exists to help you.",b:"\"What if your perfectionism exists to help you? Perfectionism does not have to be a struggle. You do not have to stop being a perfectionist to be healthy.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"An excellent servant. A terrible master.",b:"\"Perfectionism makes an excellent servant and a terrible master.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"You are not the problem.",b:"\"Your problem is not that you're a perfectionist. Your problem is that you're not being your full self.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Some gifts feel like a burden first.",b:"\"Some gifts feel like a burden until you understand how they can serve you.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Acknowledging more is boldness.",b:"\"Acknowledging that you want more is an act of boldness.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Not talent. Persistence.",b:"\"It's not mere talent that rises to the top, it's persistence.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Not changing is a deeper loss.",b:"\"While change does always involve loss, not changing involves a much deeper loss.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Champions of possibility.",b:"\"We need messy perfectionists in the world; they are the champions of possibility.\"",attr:"— Katherine Morgan Schafler"},
+  {icon:"✦",t:"Obedient is not the same as healthy.",b:"\"Subscribing to prepackaged notions of balance and generic wellness when they don't fit who you are isn't being healthy, it's being obedient.\"",attr:"— Katherine Morgan Schafler"},
+  // — Julia Cameron, The Artist's Way —
+  {icon:"✦",t:"Creativity is the natural order of life.",b:"\"Life is energy: pure creative energy. There is an underlying, in-dwelling creative force infusing all of life — including ourselves.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"A gift given back.",b:"\"Creativity is God's gift to us. Using our creativity is our gift back to God.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Counter to our true nature.",b:"\"The refusal to be creative is self-will and is counter to our true nature.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Move toward your divinity.",b:"\"Our creative dreams and yearnings come from a divine source. As we move toward our dreams, we move toward our divinity.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Leap, and the net will appear.",b:"\"Art is an act of faith, and we practice practicing it.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Your mood doesn't really matter.",b:"\"Morning pages will teach you that your mood doesn't really matter. Show up anyway. The pages get done regardless.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"A creative energy wants to express itself through you.",b:"\"Remember, there is a creative energy that wants to express itself through you. Don't judge the work or yourself. You can sort it out later.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Creativity is like your blood.",b:"\"Just as blood is a fact of your physical body, creativity is a fact of your spiritual body and nothing that you must invent.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Blocks are unnatural.",b:"\"Creativity is our true nature; blocks are an unnatural thwarting of a process at once as normal and as miraculous as the blossoming of a flower.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Making our art, we make artful lives.",b:"\"Making our art, we meet firsthand the hand of our Creator.\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"A wing and a prayer.",b:"\"For artists, a wing and a prayer is routine operating procedure. We must trust our process, look beyond 'results.'\"",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"We begin to excavate our buried dreams.",b:"The pages, the walks, the small daily acts of faith — they are the excavation. Keep going.",attr:"— Julia Cameron, The Artist's Way"},
+  {icon:"✦",t:"Open yourself to greater creativity.",b:"\"It is safe to open ourselves up to greater and greater creativity. When we open ourselves, we open ourselves to the creator's creativity within us.\"",attr:"— Julia Cameron, The Artist's Way"},
+  // — Voices within The Artist's Way —
+  {icon:"✦",t:"The artist is a channel.",b:"\"The position of the artist is humble. He is essentially a channel.\"",attr:"— Piet Mondrian"},
+  {icon:"✦",t:"What lies within us.",b:"\"What lies behind us and what lies before us are tiny matters, compared to what lies within us.\"",attr:"— Ralph Waldo Emerson"},
+  {icon:"✦",t:"Grow, grow.",b:"\"Every blade of grass has its Angel that bends over it and whispers, 'Grow, grow.'\"",attr:"— The Talmud"},
+  {icon:"✦",t:"Directly from God.",b:"\"Straight away the ideas flow in upon me, directly from God.\"",attr:"— Johannes Brahms"},
+  {icon:"✦",t:"The Holy Spirit accomplishes all.",b:"\"I myself do nothing. The Holy Spirit accomplishes all through me.\"",attr:"— William Blake"},
+  {icon:"✦",t:"The image of God.",b:"\"It is the creative potential itself in human beings that is the image of God.\"",attr:"— Mary Daly"},
+  {icon:"✦",t:"Life, intensified.",b:"\"The purpose of art is not a rarified, intellectual distillate — it is life, intensified, brilliant life.\"",attr:"— Alain Arias-Misson"},
+  {icon:"✦",t:"Faith gives you sight.",b:"\"I paint not by sight but by faith. Faith gives you sight.\"",attr:"— Amos Ferguson"},
+  {icon:"✦",t:"Making it flow through your eyes.",b:"\"Creativity is harnessing universality and making it flow through your eyes.\"",attr:"— Peter Koestenbaum"},
+  {icon:"✦",t:"Stumble on what one couldn't do alone.",b:"\"In the brush doing what it's doing, it will stumble on what one couldn't do by oneself.\"",attr:"— Robert Motherwell"},
+  {icon:"✦",t:"Go deep enough.",b:"\"It always comes back to the same necessity: go deep enough and there is a bedrock of truth, however hard.\"",attr:"— May Sarton"},
+  {icon:"✦",t:"A mind too active is no mind at all.",b:"\"A mind too active is no mind at all.\"",attr:"— Theodore Roethke"},
+  {icon:"✦",t:"Words are action.",b:"\"Words are a form of action, capable of influencing change.\"",attr:"— Ingrid Bengis"},
+  {icon:"✦",t:"Use your creative power.",b:"\"There is nothing that makes people so generous, joyful, lively, bold and compassionate as using their creative power.\"",attr:"— Brenda Ueland"},
+  {icon:"✦",t:"Fulfill your destiny.",b:"\"Man is asked to make of himself what he is supposed to become to fulfill his destiny.\"",attr:"— Paul Tillich"},
+  // — Scripture —
+  {icon:"✦",t:"Plans to prosper you.",b:"\"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.\"",attr:"— Jeremiah 29:11"},
+  {icon:"✦",t:"All things through Christ.",b:"\"I can do all things through Christ who strengthens me.\"",attr:"— Philippians 4:13"},
+  {icon:"✦",t:"Do not fear.",b:"\"Do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you.\"",attr:"— Isaiah 41:10"},
+  {icon:"✦",t:"He will make your paths straight.",b:"\"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.\"",attr:"— Proverbs 3:5-6"},
+  {icon:"✦",t:"All things work together for good.",b:"\"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.\"",attr:"— Romans 8:28"},
+  {icon:"✦",t:"Let your light shine.",b:"\"You are the light of the world. A town built on a hill cannot be hidden. Let your light shine before others.\"",attr:"— Matthew 5:14-16"},
+  {icon:"✦",t:"The desires of your heart.",b:"\"Delight yourself in the Lord, and he will give you the desires of your heart.\"",attr:"— Psalm 37:4"},
+  {icon:"✦",t:"Not a spirit of fear.",b:"\"For God has not given us a spirit of fear, but of power and of love and of a sound mind.\"",attr:"— 2 Timothy 1:7"},
+  {icon:"✦",t:"God's handiwork.",b:"\"For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do.\"",attr:"— Ephesians 2:10"},
+  {icon:"✦",t:"Be strong and courageous.",b:"\"Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.\"",attr:"— Joshua 1:9"}
+];
+
+const BCY_PLAN = {
+  w14:{ name:'The Floor',
+    tasks:[{text:"Driver's license renewed",cat:"admin"},{text:"Blanket text sent to all 150 — one message, not perfect, sent",cat:"comms"},{text:"CalFresh recertified",cat:"admin"},{text:"Tax extension filed",cat:"admin"},{text:"Three estate attorney emails sent — just the ask, not the consultation",cat:"legal"}],
+    practices:["Phone charges in the kitchen starting tonight","One anchor wake time picked — held even when it is hard","Script opened at least twice — not necessarily written, opened"],
+  },
+  w15:{ name:'The First Exhale',
+    tasks:[{text:"EDD follow-up call made",cat:"admin"},{text:"Estate attorney consultation booked from the three responses",cat:"legal"},{text:"Sleep study scheduled",cat:"health"},{text:"ENT scheduled",cat:"health"},{text:"Second hakomi session — book the third before you leave",cat:"wellness"}],
+    practices:["One friend on the couch this week — let them bring food, let them stay","Thirty minutes outside without the phone, three times","The Minnesota scene — write it, Ethan kisses her, no exit strategy"],
+  },
+  w16:{ name:'Birthday Week',
+    tasks:[{text:"Estate attorney consultation happens — know your rights now",cat:"legal"},{text:"Psych appointment — medication review conversation had",cat:"health"},{text:"Allergy appointments rescheduled",cat:"health"},{text:"Autism diagnosis rescheduled — on the calendar",cat:"health"}],
+    practices:["Tell at least one person what you actually want for your birthday","Do not spend the day alone unless you genuinely want to","Write the scene where Autumn receives something and stays"],
+  },
+  w17:{ name:'The List Gets Shorter',
+    tasks:[{text:"DMV tabs paid or payment plan arranged",cat:"admin"},{text:"WGA dues handled",cat:"admin"},{text:"CVS card fixed",cat:"admin"},{text:"HBO to Hulu switched",cat:"admin"},{text:"Mail opened, sorted, dealt with or filed",cat:"admin"}],
+    practices:["The wake time is holding — not natural yet, hold it anyway","Sugar reduced — not eliminated, one swap per day","Script: act two is being touched regularly — not finished, touched"],
+  },
+  w18:{ name:'Momentum',
+    tasks:[{text:"Backyard ready — propane, afternoon with Sameliah",cat:"home"},{text:"Wig refresh appointment scheduled and kept",cat:"self-care"},{text:"Business checking account — three options researched, one chosen",cat:"finance"},{text:"EDD situation resolved or in process",cat:"admin"}],
+    practices:["Bible study — one session, however small, this week","One thing per day system becoming automatic","Notice when you pick up the phone to avoid a feeling — put it down twice"],
+  },
+  w19:{ name:'The Creative Re-entry',
+    tasks:[{text:"Pick Me draft: act two complete or close to complete",cat:"writing"},{text:"Sleep study happens or is imminent",cat:"health"},{text:"Psych adjustment noted — you feel slightly different",cat:"health"},{text:"Debt mapped — the full picture known",cat:"finance"}],
+    practices:["The 10pm writing signal is a real thing in your life now","Going outside without making it a whole thing","Let yourself be excited without immediately auditing the excitement"],
+  },
+  w20:{ name:'The Diagnosis',
+    tasks:[{text:"Autism diagnosis appointment completed",cat:"health"},{text:"Sit with it — explanation, not limitation",cat:"self-knowledge"}],
+    practices:["Nothing was ever wrong with you","You were running the wrong operating system — now you know there's another one","Use it as information"],
+  },
+  w21:{ name:'The Social Re-entry',
+    tasks:[{text:"Seen at least three people in person this month",cat:"social"},{text:"New car plan for July — research done, options known",cat:"admin"},{text:"Mailbox service set up for Palava Productions",cat:"palava"},{text:"Taxes filed or on track for October",cat:"admin"}],
+    practices:["Go to one social thing this week — leave when tired, not when it ends","Do not apologize for leaving","Notice the recovery time is getting shorter"],
+  },
+  w22:{ name:'Pick Me Draft Complete',
+    tasks:[{text:"Full feature draft done — not perfect, done",cat:"writing"},{text:"Ethan kisses her without an exit strategy — written",cat:"writing"},{text:"Autumn receives something and stays — written",cat:"writing"},{text:"The audition tape scene from inside the nine year old — written",cat:"writing"},{text:"The line Ethan doesn't want to say — written",cat:"writing"},{text:"Third act parking lot that earns the tornado — written",cat:"writing"},{text:"Sent to Sameliah, then one trusted reader — without apology",cat:"writing"}],
+    practices:["Don't apologize when you send it","Say 'here it is, tell me what is true'","The sending is the phone call"],
+  },
+  w24:{ name:'The Approach',
+    tasks:[{text:"Feedback integrated — this version goes out",cat:"writing"},{text:"Formal packaging approach underway",cat:"career"},{text:"The letter written — third version, sounds like you",cat:"outreach"},{text:"The letter sent — hands shaking, sent anyway",cat:"outreach"}],
+    practices:["Do not engineer the outcome","Send the version that sounds like you","That is the whole practice — send it anyway"],
+  },
+  w26:{ name:'The Breath',
+    tasks:[{text:"Go to bible study",cat:"spirit"},{text:"Call your mother",cat:"family"},{text:"Go outside",cat:"body"}],
+    practices:["Do not wait for the response","Let the thing be in the world without checking","Practice standing still"],
+  },
+  w27:{ name:'Festival Season',
+    tasks:[{text:"New car situation resolved by July 1st",cat:"admin"},{text:"Pick Me short — festival run continues",cat:"pick-me"},{text:"Feature script in active packaging conversations",cat:"career"},{text:"Gramcracker — development conversations beginning",cat:"career"}],
+    practices:["Show up present, not performing","Let yourself cry when something accurate is written about you","Do not immediately make it a bit"],
+  },
+  w29:{ name:'The Life',
+    tasks:[{text:"One thing per day — automatic now",cat:"system"},{text:"10pm writing signal — real and held",cat:"system"},{text:"Anchor wake time holding, 9–11am range",cat:"system"},{text:"Bible study weekly, Sunday morning, small",cat:"spirit"}],
+    practices:["Let the people who've earned it see you in your actual condition","Less masking means less expenditure","Mornings are for the list; nights are for the real writing"],
+  },
+  w32:{ name:'The Stand-Up',
+    tasks:[{text:"Stand-up architecture developed — not a list of bits, a structure",cat:"standup"},{text:"Wigger confessional written out fully for the first time",cat:"standup"},{text:"Casper bit rewritten — says what it's actually about",cat:"standup"},{text:"'Ladies are we insane' bit — ends where it needs to end",cat:"standup"},{text:"Work-in-progress set performed — small room, mixed audience",cat:"standup"}],
+    practices:["Don't use comedy as the exit hatch for the true things","Let the true things be true and funny simultaneously","Someone will say something after the set you'll think about for a long time"],
+  },
+  w36:{ name:'The Last Quarter',
+    tasks:[{text:"Script in active packaging — whatever you found out, you're okay",cat:"career"},{text:"Money situation clearer — not solved, clearer",cat:"finance"},{text:"Life insurance situation addressed legally",cat:"legal"},{text:"CalFresh current, EDD resolved, debt has a plan",cat:"admin"},{text:"SeedFest early planning — entity structure decided, 2027 on calendar",cat:"palava"}],
+    practices:["The list is a maintenance schedule now, not a wall","Wake before noon most days — not forced, regulated","Carry him differently — he is the barbecue, the thumbs up, the work"],
+  }
+};
+
+// 53 ISO calendar weeks of 2026 (week starts Monday; week belongs to 2026 if its Thursday is in 2026)
+const WEEK_DATES = ['2025-12-29','2026-01-04','2026-01-05','2026-01-11','2026-01-12','2026-01-18','2026-01-19','2026-01-25','2026-01-26','2026-02-01','2026-02-02','2026-02-08','2026-02-09','2026-02-15','2026-02-16','2026-02-22','2026-02-23','2026-03-01','2026-03-02','2026-03-08','2026-03-09','2026-03-15','2026-03-16','2026-03-22','2026-03-23','2026-03-29','2026-03-30','2026-04-05','2026-04-06','2026-04-12','2026-04-13','2026-04-19','2026-04-20','2026-04-26','2026-04-27','2026-05-03','2026-05-04','2026-05-10','2026-05-11','2026-05-17','2026-05-18','2026-05-24','2026-05-25','2026-05-31','2026-06-01','2026-06-07','2026-06-08','2026-06-14','2026-06-15','2026-06-21','2026-06-22','2026-06-28','2026-06-29','2026-07-05','2026-07-06','2026-07-12','2026-07-13','2026-07-19','2026-07-20','2026-07-26','2026-07-27','2026-08-02','2026-08-03','2026-08-09','2026-08-10','2026-08-16','2026-08-17','2026-08-23','2026-08-24','2026-08-30','2026-08-31','2026-09-06','2026-09-07','2026-09-13','2026-09-14','2026-09-20','2026-09-21','2026-09-27','2026-09-28','2026-10-04','2026-10-05','2026-10-11','2026-10-12','2026-10-18','2026-10-19','2026-10-25','2026-10-26','2026-11-01','2026-11-02','2026-11-08','2026-11-09','2026-11-15','2026-11-16','2026-11-22','2026-11-23','2026-11-29','2026-11-30','2026-12-06','2026-12-07','2026-12-13','2026-12-14','2026-12-20','2026-12-21','2026-12-27','2026-12-28','2027-01-03'];
+
+const WEEKS = WEEK_DATES.reduce((arr, _, i, d) => {
+  if (i % 2 !== 0) return arr;
+  const n = i/2 + 1, id = 'w'+n, p = BCY_PLAN[id] || {};
+  arr.push({ id, label:'Week '+n, num:String(n), start:d[i], end:d[i+1], name:p.name||'', tasks:p.tasks||[], practices:p.practices||[], enc:p.enc||DEFAULT_ENC });
+  return arr;
+}, []);
+
+
+// ─── ACTIVE WEEKS (mutable — supports delete/add) ────────────────────────────
+let AW = [];
+function refreshAW() {
+  const v4 = gs4() || {};
+  const deleted = new Set(v4.deletedWeeks || []);
+  const archived = new Set(v4.archivedWeeks || []);
+  const custom = (v4.customWeeks || []);
+  AW = [...WEEKS.filter(w => !deleted.has(w.id) && !archived.has(w.id)),
+        ...custom.map(cw => ({ ...cw, tasks:[], practices:[], enc:cw.enc||DEFAULT_ENC })).filter(cw => !archived.has(cw.id))]
+       .sort((a, b) => a.start.localeCompare(b.start));
+}
+
+// ─── V4 STATE SYSTEM ──────────────────────────────────────────────────────────
+const KEY4 = 'bcy_v4';
+
+function gs4() { try { return JSON.parse(localStorage.getItem(KEY4)) || null; } catch { return null; } }
+function ss4(v4) { if (!_isFirstRender && !_skipPush) v4.lastModified = new Date().toISOString(); localStorage.setItem(KEY4, JSON.stringify(v4)); if (!_isFirstRender && !_skipPush) scheduleDropboxPush(); }
+
+function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+
+function initV4() {
+  let v4 = gs4();
+  if (v4 && v4.weeks) {
+    // One-time migration: old system had w1=Mar31 (now w14), w2=Apr7 (now w15), etc.
+    if (v4.weeks['w1'] && !v4.weeks['w14'] && !v4.weeks['w15']) {
+      const OLD_MAP = {w1:'w14',w2:'w15',w3:'w16',w4:'w17',w5:'w18',w6:'w19',w7:'w20',w8:'w21',w9:'w22',w11:'w24',w13:'w26',w14:'w27',w16:'w29',w19:'w32',w23:'w36'};
+      const nw = {};
+      Object.entries(v4.weeks).forEach(([id,data]) => { nw[OLD_MAP[id]||id] = data; });
+      v4.weeks = nw; ss4(v4);
+    }
+    return v4;
+  }
+  let v3 = null;
+  try { v3 = JSON.parse(localStorage.getItem('bcy_v3')); } catch {}
+  v4 = { weekThemes: {}, weeks: {} };
+  WEEKS.forEach(w => {
+    const bDone  = ((v3?.tasks || {})[w.id] || {});
+    const bNotes = ((v3?.notes  || {})[w.id] || {});
+    const v3Cust = ((v3?.customTasks || {})[w.id] || []);
+    v4.weeks[w.id] = { items: [
+      ...w.tasks.map((t,i) => ({ id:`${w.id}_b_${i}`, text:t.text, cat:t.cat, done:!!bDone[i], note:bNotes[i]||'', builtin:true, originWeek:null, originWeekLabel:null })),
+      ...v3Cust.map((t,ci) => ({ id:genId(w.id+'_c'), text:t.text, cat:t.cat||'custom', done:!!bDone[w.tasks.length+ci], note:bNotes[w.tasks.length+ci]||'', builtin:false, originWeek:null, originWeekLabel:null }))
+    ]};
+  });
+  ss4(v4); return v4;
+}
+
+function getItems(weekId) { return gs4()?.weeks?.[weekId]?.items || []; }
+function saveItems(weekId, items) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  if (!v4.weeks[weekId]) v4.weeks[weekId] = {};
+  v4.weeks[weekId].items = items; ss4(v4);
+}
+function getWeekTheme(weekId) { return (gs4()?.weekThemes || {})[weekId] || null; }
+function setWeekTheme(weekId, name) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  if (!v4.weekThemes) v4.weekThemes = {};
+  if (name && name.trim()) v4.weekThemes[weekId] = name.trim();
+  else delete v4.weekThemes[weekId];
+  ss4(v4);
+}
+
+function toggleItemDone(weekId, itemId, x, y) {
+  const items = getItems(weekId);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  const becomingDone = !item.done;
+  item.done = becomingDone;
+  if (becomingDone) { item.completedAt = new Date().toISOString(); launchGlitter(x, y); }
+  else delete item.completedAt;
+  saveItems(weekId, items); render(weekId);
+}
+function deleteItem(weekId, itemId) { saveItems(weekId, getItems(weekId).filter(it => it.id !== itemId)); }
+function editItem(weekId, itemId, text, cat, dtl, blocker) {
+  const items = getItems(weekId);
+  const item = items.find(it => it.id === itemId);
+  if (item) {
+    item.text = text; item.cat = cat;
+    if (dtl !== undefined) item.dtl = !!dtl;
+    if (dtl) item.blocker = blocker || '';
+    else delete item.blocker;
+  }
+  saveItems(weekId, items);
+}
+function moveItemUp(weekId, itemId) {
+  const items = getItems(weekId); const idx = items.findIndex(it => it.id === itemId);
+  if (idx <= 0) return; [items[idx-1], items[idx]] = [items[idx], items[idx-1]]; saveItems(weekId, items);
+}
+function moveItemDown(weekId, itemId) {
+  const items = getItems(weekId); const idx = items.findIndex(it => it.id === itemId);
+  if (idx < 0 || idx >= items.length - 1) return; [items[idx], items[idx+1]] = [items[idx+1], items[idx]]; saveItems(weekId, items);
+}
+function rescheduleItem(fromWeekId, itemId, toWeekId) {
+  if (!toWeekId || fromWeekId === toWeekId) return;
+  const fromItems = getItems(fromWeekId); const idx = fromItems.findIndex(it => it.id === itemId);
+  if (idx < 0) return;
+  const [item] = fromItems.splice(idx, 1);
+  item.done = false; delete item.completedAt;
+  item.originWeek = fromWeekId; item.originWeekLabel = getWeek(fromWeekId)?.label || fromWeekId;
+  item.id = genId(toWeekId + '_r');
+  saveItems(fromWeekId, fromItems);
+  const toItems = getItems(toWeekId); toItems.push(item); saveItems(toWeekId, toItems);
+}
+function carryForward(weekId, itemId) {
+  const wIdx = AW.findIndex(w => w.id === weekId);
+  if (wIdx < 0 || wIdx >= AW.length - 1) return;
+  rescheduleItem(weekId, itemId, AW[wIdx + 1].id);
+}
+function addNewItem(weekId, text, cat) {
+  const items = getItems(weekId);
+  items.push({ id:genId(weekId+'_u'), text, cat:cat||'custom', done:false, note:'', builtin:false, originWeek:null, originWeekLabel:null });
+  saveItems(weekId, items);
+}
+function setItemNote(weekId, itemId, note) {
+  const items = getItems(weekId); const item = items.find(it => it.id === itemId);
+  if (item) item.note = note; saveItems(weekId, items);
+}
+
+// ─── GLOBALS ──────────────────────────────────────────────────────────────────
+let CW = null, EI = 0, MI = null, MGMT_ID = null, _dragId = null;
+function getWeek(id) { return AW.find(w => w.id === id); }
+
+function autoWeekId() {
+  if (!AW.length) return WEEKS[0].id; // fallback: all weeks deleted
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (const w of AW) {
+    if (today >= new Date(w.start+'T00:00:00') && today <= new Date(w.end+'T23:59:59')) return w.id;
+  }
+  const last = new Date(AW[AW.length-1].end+'T23:59:59');
+  return today > last ? AW[AW.length-1].id : AW[0].id;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render(weekId) {
+  CW = weekId;
+  _currentWeekId = weekId;
+  updateTimeline(weekId);
+  const w = getWeek(weekId);
+  if (!w) { console.warn('render: week not found', weekId); return; }
+  const items = getItems(weekId);
+  const activeItems = items.filter(it => !it.dtl);
+  const done = activeItems.filter(it => it.done).length;
+  const total = activeItems.length;
+  const left = total - done;
+  const pct = total > 0 ? done/total : 0;
+  const wIdx = AW.findIndex(wk => wk.id === weekId);
+  const hasNextWeek = wIdx < AW.length - 1;
+
+  // Hero
+  document.getElementById('heroNum').textContent = 'Week ' + w.num;
+  const theme = getWeekTheme(weekId) || w.name;
+  const heroPhaseEl = document.getElementById('heroPhase');
+  if (theme) {
+    heroPhaseEl.textContent = theme;
+    heroPhaseEl.style.opacity = '1';
+  } else {
+    heroPhaseEl.textContent = 'name this week →';
+    heroPhaseEl.style.opacity = '0.35';
+  }
+  document.getElementById('heroDates').textContent = fmtRange(w.start, w.end);
+  document.getElementById('heroPill').textContent = `${done} of ${total} done`;
+
+  // Ring
+  const circ = 2*Math.PI*33;
+  document.getElementById('ringFill').style.strokeDasharray = circ;
+  document.getElementById('ringFill').style.strokeDashoffset = circ - (pct*circ);
+  document.getElementById('ringN').textContent = done;
+  document.getElementById('ringD').textContent = 'of ' + total;
+
+  if (done === 0 && total === 0) { document.getElementById('progHead').textContent = "Your week."; document.getElementById('progSub').textContent = ""; }
+  else if (done === 0) { document.getElementById('progHead').textContent = "Let's get into it."; document.getElementById('progSub').textContent = `${total} thing${total===1?'':'s'} this week.`; }
+  else if (done === total) { document.getElementById('progHead').textContent = "Week complete."; document.getElementById('progSub').textContent = "All of it. Every single thing on the list."; }
+  else { document.getElementById('progHead').textContent = `${done} of ${total} done.`; document.getElementById('progSub').textContent = `${left} thing${left===1?'':'s'} left.`; }
+
+  document.getElementById('doneBanner').style.display = (done === total && total > 0) ? 'block' : 'none';
+  // quote section removed
+  renderEnc(w);
+
+  // Tasks
+  const tl = document.getElementById('taskList');
+  tl.innerHTML = '';
+  items.filter(it => !it.done && !it.dtl).forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'task-row';
+    li.setAttribute('draggable', 'true');
+
+    let originHTML = item.originWeekLabel ? `<span class="origin-badge">moved from ${esc(item.originWeekLabel)}</span>` : '';
+    let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '+ update status' : '+ add status note'}</button>`;
+    if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
+    let carryHTML = hasNextWeek ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
+
+    li.innerHTML = `
+      <div class="task-drag-handle" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 10 14" fill="none"><circle cx="3" cy="2.5" r="1.5" fill="currentColor"/><circle cx="7" cy="2.5" r="1.5" fill="currentColor"/><circle cx="3" cy="7" r="1.5" fill="currentColor"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/><circle cx="3" cy="11.5" r="1.5" fill="currentColor"/><circle cx="7" cy="11.5" r="1.5" fill="currentColor"/></svg></div>
+      <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
+      <div class="task-body">
+        <div class="task-label">${esc(item.text)}</div>
+        ${originHTML}
+        <span class="task-cat">${esc(item.cat||'task')}</span>
+        ${noteHTML}
+      </div>
+      <div class="task-actions">
+        ${carryHTML}
+        <button class="task-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
+      </div>`;
+
+    li.addEventListener('dragstart', e => {
+      _dragId = item.id;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => li.classList.add('dragging'), 0);
+    });
+    li.addEventListener('dragend', () => {
+      li.classList.remove('dragging');
+      document.querySelectorAll('#taskList .drag-over').forEach(el => el.classList.remove('drag-over'));
+      _dragId = null;
+    });
+    li.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (_dragId && _dragId !== item.id) li.classList.add('drag-over');
+    });
+    li.addEventListener('dragleave', () => li.classList.remove('drag-over'));
+    li.addEventListener('drop', e => {
+      e.preventDefault();
+      li.classList.remove('drag-over');
+      if (!_dragId || _dragId === item.id) return;
+      const its = getItems(weekId);
+      const fi = its.findIndex(it => it.id === _dragId);
+      const ti = its.findIndex(it => it.id === item.id);
+      if (fi < 0 || ti < 0) return;
+      const [moved] = its.splice(fi, 1);
+      its.splice(ti, 0, moved);
+      saveItems(weekId, its);
+      render(weekId);
+    });
+
+    tl.appendChild(li);
+  });
+
+  // Down the Line section
+  renderDTL(weekId);
+
+  // Practices (editable)
+  renderPracticesDisplay(getCurrentPractices(w));
+  // Close edit panel when switching weeks
+  const prPanel = document.getElementById('prEditPanel');
+  if (prPanel) prPanel.classList.remove('open');
+
+  // Prompt opts (chips)
+  const list = document.getElementById('promptOpts');
+  list.innerHTML = '';
+  const undone = items.filter(it => !it.done);
+  undone.slice(0,6).forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'prompt-opt';
+    li.textContent = item.text.length > 50 ? item.text.slice(0,48) + '…' : item.text;
+    li.onclick = () => {
+      document.querySelectorAll('#promptOpts .prompt-opt').forEach(el => el.classList.remove('selected'));
+      li.classList.add('selected');
+      document.getElementById('promptCustom').value = item.text;
+    };
+    list.appendChild(li);
+  });
+
+  updateTimeline(weekId);
+}
+
+// ─── ENCOURAGEMENT ────────────────────────────────────────────────────────────
+function renderEnc(w) {
+  const item = w.enc[EI % w.enc.length];
+  document.getElementById('encIcon').innerHTML = '<span style="color:#eefbd1;">✦</span>';
+  document.getElementById('encTitle').textContent = '';
+  document.getElementById('encBody').textContent = item.b;
+  const attrEl = document.getElementById('encAttr');
+  if (attrEl) { attrEl.textContent = item.attr || ''; attrEl.style.display = item.attr ? 'block' : 'none'; }
+}
+function nextEnc() { EI = (EI+1) % getWeek(CW).enc.length; renderEnc(getWeek(CW)); }
+
+// ─── STATUS MODAL ─────────────────────────────────────────────────────────────
+function openStatusModal(itemId, e) {
+  e.stopPropagation(); MI = itemId;
+  const item = getItems(CW).find(it => it.id === itemId);
+  document.getElementById('modalSub').textContent = item?.text || '';
+  document.getElementById('modalTa').value = item?.note || '';
+  document.getElementById('statusModal').classList.add('open');
+  setTimeout(() => document.getElementById('modalTa').focus(), 300);
+}
+function saveNote() {
+  if (!MI) return;
+  setItemNote(CW, MI, document.getElementById('modalTa').value.trim());
+  closeModal('statusModal'); render(CW);
+}
+function saveAndPrompt() {
+  if (!MI) return;
+  const cId = MI; const noteText = document.getElementById('modalTa').value.trim();
+  setItemNote(CW, cId, noteText); closeModal('statusModal'); render(CW);
+  const item = getItems(CW).find(it => it.id === cId);
+  if (item) showPrompt(buildPrompt(item.text, noteText));
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  if (id === 'statusModal') MI = null;
+  if (id === 'taskMgmtModal') MGMT_ID = null;
+}
+function bgClose(e) { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); }
+
+// ─── TASK MANAGEMENT ──────────────────────────────────────────────────────────
+function openTaskMgmt(itemId, e) {
+  e.stopPropagation(); MGMT_ID = itemId;
+  const item = getItems(CW).find(it => it.id === itemId);
+  if (!item) return;
+  document.getElementById('taskMgmtSub').textContent = item.text.length > 60 ? item.text.slice(0,58)+'…' : item.text;
+  document.getElementById('taskMgmtText').value = item.text;
+  buildCatSelect('taskMgmtCat', item.cat || 'custom');
+  // DTL state
+  const isDTL = !!item.dtl;
+  const dtlBtn = document.getElementById('taskMgmtDTLBtn');
+  const blockerRow = document.getElementById('taskMgmtBlockerRow');
+  dtlBtn.textContent = isDTL ? 'Yes' : 'No';
+  dtlBtn.dataset.dtl = isDTL ? 'true' : 'false';
+  dtlBtn.classList.toggle('active', isDTL);
+  blockerRow.style.display = isDTL ? 'block' : 'none';
+  document.getElementById('taskMgmtBlocker').value = item.blocker || '';
+  const sel = document.getElementById('taskReschedSel');
+  sel.innerHTML = '<option value="">— pick a week —</option>';
+  AW.forEach(w => { if (w.id !== CW) { const o = document.createElement('option'); o.value = w.id; o.textContent = `${w.label}: ${w.name || 'Unnamed'}`; sel.appendChild(o); } });
+  document.getElementById('taskMgmtModal').classList.add('open');
+}
+function mgmtSave() {
+  if (!MGMT_ID) return;
+  const text = document.getElementById('taskMgmtText').value.trim();
+  const cat  = document.getElementById('taskMgmtCat').value;
+  if (!text) { document.getElementById('taskMgmtText').style.borderColor = 'var(--hot)'; return; }
+  const isDTL = document.getElementById('taskMgmtDTLBtn').dataset.dtl === 'true';
+  const blocker = isDTL ? document.getElementById('taskMgmtBlocker').value.trim() : '';
+  editItem(CW, MGMT_ID, text, cat, isDTL, blocker);
+  const toWeek = document.getElementById('taskReschedSel').value;
+  if (toWeek) { rescheduleItem(CW, MGMT_ID, toWeek); }
+  closeModal('taskMgmtModal'); render(CW);
+}
+function mgmtMoveUp() { if (!MGMT_ID) return; moveItemUp(CW, MGMT_ID); render(CW); }
+function mgmtMoveDown() { if (!MGMT_ID) return; moveItemDown(CW, MGMT_ID); render(CW); }
+function mgmtCarry() {
+  if (!MGMT_ID) return;
+  const wIdx = AW.findIndex(w => w.id === CW);
+  if (wIdx < 0 || wIdx >= AW.length - 1) { alert('No next week available.'); return; }
+  carryForward(CW, MGMT_ID); closeModal('taskMgmtModal'); render(CW);
+}
+function mgmtDelete() {
+  if (!MGMT_ID) return;
+  if (!confirm('Delete this task?')) return;
+  deleteItem(CW, MGMT_ID); closeModal('taskMgmtModal'); render(CW);
+}
+function handleCarry(itemId, e) { e.stopPropagation(); carryForward(CW, itemId); render(CW); }
+
+// ─── CATEGORY MANAGEMENT ──────────────────────────────────────────────────────
+const DEFAULT_CATS = ['admin','writing','health','wellness','legal','finance','comms','career','self-care','spirit','social','home','palava','system','standup','custom'];
+function getCats() { try { const c = localStorage.getItem('bcy_cats'); return c ? JSON.parse(c) : [...DEFAULT_CATS]; } catch(e) { return [...DEFAULT_CATS]; } }
+function saveCats(cats) { try { localStorage.setItem('bcy_cats', JSON.stringify(cats)); } catch(e) {} }
+function buildCatSelect(selId, currentVal) {
+  const sel = document.getElementById(selId);
+  if (!sel) return;
+  sel.innerHTML = '';
+  getCats().forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+    sel.appendChild(o);
+  });
+  if (currentVal) sel.value = currentVal;
+}
+function openCatsModal() {
+  renderCatsList();
+  document.getElementById('catsModal').classList.add('open');
+}
+function closeCatsModal() {
+  closeModal('catsModal');
+  const currentCat = document.getElementById('taskMgmtCat')?.value;
+  buildCatSelect('taskMgmtCat', currentCat);
+}
+function renderCatsList() {
+  const ul = document.getElementById('catsList');
+  if (!ul) return;
+  ul.innerHTML = '';
+  getCats().forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'cat-list-item';
+    li.innerHTML = `<span class="cat-list-name">${esc(cat.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '))}</span><button class="cat-del-btn" onclick="deleteCat('${esc(cat)}')">✕</button>`;
+    ul.appendChild(li);
+  });
+}
+function addCat() {
+  const input = document.getElementById('catNewInput');
+  const val = input.value.trim().toLowerCase().replace(/\s+/g, '-');
+  if (!val) { input.style.borderColor = 'var(--hot)'; return; }
+  input.style.borderColor = '';
+  const cats = getCats();
+  if (!cats.includes(val)) { cats.push(val); saveCats(cats); }
+  input.value = ''; renderCatsList();
+}
+function deleteCat(cat) {
+  const cats = getCats().filter(c => c !== cat);
+  saveCats(cats); renderCatsList();
+}
+
+// ─── DOWN THE LINE ────────────────────────────────────────────────────────────
+let DTL_OPEN = false;
+function toggleDTLPanel() {
+  DTL_OPEN = !DTL_OPEN;
+  document.getElementById('dtlBody').style.display = DTL_OPEN ? 'block' : 'none';
+  document.getElementById('dtlToggleInd').textContent = DTL_OPEN ? '−' : '+';
+}
+function renderDTL(weekId) {
+  const dtlItems = getItems(weekId).filter(it => it.dtl && !it.done);
+  const badge = document.getElementById('dtlCountBadge');
+  if (badge) { badge.textContent = dtlItems.length; badge.style.display = dtlItems.length > 0 ? 'inline-block' : 'none'; }
+  const list = document.getElementById('dtlList');
+  if (!list) return;
+  list.innerHTML = '';
+  dtlItems.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'dtl-item';
+    const catBadge = item.cat ? `<span class="task-cat" style="margin-top:4px;">${esc(item.cat)}</span>` : '';
+    const blockerEl = item.blocker ? `<div class="dtl-blocker">Need: ${esc(item.blocker)}</div>` : '';
+    li.innerHTML = `
+      <div class="dtl-text">
+        <div class="dtl-task-text">${esc(item.text)}</div>
+        ${catBadge}${blockerEl}
+      </div>
+      <div class="dtl-item-actions">
+        <button class="dtl-activate-btn" onclick="activateDTLItem('${esc(item.id)}')">Move to active</button>
+        <button class="dtl-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
+      </div>`;
+    list.appendChild(li);
+  });
+}
+function addDTLTask() {
+  const textInput = document.getElementById('dtlAddText');
+  const blockerInput = document.getElementById('dtlAddBlocker');
+  const text = textInput.value.trim();
+  if (!text) { textInput.style.borderColor = 'var(--hot)'; return; }
+  textInput.style.borderColor = 'transparent';
+  const items = getItems(CW);
+  items.push({ id: genId(CW+'_d'), text, cat: 'custom', done: false, note: '', blocker: blockerInput.value.trim(), dtl: true, builtin: false, originWeek: null, originWeekLabel: null });
+  saveItems(CW, items);
+  textInput.value = ''; blockerInput.value = '';
+  renderDTL(CW);
+}
+function activateDTLItem(itemId) {
+  const items = getItems(CW);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  item.dtl = false; delete item.blocker;
+  saveItems(CW, items); render(CW);
+}
+function toggleMgmtDTL() {
+  const btn = document.getElementById('taskMgmtDTLBtn');
+  const row = document.getElementById('taskMgmtBlockerRow');
+  const isDTL = btn.dataset.dtl === 'true';
+  const nowDTL = !isDTL;
+  btn.dataset.dtl = nowDTL ? 'true' : 'false';
+  btn.textContent = nowDTL ? 'Yes' : 'No';
+  btn.classList.toggle('active', nowDTL);
+  row.style.display = nowDTL ? 'block' : 'none';
+}
+
+// ─── ADD TASK ─────────────────────────────────────────────────────────────────
+function addTask() {
+  const inp = document.getElementById('addInput');
+  const text = inp.value.trim(); if (!text) return;
+  addNewItem(CW, text, 'custom'); inp.value = ''; render(CW);
+}
+document.getElementById('addInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+
+// ─── WEEK THEME EDIT ──────────────────────────────────────────────────────────
+function startEditTheme() {
+  const ph = document.getElementById('heroPhase');
+  const inp = document.getElementById('heroPhaseInput');
+  // Use actual saved theme, not display text (which may be a placeholder)
+  inp.value = getWeekTheme(CW) || '';
+  ph.style.display = 'none'; inp.style.display = 'block'; inp.focus(); inp.select();
+}
+function saveEditTheme() {
+  const ph = document.getElementById('heroPhase');
+  const inp = document.getElementById('heroPhaseInput');
+  const val = inp.value.trim();
+  setWeekTheme(CW, val);
+  const displayName = val || getWeek(CW)?.name || '';
+  ph.textContent = displayName;
+  ph.style.display = 'block'; inp.style.display = 'none';
+  // sync timeline chip
+  const chip = document.querySelector(`.tl-chip[data-id="${CW}"] .tl-name`);
+  if (chip) chip.textContent = displayName;
+}
+function themeKeydown(e) {
+  if (e.key === 'Enter') saveEditTheme();
+  if (e.key === 'Escape') { document.getElementById('heroPhaseInput').style.display='none'; document.getElementById('heroPhase').style.display='block'; }
+}
+
+// ─── PROMPT BUILDER ───────────────────────────────────────────────────────────
+function buildPrompt(taskText, specificNote) {
+  const w = getWeek(CW); const items = getItems(CW);
+  let p = `I'm in ${w.label} of my AKQ HQ — "${w.name}" (${fmtRange(w.start, w.end)}).`;
+  p += `\n\nI need help with: ${taskText}`;
+  if (specificNote) p += `\n\nStatus on this task: ${specificNote}`;
+  const others = items.filter(it => it.note && it.text !== taskText).map(it => `• ${it.text}: ${it.note}`);
+  if (others.length) p += `\n\nOther tasks with saved status notes:\n${others.join('\n')}`;
+  p += `\n\nCan you do the pre-game for me? Break this down into its smallest components, do as much of the prep work as possible, and tell me exactly what action I need to take — and when.`;
+  return p;
+}
+function generatePrompt() {
+  const ta = document.getElementById('promptCustom'); const text = ta.value.trim();
+  if (!text) {
+    ta.style.borderColor = 'var(--hot)'; ta.placeholder = 'Pick a task above or type what you need'; ta.focus();
+    setTimeout(() => { ta.style.borderColor = ''; ta.placeholder = 'What do you need help with?'; }, 3000);
+    return;
+  }
+  showPrompt(buildPrompt(text, ''));
+}
+function showPrompt(text) { document.getElementById('promptResult').textContent = text; document.getElementById('promptModal').classList.add('open'); }
+function copyPrompt() {
+  const text = document.getElementById('promptResult').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#promptModal .mbtn-primary'); btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy to clipboard', 2000);
+  }).catch(() => { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); });
+}
+
+// ─── GLITTER ──────────────────────────────────────────────────────────────────
+function launchGlitter(x, y) {
+  const colors = ['#EA258D','#F5952D','#F1BCD7','#D9AED0','#b2c0f9','#f2ffd5'];
+  const chars  = ['✦','✨','★','◆','●','✿'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('span');
+    el.className = 'glitter-particle';
+    const angle = Math.random() * 2 * Math.PI;
+    const speed = 50 + Math.random() * 100;
+    el.style.cssText = `left:${x}px;top:${y}px;color:${colors[Math.floor(Math.random()*colors.length)]};--dx:${Math.cos(angle)*speed}px;--dy:${Math.sin(angle)*speed}px;font-size:${9+Math.random()*11}px;animation-delay:${Math.random()*0.12}s;`;
+    el.textContent = chars[Math.floor(Math.random()*chars.length)];
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
+// ─── YOU DID THAT ─────────────────────────────────────────────────────────────
+function showYouDidThat() { buildYouDidThat(); document.getElementById('ydtOverlay').classList.add('open'); window.scrollTo(0,0); }
+function closeYouDidThat() { document.getElementById('ydtOverlay').classList.remove('open'); }
+function buildYouDidThat() {
+  const container = document.getElementById('ydtContent');
+  container.innerHTML = '';
+  let totalDone = 0, hasAny = false;
+  const currentWId = autoWeekId();
+  const thisWeekItems = [];  // done items from the current week
+  const pastWeeks = [];      // { w, items } for all other weeks
+
+  AW.forEach(w => {
+    const items = getItems(w.id).filter(it => it.done);
+    if (!items.length) return;
+    hasAny = true; totalDone += items.length;
+    if (w.id === currentWId) {
+      thisWeekItems.push(...items.map(it => ({ ...it, _wid: w.id })));
+    } else {
+      pastWeeks.push({ w, items });
+    }
+  });
+
+  // ── "Crushed it this week" section ──
+  if (thisWeekItems.length) {
+    const section = document.createElement('div');
+    section.className = 'ydt-section';
+    section.innerHTML = `<div class="ydt-section-title">✦ Crushed it this week</div>`;
+    thisWeekItems.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'ydt-task-item';
+      row.innerHTML = `<div class="ydt-check" style="cursor:pointer;" title="Tap to undo" onclick="ydtUncheck('${esc(item._wid)}','${esc(item.id)}')">✓</div><span class="ydt-task-text">${esc(item.text)}</span>`;
+      section.appendChild(row);
+    });
+    container.appendChild(section);
+  }
+
+  // ── "Everything else" section ──
+  if (pastWeeks.length) {
+    const section = document.createElement('div');
+    section.className = 'ydt-section';
+    if (thisWeekItems.length) {
+      section.innerHTML = `<div class="ydt-section-title ydt-section-title--past">Everything else</div>`;
+    }
+    pastWeeks.forEach(({ w, items }) => {
+      const group = document.createElement('div');
+      group.className = 'ydt-week-group';
+      const theme = getWeekTheme(w.id) || w.name;
+      group.innerHTML = `<span class="ydt-week-label">${esc(w.label)} — ${esc(theme)}</span>`;
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'ydt-task-item';
+        row.innerHTML = `<div class="ydt-check" style="cursor:pointer;" title="Tap to undo" onclick="ydtUncheck('${esc(w.id)}','${esc(item.id)}')">✓</div><span class="ydt-task-text">${esc(item.text)}</span>`;
+        group.appendChild(row);
+      });
+      section.appendChild(group);
+    });
+    container.appendChild(section);
+  }
+
+  document.getElementById('ydtCount').textContent = `${totalDone} task${totalDone===1?'':'s'} complete`;
+  if (!hasAny) container.innerHTML = '<div class="ydt-empty"><div class="ydt-empty-serif">Nothing yet — but the moment you check something off, it lives here forever.</div></div>';
+}
+function ydtUncheck(weekId, itemId) {
+  const items = getItems(weekId);
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
+  item.done = false;
+  delete item.completedAt;
+  saveItems(weekId, items);
+  buildYouDidThat();
+  if (CW) render(CW); // re-render the currently displayed week, not the item's week
+}
+
+// ─── EXPORT / IMPORT ──────────────────────────────────────────────────────────
+function exportData() {
+  const v4 = gs4();
+  const data = { version:'4', exported: new Date().toISOString(), state: v4 };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const now = new Date(), p = n => String(n).padStart(2,'0');
+  const fname = `AKQ_HQ_${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}_${p(now.getHours())}-${p(now.getMinutes())}.json`;
+  const a = document.createElement('a'); a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+function importData(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onerror = () => alert("File read failed — try exporting again.");
+  reader.onload = (e) => {
+    // Step 1: Parse JSON — isolated so parse errors don't hide other bugs
+    let data;
+    try {
+      const raw = (e.target.result || '').replace(/^\uFEFF/, ''); // strip BOM
+      data = JSON.parse(raw);
+    } catch {
+      alert("Couldn't read that file — it may be corrupted. Try exporting a fresh copy.");
+      return;
+    }
+    // Step 2: Validate format
+    if (data.version === '4' && data.state) {
+      ss4(data.state);
+    } else if (data.version === '1' || data.tasks !== undefined) {
+      const v4m = { weekThemes:{}, weeks:{} };
+      WEEKS.forEach(w => {
+        const bDone = ((data.tasks||{})[w.id]||{}); const bNotes = ((data.notes||{})[w.id]||{}); const v3C = ((data.customTasks||{})[w.id]||[]);
+        v4m.weeks[w.id] = { items: [
+          ...w.tasks.map((t,i)=>({id:`${w.id}_b_${i}`,text:t.text,cat:t.cat,done:!!bDone[i],note:bNotes[i]||'',builtin:true,originWeek:null,originWeekLabel:null})),
+          ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false,originWeek:null,originWeekLabel:null}))
+        ]};
+      });
+      ss4(v4m);
+    } else { alert("This doesn't look like an AKQ HQ file."); return; }
+    // Step 3: Refresh app state (outside parse try/catch — errors here are real bugs)
+    initV4();
+    refreshAW();
+    buildTimeline();
+    render(autoWeekId());
+    const banner = document.getElementById('importSuccess'); banner.style.display = 'block';
+    setTimeout(() => banner.style.display = 'none', 3000);
+  };
+  reader.readAsText(file); event.target.value = '';
+}
+
+// ─── TIMELINE ─────────────────────────────────────────────────────────────────
+function buildTimeline() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const c = document.getElementById('tlScroll'); c.innerHTML = '';
+  AW.forEach(w => {
+    const end = new Date(w.end+'T23:59:59'), start = new Date(w.start+'T00:00:00');
+    const isPast = today > end, isCur = today >= start && today <= end;
+    const chip = document.createElement('div');
+    chip.className = 'tl-chip' + (isCur ? ' active' : '') + (isPast ? ' past' : '');
+    chip.dataset.id = w.id;
+    const theme = getWeekTheme(w.id) || w.name;
+    chip.innerHTML = `<span class="tl-name">${esc(theme)}</span><span class="tl-wk">${esc(w.label)}</span>`;
+    chip.onclick = () => { EI = 0; render(w.id); };
+    c.appendChild(chip);
+  });
+  // Add week chip
+  const addChip = document.createElement('div');
+  addChip.className = 'tl-add-chip';
+  addChip.innerHTML = '<span class="tl-add-name">+ Add</span><span class="tl-add-wk">new week</span>';
+  addChip.onclick = openAddWeek;
+  c.appendChild(addChip);
+  // Archived weeks chip (shown only when there are archived weeks)
+  const archivedIds = (gs4() || {}).archivedWeeks || [];
+  if (archivedIds.length > 0) {
+    const archChip = document.createElement('div');
+    archChip.className = 'tl-add-chip';
+    archChip.style.opacity = '0.65';
+    archChip.innerHTML = `<span class="tl-add-name">Archived</span><span class="tl-add-wk">${archivedIds.length} week${archivedIds.length===1?'':'s'}</span>`;
+    archChip.onclick = openArchivedModal;
+    c.appendChild(archChip);
+  }
+}
+function updateTimeline(weekId) {
+  document.querySelectorAll('.tl-chip').forEach(el => { el.classList.remove('active'); if (el.dataset.id === weekId) el.classList.add('active'); });
+  const a = document.querySelector(`.tl-chip[data-id="${weekId}"]`);
+  if (a) { const cont = document.getElementById('tlScroll'); cont.scrollLeft = a.offsetLeft - (cont.offsetWidth/2) + (a.offsetWidth/2); }
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function fmtRange(s, e) {
+  const sd = new Date(s+'T12:00:00'), ed = new Date(e+'T12:00:00');
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return sd.getMonth()===ed.getMonth() ? `${M[sd.getMonth()]} ${sd.getDate()} – ${ed.getDate()}` : `${M[sd.getMonth()]} ${sd.getDate()} – ${M[ed.getMonth()]} ${ed.getDate()}`;
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// ─── GOOD MORNING ─────────────────────────────────────────────────────────────
+const GM_DEFAULT_ITEMS = [
+  { id:'phone', label:'No phone first' },
+  { id:'movement', label:'Movement' },
+  { id:'meds', label:'Meds' },
+  { id:'spirit', label:'Bible study or morning pages' },
+  { id:'breakfast', label:'Breakfast' }
+];
+const GM_KEY = 'bcy_morning';
+const GM_ITEMS_KEY = 'bcy_morning_items';
+
+function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+function loadGmItems() {
+  try { const raw = JSON.parse(localStorage.getItem(GM_ITEMS_KEY)); if (raw && raw.length) return raw; } catch {}
+  return GM_DEFAULT_ITEMS.map(i => ({ ...i }));
+}
+function saveGmItems(items) { localStorage.setItem(GM_ITEMS_KEY, JSON.stringify(items)); }
+
+function loadMorning() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(GM_KEY));
+    if (raw && raw.date === todayStr()) return raw.states;
+  } catch {}
+  const states = {};
+  loadGmItems().forEach(it => { states[it.id] = false; });
+  return states;
+}
+function saveMorning(states) {
+  localStorage.setItem(GM_KEY, JSON.stringify({ date: todayStr(), states }));
+}
+function toggleMorningItem(id) {
+  const states = loadMorning();
+  states[id] = !states[id];
+  saveMorning(states);
+  renderMorning();
+}
+
+function renderMorning() {
+  const items = loadGmItems();
+  const states = loadMorning();
+  const container = document.getElementById('gmItems');
+  container.innerHTML = items.map(it => {
+    const checked = !!states[it.id];
+    return `<div class="gm-item" onclick="toggleMorningItem('${esc(it.id)}')">
+      <div class="gm-check-row">
+        <div class="gm-box${checked ? ' checked' : ''}"></div>
+        <span class="gm-label${checked ? ' checked' : ''}">${esc(it.label)}</span>
+      </div>
+    </div>`;
+  }).join('');
+  const allDoneEl = document.getElementById('gmAllDone');
+  if (allDoneEl) allDoneEl.classList.toggle('show', items.length > 0 && items.every(it => states[it.id]));
+}
+
+// ── Morning edit mode ──
+function toggleGmEdit() {
+  const panel = document.getElementById('gmEditPanel');
+  const btn = document.getElementById('gmEditBtn');
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? 'done' : 'edit';
+  if (panel.classList.contains('open')) renderGmEditList();
+}
+function renderGmEditList() {
+  const items = loadGmItems();
+  document.getElementById('gmEditList').innerHTML = items.map((it, i) => {
+    return `<div class="gm-edit-item">
+      <input class="gm-edit-input" value="${esc(it.label)}" onchange="renameGmItem(${i}, this.value)" onblur="renameGmItem(${i}, this.value)">
+      <button class="gm-edit-del" onclick="removeGmItem(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+function renameGmItem(idx, val) {
+  const items = loadGmItems();
+  if (idx < items.length && val.trim()) {
+    items[idx].label = val.trim();
+    saveGmItems(items);
+    renderMorning();
+  }
+}
+function removeGmItem(idx) {
+  const items = loadGmItems();
+  items.splice(idx, 1);
+  saveGmItems(items);
+  renderMorning();
+  renderGmEditList();
+}
+function addMorningItem() {
+  const input = document.getElementById('gmAddInput');
+  const label = input.value.trim();
+  if (!label) return;
+  const items = loadGmItems();
+  const id = 'gm_' + Date.now();
+  items.push({ id, label });
+  saveGmItems(items);
+  input.value = '';
+  renderMorning();
+  renderGmEditList();
+}
+
+// ─── PRACTICES EDIT ──────────────────────────────────────────────────────────
+const PR_KEY = 'bcy_custom_practices';
+let _currentWeekId = null;
+
+function loadCustomPractices(weekId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PR_KEY)) || {};
+    return all[weekId] || null;
+  } catch { return null; }
+}
+function saveCustomPractices(weekId, practices) {
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem(PR_KEY)) || {}; } catch {}
+  all[weekId] = practices;
+  localStorage.setItem(PR_KEY, JSON.stringify(all));
+}
+function getCurrentPractices(week) {
+  const custom = loadCustomPractices(week.id);
+  return custom !== null ? custom : [...week.practices];
+}
+function togglePrEdit() {
+  const panel = document.getElementById('prEditPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderPrEditList();
+}
+function renderPrEditList() {
+  if (!_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  if (!week) return;
+  const practices = getCurrentPractices(week);
+  document.getElementById('prEditList').innerHTML = practices.map((p, i) => {
+    return `<div class="pr-edit-item">
+      <input class="pr-edit-input" value="${esc(p)}" onchange="renamePractice(${i}, this.value)" onblur="renamePractice(${i}, this.value)">
+      <button class="pr-edit-del" onclick="removePractice(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+function renamePractice(idx, val) {
+  if (!_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const practices = getCurrentPractices(week);
+  if (idx < practices.length && val.trim()) {
+    practices[idx] = val.trim();
+    saveCustomPractices(_currentWeekId, practices);
+    renderPracticesDisplay(practices);
+  }
+}
+function removePractice(idx) {
+  if (!_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const practices = getCurrentPractices(week);
+  practices.splice(idx, 1);
+  saveCustomPractices(_currentWeekId, practices);
+  renderPracticesDisplay(practices);
+  renderPrEditList();
+}
+function addPractice() {
+  const input = document.getElementById('prAddInput');
+  const text = input.value.trim();
+  if (!text || !_currentWeekId) return;
+  const week = WEEKS.find(w => w.id === _currentWeekId);
+  const practices = getCurrentPractices(week);
+  practices.push(text);
+  saveCustomPractices(_currentWeekId, practices);
+  input.value = '';
+  renderPracticesDisplay(practices);
+  renderPrEditList();
+}
+function renderPracticesDisplay(practices) {
+  const pl = document.getElementById('practiceList');
+  pl.innerHTML = '';
+  practices.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'practice-row';
+    div.innerHTML = `<div class="pr-dot"></div><span class="pr-text">${esc(p)}</span>`;
+    pl.appendChild(div);
+  });
+}
+
+// ─── IDEA BANK ────────────────────────────────────────────────────────────────
+const IB_KEY = 'bcy_ideabank';
+const IB_TOKEN_KEY = 'bcy_notion_token';
+const IB_DB_ID = '1734237e26d081fe9515cf8a2f0b9fa0';
+const IB_TAG_COLORS = { 'Stand Up':'var(--hot)', 'TV / Pilot':'#b2c0f9', 'Film':'var(--pink)', 'Podcast':'var(--lavender)', 'Music':'var(--orange)', 'Business':'var(--mist)', 'Online / Social':'#a8d8a0', 'Other':'#ccc' };
+
+function getIbToken() { return localStorage.getItem(IB_TOKEN_KEY) || ''; }
+function loadIdeas() { try { return JSON.parse(localStorage.getItem(IB_KEY)) || []; } catch { return []; } }
+function saveIdeasLocal(ideas) { localStorage.setItem(IB_KEY, JSON.stringify(ideas)); }
+
+function ibMakeShorthand(text) {
+  return text.replace(/[^\w\s]/g,'').toUpperCase().trim().split(/\s+/).slice(0,4).join(' ');
+}
+
+// ── Direct Notion API ──
+async function ibSendToNotion(idea) {
+  const token = getIbToken();
+  if (!token) return false;
+  const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://api.notion.com/v1/pages');
+  const fetchOpts = {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28'
+    },
+    body: JSON.stringify({
+      parent: { database_id: IB_DB_ID },
+      icon: { type: 'emoji', emoji: '✨' },
+      properties: {
+        Name:     { title:     [{ text: { content: idea.name || ibMakeShorthand(idea.text) } }] },
+        Category: { select:    { name: idea.tag || 'Other' } },
+        Status:   { status:    { name: 'In progress' } },
+        details:  { rich_text: [{ text: { content: idea.text } }] }
+      }
+    })
+  };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(proxyUrl, fetchOpts);
+      return res.ok;
+    } catch(e) {
+      if (attempt === 0) { await new Promise(r => setTimeout(r, 900)); continue; }
+      console.error('Notion proxy error:', e);
+      return false;
+    }
+  }
+}
+
+// ── Save idea — sends to Notion automatically if token exists ──
+async function saveIdea() {
+  const text = document.getElementById('ibInput').value.trim();
+  if (!text) return;
+  const nameInput = document.getElementById('ibName');
+  const customName = nameInput ? nameInput.value.trim().toUpperCase() : '';
+  const activeTag = document.querySelector('#ibOverlay .ib-tag-btn.active');
+  const tag = activeTag ? activeTag.dataset.tag : '';
+  const idea = { id: genId('idea'), text, tag, name: customName, ts: new Date().toISOString(), sent: false };
+
+  // Disable button while sending
+  const btn = document.getElementById('ibSaveBtn');
+  const origText = btn.textContent;
+  const token = getIbToken();
+
+  if (token) {
+    btn.textContent = 'Sending to Notion...';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+  }
+
+  const ideas = loadIdeas(); ideas.unshift(idea); saveIdeasLocal(ideas);
+  document.getElementById('ibInput').value = '';
+  if (nameInput) nameInput.value = '';
+  document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
+  renderIdeaBank();
+
+  if (token) {
+    const ok = await ibSendToNotion(idea);
+    if (ok) {
+      idea.sent = true;
+      saveIdeasLocal(loadIdeas().map(i => i.id === idea.id ? idea : i));
+      renderIdeaBank();
+      showToast('Added to Notion ✨');
+    } else {
+      showToast('Saved locally — Notion sync failed');
+    }
+    btn.textContent = origText;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  } else {
+    showToast('Saved locally');
+  }
+}
+
+function deleteIdea(id) { saveIdeasLocal(loadIdeas().filter(i => i.id !== id)); renderIdeaBank(); }
+
+let _toastTimer = null;
+function showToast(msg) {
+  let t = document.getElementById('bcyToast');
+  if (!t) { t = document.createElement('div'); t.id = 'bcyToast'; t.className = 'bcy-toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer); _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── Sync a single unsent idea to Notion ──
+async function syncIdeaToNotion(id) {
+  const token = getIbToken();
+  if (!token) { showToast('Set up Notion token first — tap ⚙️'); return; }
+  const ideas = loadIdeas();
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  showToast('Sending...');
+  const ok = await ibSendToNotion(idea);
+  if (ok) {
+    idea.sent = true; saveIdeasLocal(ideas); renderIdeaBank();
+    showToast('Added to Notion ✨');
+  } else {
+    showToast('Sync failed — proxy may be down, idea saved locally');
+  }
+}
+
+// ── Sync all unsent ideas ──
+async function sendAllToNotion() {
+  const token = getIbToken();
+  if (!token) { showToast('Set up Notion token first — tap ⚙️'); return; }
+  const ideas = loadIdeas();
+  const unsent = ideas.filter(i => !i.sent);
+  if (!unsent.length) { showToast('All ideas already synced'); return; }
+  showToast('Syncing ' + unsent.length + ' ideas...');
+  let success = 0;
+  for (const idea of unsent) {
+    const ok = await ibSendToNotion(idea);
+    if (ok) { idea.sent = true; success++; }
+  }
+  saveIdeasLocal(ideas); renderIdeaBank();
+  showToast(success + ' of ' + unsent.length + ' synced to Notion ✨');
+}
+
+function ibTagSelect(btn) {
+  const was = btn.classList.contains('active');
+  document.querySelectorAll('#ibOverlay .ib-tag-btn').forEach(b => b.classList.remove('active'));
+  if (!was) btn.classList.add('active');
+}
+
+// ── Settings: token management ──
+function toggleIbSettings() {
+  const panel = document.getElementById('ibSettingsPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    document.getElementById('ibTokenInput').value = getIbToken();
+  }
+}
+function saveIbToken() {
+  const val = document.getElementById('ibTokenInput').value.trim();
+  if (!val) { showToast('Paste a token first'); return; }
+  if (!val.startsWith('secret_') && !val.startsWith('ntn_')) {
+    showToast('That doesn\'t look like a Notion token'); return;
+  }
+  localStorage.setItem(IB_TOKEN_KEY, val);
+  updateIbSyncBadge();
+  renderIdeaBank();
+  showToast('Token saved — ideas go straight to Notion now');
+}
+async function testIbToken() {
+  const val = document.getElementById('ibTokenInput').value.trim();
+  if (!val) { showToast('Paste a token to test'); return; }
+  showToast('Testing...');
+  const notionUrl = 'https://api.notion.com/v1/databases/' + IB_DB_ID;
+  const opts = { headers: { 'Authorization': 'Bearer ' + val, 'Notion-Version': '2022-06-28' } };
+  let res;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      res = await fetch('https://corsproxy.io/?' + encodeURIComponent(notionUrl), opts);
+      break;
+    } catch(e) {
+      if (attempt === 0) { await new Promise(r => setTimeout(r, 900)); continue; }
+      showToast('Proxy unreachable — try again in a moment');
+      return;
+    }
+  }
+  if (res.ok) {
+    showToast('Connected to Idea Bank ✨');
+  } else if (res.status === 404) {
+    showToast('Token works — add Idea Bank connection in Notion');
+  } else if (res.status === 401 || res.status === 403) {
+    showToast('Token rejected — double-check it in Notion');
+  } else {
+    showToast('Notion error: ' + res.status);
+  }
+}
+
+function updateIbSyncBadge() {
+  const badge = document.getElementById('ibSyncBadge');
+  if (!badge) return;
+  const token = getIbToken();
+  if (token) {
+    badge.textContent = 'Notion sync on';
+    badge.className = 'ib-sync-badge ib-sync-on';
+  } else {
+    badge.textContent = 'offline';
+    badge.className = 'ib-sync-badge ib-sync-off';
+  }
+}
+
+function updateIbSaveBtn() {
+  const btn = document.getElementById('ibSaveBtn');
+  if (!btn) return;
+  btn.textContent = getIbToken() ? 'Add to Notion ✨' : 'Save to Idea Bank';
+}
+
+function renderIdeaBank() {
+  const ideas = loadIdeas();
+  const list = document.getElementById('ibList'); if (!list) return;
+  const token = getIbToken();
+
+  // Show/hide sync all button
+  const syncAllBtn = document.getElementById('ibSendAllBtn');
+  const unsent = ideas.filter(i => !i.sent);
+  if (syncAllBtn) syncAllBtn.style.display = (token && unsent.length > 0) ? 'inline-block' : 'none';
+
+  updateIbSyncBadge();
+  updateIbSaveBtn();
+
+  if (!ideas.length) { list.innerHTML = '<div class="ib-empty">Nothing here yet. Ideas incoming.</div>'; return; }
+  list.innerHTML = ideas.map(idea => {
+    const color = IB_TAG_COLORS[idea.tag] || 'var(--mist)';
+    const dateStr = new Date(idea.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const syncBtn = (!idea.sent && token)
+      ? `<button class="ib-notion-btn" onclick="syncIdeaToNotion('${esc(idea.id)}')">✦ Sync to Notion</button>`
+      : (!idea.sent && !token)
+        ? ''
+        : '';
+    return `<div class="ib-card" style="border-left-color:${color}">
+      ${idea.name ? `<div style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--hot);margin-bottom:4px;">${esc(idea.name)}</div>` : ''}
+      <div class="ib-card-text">${esc(idea.text)}</div>
+      <div class="ib-card-meta">
+        ${idea.tag ? `<span class="ib-tag-badge" style="color:${color}">${esc(idea.tag)}</span>` : ''}
+        <span class="ib-ts">${dateStr}</span>
+        ${idea.sent ? '<span class="ib-sent">in Notion ✨</span>' : ''}
+      </div>
+      <div class="ib-card-acts">
+        ${syncBtn}
+        <button class="ib-del-btn" onclick="deleteIdea('${esc(idea.id)}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showIdeaBank() {
+  document.getElementById('ibOverlay').classList.add('open');
+  renderIdeaBank();
+}
+function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove('open'); }
+
+
+// ─── PWA SERVICE WORKER ──────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        // Only reload on UPDATE (old SW was already controlling) — not on first install
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          window.location.reload();
+        }
+      });
+    });
+  }).catch(e => console.log('SW registration failed:', e));
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  DROPBOX SYNC — OAuth PKCE, mobile (page redirect) variant
+//  Register at https://www.dropbox.com/developers/apps → paste App Key below
+// ══════════════════════════════════════════════════════════════════════════════
+const DBX = (() => {
+  const APP_KEY    = 'fu1in22nni46kx6';
+  const KEY_TOKENS = 'akq_hq_dbx_tokens';
+  const KEY_PKCE   = 'akq_hq_dbx_pkce';
+  const KEY_FILEID = 'akq_hq_dbx_fileid';
+  const AKQ_PATH   = '/AKQ HQ/akq-data.json';
+  let st = { accessToken:null, refreshToken:null, expiresAt:0, account:null, fileId:null };
+  function b64url(buf) { return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  async function sha256(str) { return b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))); }
+  function randVerifier(len=64) { const c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'; let s=''; const a=new Uint8Array(len); crypto.getRandomValues(a); for(let i=0;i<len;i++) s+=c[a[i]%c.length]; return s; }
+  function getRedirectUri() { const u=new URL(location.href); u.search=''; u.hash=''; return u.href; }
+  function load() {
+    try { const raw=localStorage.getItem(KEY_TOKENS); if(raw){const t=JSON.parse(raw);st.accessToken=t.accessToken||null;st.refreshToken=t.refreshToken||null;st.expiresAt=t.expiresAt||0;st.account=t.account||null;} st.fileId=localStorage.getItem(KEY_FILEID)||null; } catch(e){console.warn('DBX load:',e);}
+  }
+  function saveTokens() { localStorage.setItem(KEY_TOKENS,JSON.stringify({accessToken:st.accessToken,refreshToken:st.refreshToken,expiresAt:st.expiresAt,account:st.account})); if(st.fileId) localStorage.setItem(KEY_FILEID,st.fileId); }
+  function clearTokens() { localStorage.removeItem(KEY_TOKENS); localStorage.removeItem(KEY_FILEID); st={accessToken:null,refreshToken:null,expiresAt:0,account:null,fileId:null}; }
+  function isConfigured() { return APP_KEY && APP_KEY !== '__DROPBOX_APP_KEY__'; }
+  function isConnected()   { return !!st.refreshToken; }
+  function account()       { return st.account; }
+  // Mobile: full-page redirect to Dropbox, reads code from URL on return
+  async function startOAuth() {
+    if (!isConfigured()) { alert("Dropbox not set up.\n\nPaste your App Key into this file (search fu1in22nni46kx6)."); return; }
+    const verifier=randVerifier(); const challenge=await sha256(verifier);
+    sessionStorage.setItem(KEY_PKCE, verifier);
+    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:getRedirectUri(),token_access_type:'offline'});
+    location.href=`https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
+  }
+  async function handleCallback() {
+    const url=new URL(location.href); const code=url.searchParams.get('code'); const error=url.searchParams.get('error');
+    if(error){url.searchParams.delete('error');url.searchParams.delete('error_description');history.replaceState(null,'',url.href);alert('Dropbox cancelled: '+error);return false;}
+    if(!code) return false;
+    const verifier=sessionStorage.getItem(KEY_PKCE); sessionStorage.removeItem(KEY_PKCE);
+    url.searchParams.delete('code');url.searchParams.delete('state');history.replaceState(null,'',url.href);
+    if(!verifier) return false;
+    const body=new URLSearchParams({code,grant_type:'authorization_code',client_id:APP_KEY,redirect_uri:getRedirectUri(),code_verifier:verifier});
+    const r=await fetch('https://api.dropbox.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+    if(!r.ok){alert('Could not finish Dropbox connection. Try again.');return false;}
+    const t=await r.json(); st.accessToken=t.access_token;st.refreshToken=t.refresh_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000;
+    try{const acct=await apiCall('/users/get_current_account',null);st.account={name:acct.name?.display_name||'—',email:acct.email||''};}catch(e){st.account=null;}
+    saveTokens(); return true;
+  }
+  async function refreshIfNeeded() {
+    if(!st.refreshToken) throw new Error('Not connected');
+    if(st.accessToken && Date.now()<st.expiresAt-30000) return;
+    const body=new URLSearchParams({grant_type:'refresh_token',refresh_token:st.refreshToken,client_id:APP_KEY});
+    const r=await fetch('https://api.dropbox.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+    if(!r.ok){clearTokens();throw new Error('Session expired — reconnect Dropbox');}
+    const t=await r.json(); st.accessToken=t.access_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000; saveTokens();
+  }
+  async function apiCall(endpoint,argsObj) {
+    await refreshIfNeeded();
+    const r=await fetch('https://api.dropboxapi.com/2'+endpoint,{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Content-Type':'application/json'},body:argsObj?JSON.stringify(argsObj):'null'});
+    if(!r.ok){const txt=await r.text();throw new Error(`DBX ${endpoint} ${r.status}: ${txt}`);}
+    return r.json();
+  }
+  async function uploadPath(path,content) {
+    await refreshIfNeeded();
+    const arg={path,mode:{'.tag':'overwrite'},autorename:false,mute:true,strict_conflict:false};
+    const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Dropbox-API-Arg':JSON.stringify(arg),'Content-Type':'application/octet-stream'},body:typeof content==='string'?new Blob([content]):content});
+    if(!r.ok){const txt=await r.text();throw new Error(`DBX upload ${r.status}: ${txt}`);}
+    return r.json();
+  }
+  async function getPathById(id) { try{const m=await apiCall('/files/get_metadata',{path:id});return m.path_display||null;}catch(e){return null;} }
+  async function uploadSmart(content) {
+    let path=AKQ_PATH;
+    if(st.fileId){const cur=await getPathById(st.fileId);if(cur)path=cur;}
+    const res=await uploadPath(path,content);
+    st.fileId=res.id; localStorage.setItem(KEY_FILEID,res.id); return res;
+  }
+  async function downloadPath(path) {
+    await refreshIfNeeded();
+    const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Dropbox-API-Arg':JSON.stringify({path})}});
+    if(r.status===409) return null;
+    if(!r.ok){const txt=await r.text();throw new Error(`DBX download ${r.status}: ${txt}`);}
+    return r.text();
+  }
+  async function downloadData() {
+    let txt=null;
+    if(st.fileId){const p=await getPathById(st.fileId);if(p)txt=await downloadPath(p);}
+    if(!txt) txt=await downloadPath(AKQ_PATH);
+    return txt;
+  }
+  async function disconnect() { try{await apiCall('/auth/token/revoke',null);}catch(e){} clearTokens(); }
+  return {load,isConfigured,isConnected,account,startOAuth,handleCallback,uploadSmart,downloadData,disconnect};
+})();
+DBX.load();
+
+// ─── AUTO SYNC ────────────────────────────────────────────────────────────────
+let _isFirstRender = true;
+let _skipPush = false;
+let _dbxPushTimer = null;
+
+function scheduleDropboxPush() {
+  if (!DBX.isConnected()) return;
+  clearTimeout(_dbxPushTimer);
+  _dbxPushTimer = setTimeout(async () => {
+    _dbxPushTimer = null;
+    try {
+      setSyncStatus('syncing');
+      const raw = localStorage.getItem(KEY4);
+      if (!raw) { setSyncStatus('idle'); return; }
+      await DBX.uploadSmart(raw);
+      setSyncStatus('idle');
+    } catch(e) { console.warn('Auto-push failed:', e); setSyncStatus('error'); }
+  }, 2000);
+}
+
+async function performDropboxPull() {
+  if (!DBX.isConnected()) return false;
+  try {
+    const txt = await DBX.downloadData();
+    if (!txt) return false;
+    const remote = JSON.parse(txt);
+    if (!remote.lastModified) return false;
+    const localRaw = localStorage.getItem(KEY4);
+    if (localRaw) {
+      try { const local=JSON.parse(localRaw); if(local.lastModified && remote.lastModified <= local.lastModified) return false; } catch(e){}
+    }
+    localStorage.setItem(KEY4, JSON.stringify(remote));
+    applyPulledState();
+    return true;
+  } catch(e) { console.warn('DBX pull failed:', e); return false; }
+}
+
+function applyPulledState() {
+  refreshAW();
+  buildTimeline();
+  EI = Math.floor(Math.random() * DEFAULT_ENC.length);
+  render(autoWeekId());
+  renderMorning();
+}
+
+function setSyncStatus(status) {
+  const dot = document.getElementById('syncDot');
+  const msg = document.getElementById('dbxSyncMsg');
+  if (dot) dot.className = 'sync-dot sync-' + status;
+  if (msg) {
+    if (status==='syncing') msg.textContent='Syncing...';
+    else if (status==='idle') msg.textContent='Up to date';
+    else if (status==='error') msg.textContent='Sync error — try Force Push';
+    else msg.textContent='';
+  }
+}
+
+function updateSyncUI() {
+  const connected = DBX.isConnected();
+  const acct = DBX.account();
+  const el = document.getElementById('dbxConnStatus');
+  const acctEl = document.getElementById('dbxAcct');
+  const connectBtn = document.getElementById('dbxConnectBtn');
+  const disconnectBtn = document.getElementById('dbxDisconnectBtn');
+  if (el) el.textContent = connected ? 'Connected to Dropbox' : 'Not connected';
+  if (acctEl) acctEl.textContent = connected && acct ? acct.email || acct.name || '' : '';
+  if (connectBtn) connectBtn.style.display = connected ? 'none' : 'block';
+  if (disconnectBtn) disconnectBtn.style.display = connected ? 'block' : 'none';
+  const dot = document.getElementById('syncDot');
+  if (dot) dot.className = 'sync-dot sync-' + (connected ? 'idle' : 'off');
+}
+
+function openSyncSettings() {
+  updateSyncUI();
+  const msg = document.getElementById('dbxSyncMsg');
+  if (msg) msg.textContent = DBX.isConnected() ? 'Up to date' : 'Not connected';
+  document.getElementById('syncModal').classList.add('open');
+}
+
+async function dbxConnect() { await DBX.startOAuth(); }
+
+async function dbxDisconnect() {
+  await DBX.disconnect();
+  updateSyncUI();
+  setSyncStatus('off');
+  showToast('Dropbox disconnected');
+}
+
+async function dbxForcePush() {
+  if (!DBX.isConnected()) { showToast('Not connected to Dropbox'); return; }
+  try {
+    setSyncStatus('syncing');
+    const raw = localStorage.getItem(KEY4);
+    if (!raw) { setSyncStatus('idle'); return; }
+    await DBX.uploadSmart(raw);
+    setSyncStatus('idle');
+    showToast('Pushed to Dropbox');
+  } catch(e) { setSyncStatus('error'); showToast('Push failed — check connection'); }
+}
+
+async function dbxForcePull() {
+  if (!DBX.isConnected()) { showToast('Not connected to Dropbox'); return; }
+  try {
+    setSyncStatus('syncing');
+    const txt = await DBX.downloadData();
+    if (!txt) { setSyncStatus('idle'); showToast('Nothing to pull'); return; }
+    const remote = JSON.parse(txt);
+    localStorage.setItem(KEY4, JSON.stringify(remote));
+    applyPulledState();
+    setSyncStatus('idle');
+    showToast('Pulled from Dropbox');
+  } catch(e) { setSyncStatus('error'); showToast('Pull failed — check connection'); }
+}
+
+function dbxReset() {
+  localStorage.removeItem('akq_hq_dbx_fileid');
+  showToast('Reset complete — reconnect Dropbox');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+initV4();
+refreshAW();
+buildTimeline();
+EI = Math.floor(Math.random() * DEFAULT_ENC.length);
+render(autoWeekId());
+renderMorning();
+
+// Dropbox: handle OAuth callback (mobile page-redirect), then boot pull
+(async () => {
+  const justConnected = await DBX.handleCallback();
+  if (justConnected) { updateSyncUI(); showToast('Dropbox connected'); }
+  if (DBX.isConnected()) {
+    setSyncStatus('syncing');
+    await performDropboxPull();
+    setSyncStatus('idle');
+  }
+  _isFirstRender = false;
+  setInterval(performDropboxPull, 10000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) performDropboxPull(); });
+})();
+
+// ─── WEEK MANAGEMENT ──────────────────────────────────────────────────────────
+function openWeekMgmt() {
+  const w = getWeek(CW);
+  const theme = getWeekTheme(CW) || w?.name || CW;
+  document.getElementById('weekMgmtSub').textContent = (w?.label || CW) + (theme ? ' — ' + theme : '');
+  document.getElementById('weekMgmtModal').classList.add('open');
+}
+function confirmDeleteWeek() {
+  const w = getWeek(CW);
+  const theme = getWeekTheme(CW) || w?.name || CW;
+  const label = w?.label || CW;
+  if (!confirm('Delete ' + label + (theme ? ' (' + theme + ')' : '') + ' from the timeline?\nYour task data for this week is preserved in exports.')) return;
+  closeModal('weekMgmtModal');
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], customWeeks:[] };
+  if (!v4.deletedWeeks) v4.deletedWeeks = [];
+  if (!v4.customWeeks) v4.customWeeks = [];
+  if (CW.startsWith('c_')) {
+    v4.customWeeks = v4.customWeeks.filter(w => w.id !== CW);
+  } else {
+    if (!v4.deletedWeeks.includes(CW)) v4.deletedWeeks.push(CW);
+  }
+  ss4(v4);
+  refreshAW();
+  buildTimeline();
+  // navigate to nearest week
+  const newId = autoWeekId();
+  EI = 0; render(newId);
+  showToast('Week deleted');
+}
+function archiveWeek() {
+  closeModal('weekMgmtModal');
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], archivedWeeks:[], customWeeks:[] };
+  if (!v4.archivedWeeks) v4.archivedWeeks = [];
+  if (!v4.archivedWeeks.includes(CW)) v4.archivedWeeks.push(CW);
+  ss4(v4);
+  refreshAW();
+  buildTimeline();
+  const newId = autoWeekId();
+  EI = 0; render(newId);
+  showToast('Week archived — tasks preserved');
+}
+function openArchivedModal() {
+  const v4 = gs4() || {};
+  const archivedIds = v4.archivedWeeks || [];
+  const list = document.getElementById('archivedList');
+  if (archivedIds.length === 0) {
+    list.innerHTML = '<p style="color:rgba(0,0,0,0.4);font-size:13px;text-align:center;padding:16px 0;">No archived weeks</p>';
+  } else {
+    const allWeeks = [...WEEKS, ...(v4.customWeeks||[])];
+    list.innerHTML = archivedIds.map(id => {
+      const w = allWeeks.find(wk => wk.id === id);
+      const theme = (v4.weekThemes||{})[id] || w?.name || id;
+      const label = w?.label || id;
+      const tasks = ((v4.weeks||{})[id]||{}).items || [];
+      const done = tasks.filter(t=>t.done).length;
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+        <div>
+          <div style="font-weight:700;font-size:13px;color:var(--ink);">${esc(theme)}</div>
+          <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">${esc(label)} &middot; ${done} of ${tasks.length} done</div>
+        </div>
+        <button onclick="unarchiveWeek('${id}')" style="background:#FFD4F4;color:var(--hot);border:none;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;">Restore</button>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('archivedModal').classList.add('open');
+}
+function unarchiveWeek(id) {
+  const v4 = gs4() || {};
+  v4.archivedWeeks = (v4.archivedWeeks || []).filter(i => i !== id);
+  ss4(v4);
+  closeModal('archivedModal');
+  refreshAW();
+  buildTimeline();
+  EI = 0; render(id);
+  showToast('Week restored to timeline');
+}
+function openAddWeek() {
+  // Pre-fill start date to today
+  const today = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const todayStr = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
+  const endDate = new Date(today); endDate.setDate(endDate.getDate() + 6);
+  const endStr = endDate.getFullYear() + '-' + pad(endDate.getMonth()+1) + '-' + pad(endDate.getDate());
+  document.getElementById('addWeekName').value = '';
+  document.getElementById('addWeekStart').value = todayStr;
+  document.getElementById('addWeekEnd').value = endStr;
+  document.getElementById('addWeekModal').classList.add('open');
+}
+// Auto-set end date when start changes
+document.addEventListener('DOMContentLoaded', () => {
+  const startInput = document.getElementById('addWeekStart');
+  if (startInput) startInput.addEventListener('change', () => {
+    const s = new Date(startInput.value + 'T12:00:00');
+    if (isNaN(s)) return;
+    s.setDate(s.getDate() + 6);
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('addWeekEnd').value = s.getFullYear() + '-' + pad(s.getMonth()+1) + '-' + pad(s.getDate());
+  });
+});
+function saveNewWeek() {
+  const name  = document.getElementById('addWeekName').value.trim();
+  const start = document.getElementById('addWeekStart').value;
+  const end   = document.getElementById('addWeekEnd').value;
+  if (!start || !end) { showToast('Set a start and end date'); return; }
+  if (start > end) { showToast('End date must be after start'); return; }
+  const v4 = gs4() || { weekThemes:{}, weeks:{}, deletedWeeks:[], customWeeks:[] };
+  if (!v4.customWeeks) v4.customWeeks = [];
+  const id = genId('c');
+  v4.customWeeks.push({ id, label:'Custom', num:'—', start, end, name, enc: DEFAULT_ENC });
+  ss4(v4);
+  closeModal('addWeekModal');
+  refreshAW();
+  // Rebuild labels/nums based on sorted position
+  const del = new Set(v4.deletedWeeks || []);
+  const merged = [...WEEKS.filter(w => !del.has(w.id)), ...v4.customWeeks]
+                   .sort((a,b) => a.start.localeCompare(b.start));
+  const newW = merged.find(w => w.id === id);
+  if (newW) {
+    const pos = merged.indexOf(newW) + 1;
+    // update label in AW
+    const aw = AW.find(w => w.id === id);
+    if (aw) { aw.label = 'Week ' + pos; aw.num = String(pos); }
+    v4.customWeeks = v4.customWeeks.map(cw => cw.id === id ? { ...cw, label:'Week '+pos, num:String(pos) } : cw);
+    ss4(v4);
+  }
+  buildTimeline();
+  EI = 0; render(id);
+  showToast('Week added ✦');
+}
+
+</script>
+</body>
+</html>

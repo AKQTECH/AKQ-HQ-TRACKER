@@ -1,0 +1,18 @@
+{
+  "name": "HQ",
+  "short_name": "HQ",
+  "description": "Week-by-week personal tracker with Dropbox sync",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFF4F8",
+  "theme_color": "#EA258D",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
