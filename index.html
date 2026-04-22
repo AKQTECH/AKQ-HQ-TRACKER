@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.7</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.8</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2176,7 +2176,12 @@ const DBX = (() => {
   async function downloadPath(path) {
     await refreshIfNeeded();
     const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Dropbox-API-Arg':JSON.stringify({path})}});
-    if(r.status===409) return null;
+    if(r.status===409){
+      const body=await r.json().catch(()=>({}));
+      const tag=(body?.error?.['.tag']||body?.error_summary||'');
+      if(tag.includes('not_found')) return null; // file genuinely doesn't exist yet
+      throw new Error('DBX 409: '+JSON.stringify(body)); // real error — path mismatch, restricted, etc.
+    }
     if(!r.ok){const txt=await r.text();throw new Error(`DBX download ${r.status}: ${txt}`);}
     return r.text();
   }
