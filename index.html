@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.9</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.10</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2179,14 +2179,16 @@ const DBX = (() => {
     if(r.status===409){
       const body=await r.json().catch(()=>({}));
       const tag=(body?.error?.['.tag']||body?.error_summary||'');
-      if(tag.includes('not_found')) return null; // file genuinely doesn't exist yet
-      throw new Error('DBX 409: '+JSON.stringify(body)); // real error — path mismatch, restricted, etc.
+      alert('DROPBOX 409 RESPONSE:\n' + JSON.stringify(body, null, 2));
+      if(tag.includes('not_found')) return null;
+      throw new Error('DBX 409: '+JSON.stringify(body));
     }
     if(!r.ok){const txt=await r.text();throw new Error(`DBX download ${r.status}: ${txt}`);}
     return r.text();
   }
   async function downloadData() {
     let txt=null;
+    alert('Attempting download. File ID: ' + (st.fileId || 'none') + '\nPath: ' + AKQ_PATH);
     if(st.fileId){const p=await getPathById(st.fileId);if(p)txt=await downloadPath(p);}
     if(!txt) txt=await downloadPath(AKQ_PATH);
     return txt;
