@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.4</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.5-debug</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2099,25 +2099,35 @@ const DBX = (() => {
     const verifier=randVerifier(); const challenge=await sha256(verifier);
     sessionStorage.setItem(KEY_PKCE, verifier);
     localStorage.setItem(KEY_PKCE, verifier);
-    // Encode verifier in state so it survives cross-context redirects (iOS PWA → Safari → PWA)
     const state=btoa(verifier);
-    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:getRedirectUri(),token_access_type:'offline',state});
+    const redirectUri=getRedirectUri();
+    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:redirectUri,token_access_type:'offline',state});
+    // DEBUG: confirm what redirect URI we're sending
+    alert('DBX DEBUG 1/3\nRedirect URI: ' + redirectUri + '\nVerifier stored: yes\nNavigating to Dropbox now...');
     location.href=`https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
   }
   async function handleCallback() {
     const url=new URL(location.href); const code=url.searchParams.get('code'); const error=url.searchParams.get('error'); const stateParam=url.searchParams.get('state');
     if(error){url.searchParams.delete('error');url.searchParams.delete('error_description');history.replaceState(null,'',url.href);alert('Dropbox cancelled: '+error);return false;}
-    if(!code) return false;
-    // Try sessionStorage first, then localStorage, then decode from state param
+    if(!code) { return false; }
+    // DEBUG: we got a code back
+    alert('DBX DEBUG 2/3\nGot code back from Dropbox.\nCode (first 8): ' + code.slice(0,8) + '\nState present: ' + !!stateParam + '\nsessionStorage verifier: ' + !!sessionStorage.getItem(KEY_PKCE) + '\nlocalStorage verifier: ' + !!localStorage.getItem(KEY_PKCE));
     let verifier=sessionStorage.getItem(KEY_PKCE)||localStorage.getItem(KEY_PKCE);
     sessionStorage.removeItem(KEY_PKCE); localStorage.removeItem(KEY_PKCE);
-    if(!verifier && stateParam){try{verifier=atob(stateParam);}catch(e){}}
+    if(!verifier && stateParam){try{verifier=atob(stateParam);}catch(e){alert('DBX: could not decode state: '+e.message);}}
     url.searchParams.delete('code');url.searchParams.delete('state');history.replaceState(null,'',url.href);
-    if(!verifier) return false;
-    const body=new URLSearchParams({code,grant_type:'authorization_code',client_id:APP_KEY,redirect_uri:getRedirectUri(),code_verifier:verifier});
+    if(!verifier){alert('DBX: no verifier found — cannot complete connection');return false;}
+    const redirectUri=getRedirectUri();
+    const body=new URLSearchParams({code,grant_type:'authorization_code',client_id:APP_KEY,redirect_uri:redirectUri,code_verifier:verifier});
     const r=await fetch('https://api.dropbox.com/oauth2/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-    if(!r.ok){alert('Could not finish Dropbox connection. Try again.');return false;}
-    const t=await r.json(); st.accessToken=t.access_token;st.refreshToken=t.refresh_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000;
+    if(!r.ok){
+      let errText=''; try{const j=await r.json();errText=JSON.stringify(j);}catch(e){errText=r.status+' '+r.statusText;}
+      alert('DBX DEBUG 3/3 — TOKEN EXCHANGE FAILED\nStatus: '+r.status+'\nError: '+errText+'\nRedirect URI used: '+redirectUri);
+      return false;
+    }
+    const t=await r.json();
+    alert('DBX DEBUG 3/3 — TOKEN EXCHANGE SUCCEEDED\nAccess token: ' + (t.access_token?'yes':'no') + '\nRefresh token: ' + (t.refresh_token?'yes':'no'));
+    st.accessToken=t.access_token;st.refreshToken=t.refresh_token;st.expiresAt=Date.now()+(t.expires_in||14400)*1000;
     try{const acct=await apiCall('/users/get_current_account',null);st.account={name:acct.name?.display_name||'—',email:acct.email||''};}catch(e){st.account=null;}
     saveTokens(); return true;
   }
@@ -2305,7 +2315,20 @@ renderMorning();
   }
   _isFirstRender = false;
   setInterval(performDropboxPull, 10000);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) performDropboxPull(); });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      // Re-read localStorage in case OAuth completed in a Safari tab while app was backgrounded
+      const wasConnected = DBX.isConnected();
+      DBX.load();
+      if (!wasConnected && DBX.isConnected()) {
+        updateSyncUI();
+        showToast('Dropbox connected');
+        performDropboxPull();
+      } else if (DBX.isConnected()) {
+        performDropboxPull();
+      }
+    }
+  });
 })();
 
 // ─── WEEK MANAGEMENT ──────────────────────────────────────────────────────────
