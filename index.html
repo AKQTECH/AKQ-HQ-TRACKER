@@ -2184,7 +2184,6 @@ const DBX = (() => {
     if(r.status===409){
       const body=await r.json().catch(()=>({}));
       const tag=(body?.error?.['.tag']||body?.error_summary||'');
-      alert('DROPBOX 409 RESPONSE:\n' + JSON.stringify(body, null, 2));
       if(tag.includes('not_found')) return null;
       throw new Error('DBX 409: '+JSON.stringify(body));
     }
@@ -2193,7 +2192,6 @@ const DBX = (() => {
   }
   async function downloadData() {
     let txt=null;
-    alert('Attempting download. File ID: ' + (st.fileId || 'none') + '\nPath: ' + AKQ_PATH);
     if(st.fileId){const p=await getPathById(st.fileId);if(p)txt=await downloadPath(p);}
     if(!txt) txt=await downloadPath(AKQ_PATH);
     return txt;
