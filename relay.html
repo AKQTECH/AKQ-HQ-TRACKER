@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connecting to Dropbox...</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; margin: 0;
+      background: #fff3f9; color: #333; text-align: center;
+    }
+    .msg { font-size: 1.1em; color: #eb2e90; }
+    .sub { font-size: 0.85em; color: #999; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="msg">Connected! Returning to PICK ME...</div>
+    <div class="sub">You can close this window if it doesn't close automatically.</div>
+  </div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const code  = params.get('code');
+    const error = params.get('error');
+
+    if (window.opener) {
+      // Opened as popup by desktop app — send code back via postMessage then close
+      try {
+        window.opener.postMessage(
+          { type: 'dropbox_oauth_callback', code: code || null, error: error || null },
+          '*'
+        );
+      } catch(e) {}
+      setTimeout(() => window.close(), 1200);
+    } else {
+      // Main window redirect (mobile / browser version) — pass code back to app URL
+      const appUrl = new URL(location.href);
+      appUrl.pathname = appUrl.pathname.replace('/relay.html', '/');
+      appUrl.search = '';
+      if (code)  appUrl.searchParams.set('code', code);
+      if (error) appUrl.searchParams.set('error', error);
+      location.replace(appUrl.href);
+    }
+  </script>
+</body>
+</html>
