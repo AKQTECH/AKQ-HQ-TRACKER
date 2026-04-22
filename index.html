@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.1</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.2</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2081,14 +2081,20 @@ const DBX = (() => {
     if (!isConfigured()) { alert("Dropbox not set up.\n\nPaste your App Key into this file (search fu1in22nni46kx6)."); return; }
     const verifier=randVerifier(); const challenge=await sha256(verifier);
     sessionStorage.setItem(KEY_PKCE, verifier);
-    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:getRedirectUri(),token_access_type:'offline'});
+    localStorage.setItem(KEY_PKCE, verifier);
+    // Encode verifier in state so it survives cross-context redirects (iOS PWA → Safari → PWA)
+    const state=btoa(verifier);
+    const params=new URLSearchParams({response_type:'code',client_id:APP_KEY,code_challenge:challenge,code_challenge_method:'S256',redirect_uri:getRedirectUri(),token_access_type:'offline',state});
     location.href=`https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
   }
   async function handleCallback() {
-    const url=new URL(location.href); const code=url.searchParams.get('code'); const error=url.searchParams.get('error');
+    const url=new URL(location.href); const code=url.searchParams.get('code'); const error=url.searchParams.get('error'); const stateParam=url.searchParams.get('state');
     if(error){url.searchParams.delete('error');url.searchParams.delete('error_description');history.replaceState(null,'',url.href);alert('Dropbox cancelled: '+error);return false;}
     if(!code) return false;
-    const verifier=sessionStorage.getItem(KEY_PKCE); sessionStorage.removeItem(KEY_PKCE);
+    // Try sessionStorage first, then localStorage, then decode from state param
+    let verifier=sessionStorage.getItem(KEY_PKCE)||localStorage.getItem(KEY_PKCE);
+    sessionStorage.removeItem(KEY_PKCE); localStorage.removeItem(KEY_PKCE);
+    if(!verifier && stateParam){try{verifier=atob(stateParam);}catch(e){}}
     url.searchParams.delete('code');url.searchParams.delete('state');history.replaceState(null,'',url.href);
     if(!verifier) return false;
     const body=new URLSearchParams({code,grant_type:'authorization_code',client_id:APP_KEY,redirect_uri:getRedirectUri(),code_verifier:verifier});
