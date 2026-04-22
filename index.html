@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.2</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.4</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1247,8 +1247,18 @@ function handleCarry(itemId, e) { e.stopPropagation(); carryForward(CW, itemId);
 
 // ─── CATEGORY MANAGEMENT ──────────────────────────────────────────────────────
 const DEFAULT_CATS = ['admin','writing','health','wellness','legal','finance','comms','career','self-care','spirit','social','home','palava','system','standup','custom'];
-function getCats() { try { const c = localStorage.getItem('bcy_cats'); return c ? JSON.parse(c) : [...DEFAULT_CATS]; } catch(e) { return [...DEFAULT_CATS]; } }
-function saveCats(cats) { try { localStorage.setItem('bcy_cats', JSON.stringify(cats)); } catch(e) {} }
+function getCats() {
+  const v4cats = gs4()?.cats;
+  if (v4cats && v4cats.length) return v4cats;
+  // one-time migration from old bcy_cats key
+  try { const c = localStorage.getItem('bcy_cats'); if (c) return JSON.parse(c); } catch {}
+  return [...DEFAULT_CATS];
+}
+function saveCats(cats) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  v4.cats = cats;
+  ss4(v4);
+}
 function buildCatSelect(selId, currentVal) {
   const sel = document.getElementById(selId);
   if (!sel) return;
@@ -1617,10 +1627,17 @@ const GM_ITEMS_KEY = 'bcy_morning_items';
 function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
 function loadGmItems() {
+  const v4items = gs4()?.morningItems;
+  if (v4items && v4items.length) return v4items;
+  // one-time migration from old key
   try { const raw = JSON.parse(localStorage.getItem(GM_ITEMS_KEY)); if (raw && raw.length) return raw; } catch {}
   return GM_DEFAULT_ITEMS.map(i => ({ ...i }));
 }
-function saveGmItems(items) { localStorage.setItem(GM_ITEMS_KEY, JSON.stringify(items)); }
+function saveGmItems(items) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  v4.morningItems = items;
+  ss4(v4);
+}
 
 function loadMorning() {
   try {
@@ -1708,16 +1725,16 @@ const PR_KEY = 'bcy_custom_practices';
 let _currentWeekId = null;
 
 function loadCustomPractices(weekId) {
-  try {
-    const all = JSON.parse(localStorage.getItem(PR_KEY)) || {};
-    return all[weekId] || null;
-  } catch { return null; }
+  const v4pr = gs4()?.customPractices;
+  if (v4pr) return v4pr[weekId] || null;
+  // one-time migration from old key
+  try { const all = JSON.parse(localStorage.getItem(PR_KEY)) || {}; return all[weekId] || null; } catch { return null; }
 }
 function saveCustomPractices(weekId, practices) {
-  let all = {};
-  try { all = JSON.parse(localStorage.getItem(PR_KEY)) || {}; } catch {}
-  all[weekId] = practices;
-  localStorage.setItem(PR_KEY, JSON.stringify(all));
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  if (!v4.customPractices) v4.customPractices = {};
+  v4.customPractices[weekId] = practices;
+  ss4(v4);
 }
 function getCurrentPractices(week) {
   const custom = loadCustomPractices(week.id);
@@ -2229,7 +2246,7 @@ function openSyncSettings() {
   document.getElementById('syncModal').classList.add('open');
 }
 
-async function dbxConnect() { await DBX.startOAuth(); }
+async function dbxConnect() { try { await DBX.startOAuth(); } catch(e) { alert('Connect error: ' + e.message); } }
 
 async function dbxDisconnect() {
   await DBX.disconnect();
