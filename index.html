@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.10</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.11</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1072,6 +1072,7 @@ function render(weekId) {
 
   // Tasks
   const tl = document.getElementById('taskList');
+  if (!tl) return;
   tl.innerHTML = '';
   items.filter(it => !it.done && !it.dtl).forEach(item => {
     const li = document.createElement('li');
@@ -1140,19 +1141,21 @@ function render(weekId) {
 
   // Prompt opts (chips)
   const list = document.getElementById('promptOpts');
-  list.innerHTML = '';
-  const undone = items.filter(it => !it.done);
-  undone.slice(0,6).forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'prompt-opt';
-    li.textContent = item.text.length > 50 ? item.text.slice(0,48) + '…' : item.text;
-    li.onclick = () => {
-      document.querySelectorAll('#promptOpts .prompt-opt').forEach(el => el.classList.remove('selected'));
-      li.classList.add('selected');
-      document.getElementById('promptCustom').value = item.text;
-    };
-    list.appendChild(li);
-  });
+  if (list) {
+    list.innerHTML = '';
+    const undone = items.filter(it => !it.done);
+    undone.slice(0,6).forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'prompt-opt';
+      li.textContent = item.text.length > 50 ? item.text.slice(0,48) + '…' : item.text;
+      li.onclick = () => {
+        document.querySelectorAll('#promptOpts .prompt-opt').forEach(el => el.classList.remove('selected'));
+        li.classList.add('selected');
+        document.getElementById('promptCustom').value = item.text;
+      };
+      list.appendChild(li);
+    });
+  }
 
   updateTimeline(weekId);
 }
@@ -1570,7 +1573,7 @@ function importData(event) {
 // ─── TIMELINE ─────────────────────────────────────────────────────────────────
 function buildTimeline() {
   const today = new Date(); today.setHours(0,0,0,0);
-  const c = document.getElementById('tlScroll'); c.innerHTML = '';
+  const c = document.getElementById('tlScroll'); if (!c) return; c.innerHTML = '';
   AW.forEach(w => {
     const end = new Date(w.end+'T23:59:59'), start = new Date(w.start+'T00:00:00');
     const isPast = today > end, isCur = today >= start && today <= end;
@@ -1662,6 +1665,7 @@ function renderMorning() {
   const items = loadGmItems();
   const states = loadMorning();
   const container = document.getElementById('gmItems');
+  if (!container) return;
   container.innerHTML = items.map(it => {
     const checked = !!states[it.id];
     return `<div class="gm-item" onclick="toggleMorningItem('${esc(it.id)}')">
@@ -1790,6 +1794,7 @@ function addPractice() {
 }
 function renderPracticesDisplay(practices) {
   const pl = document.getElementById('practiceList');
+  if (!pl) return;
   pl.innerHTML = '';
   practices.forEach(p => {
     const div = document.createElement('div');
