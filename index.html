@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.8</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.9</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2239,7 +2239,7 @@ async function performDropboxPull() {
     localStorage.setItem(KEY4, JSON.stringify(remote));
     applyPulledState();
     return true;
-  } catch(e) { console.warn('DBX pull failed:', e); return false; }
+  } catch(e) { console.warn('DBX pull failed:', e); setSyncStatus('error'); showToast('Pull failed: ' + (e.message || e).toString().substring(0, 80)); return false; }
 }
 
 function applyPulledState() {
@@ -2316,7 +2316,7 @@ async function dbxForcePull() {
     applyPulledState();
     setSyncStatus('idle');
     showToast('Pulled from Dropbox');
-  } catch(e) { setSyncStatus('error'); showToast('Pull failed — check connection'); }
+  } catch(e) { setSyncStatus('error'); showToast('Pull failed: ' + (e.message || e).toString().substring(0, 80)); console.error('Force pull error:', e); }
 }
 
 function dbxReset() {
