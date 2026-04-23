@@ -553,7 +553,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.11</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.12</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1451,6 +1451,7 @@ function showYouDidThat() { buildYouDidThat(); document.getElementById('ydtOverl
 function closeYouDidThat() { document.getElementById('ydtOverlay').classList.remove('open'); }
 function buildYouDidThat() {
   const container = document.getElementById('ydtContent');
+  if (!container) return;
   container.innerHTML = '';
   let totalDone = 0, hasAny = false;
   const currentWId = autoWeekId();
@@ -2422,6 +2423,7 @@ function openArchivedModal() {
   const v4 = gs4() || {};
   const archivedIds = v4.archivedWeeks || [];
   const list = document.getElementById('archivedList');
+  if (!list) return;
   if (archivedIds.length === 0) {
     list.innerHTML = '<p style="color:rgba(0,0,0,0.4);font-size:13px;text-align:center;padding:16px 0;">No archived weeks</p>';
   } else {
