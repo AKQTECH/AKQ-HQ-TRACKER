@@ -1,6 +1,6 @@
 // ─── AKQ HQ SERVICE WORKER ────────────────────────────────────────────────────
 // Bump this version string every deploy to force cache refresh on all devices.
-const VERSION = 'akq-hq-v26';
+const VERSION = 'akq-hq-v31';
 
 const ASSETS = [
   './',
