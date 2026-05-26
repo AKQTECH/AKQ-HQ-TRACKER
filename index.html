@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#F1BCD7">
+  <meta name="theme-color" content="#FFA9DA">
   <title>HQ</title>
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="Content-Security-Policy" content="connect-src https://api.dropboxapi.com https://content.dropboxapi.com https://api.dropbox.com https://www.dropbox.com https://api.notion.com https://*.workers.dev;">
@@ -18,8 +18,8 @@
     :root {
       --hot: #EA258D;
       --pink: #F37EB3;
-      --blush: #F1BCD7;
-      --orange: #F5952D;
+      --blush: #ffdaf5;
+      --orange: #ffdaf5;
       --lavender: #D9AED0;
       --mist: #CACBDF;
       --ink: #111111;
@@ -103,16 +103,16 @@
     .task-body { flex: 1; min-width: 0; }
     .task-label { font-size: 14px; color: var(--ink); line-height: 1.4; transition: color 0.15s; }
     .task-row.done .task-label { color: var(--lavender); text-decoration: line-through; text-decoration-color: var(--pink); }
-    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFD4F4; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
+    .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFA9DA; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
-    .origin-badge { display: inline-block; background: #FFD4F4; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
+    .origin-badge { display: inline-block; background: #FFA9DA; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Down the Line section */
     .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
     .dtl-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
     .dtl-label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hot); }
-    .dtl-count-badge { background: #ffadf7; color: var(--hot); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: none; }
+    .dtl-count-badge { background: #FFA9DA; color: var(--hot); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: none; }
     .dtl-toggle-indicator { font-size: 13px; color: rgba(0,0,0,0.35); margin-left: 6px; }
     .dtl-body { padding: 0 20px 16px; }
     .dtl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
@@ -127,7 +127,7 @@
     .dtl-add-input { background: var(--blush); border: 1.5px solid transparent; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink); outline: none; transition: border-color 0.15s; }
     .dtl-add-input:focus { border-color: #ffadf7; }
     .dtl-add-input::placeholder { color: rgba(0,0,0,0.35); }
-    .dtl-add-btn { background: #ffadf7; color: var(--hot); border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; align-self: flex-start; }
+    .dtl-add-btn { background: #FFA9DA; color: var(--hot); border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; align-self: flex-start; }
     /* Category list in manage-cats modal */
     .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
     .cat-list-item:last-child { border-bottom: none; }
@@ -139,7 +139,7 @@
     /* DTL toggle in task modal */
     .mgmt-dtl-row { display: flex; align-items: center; justify-content: space-between; margin: 4px 0; }
     .mgmt-dtl-btn { background: var(--blush); color: var(--hot); border: 1.5px solid transparent; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
-    .mgmt-dtl-btn.active { background: #ffadf7; border-color: var(--hot); }
+    .mgmt-dtl-btn.active { background: #FFA9DA; border-color: var(--hot); }
 
     /* Task action controls */
     .task-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
@@ -149,21 +149,21 @@
     .task-mgmt-btn:active { color: var(--ink); }
 
     /* ── ADD TASK ── */
-    .add-row { display: flex; gap: 8px; padding: 14px 22px; border-top: 1.5px solid var(--blush); background: var(--off); }
+    .add-row { display: flex; gap: 8px; padding: 14px 22px; border-top: 1.5px solid var(--blush); background:#FFDAF5; }
     .add-input { flex: 1; border: 1.5px solid var(--blush); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; outline: none; }
     .add-input:focus { border-color: var(--hot); }
     .add-input::placeholder { color: var(--lavender); }
     .add-btn { background: var(--pink); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .add-btn:active { background: #d9689f; }
+    .add-btn:active { background: #FFA9DA; }
 
     /* ── PRACTICES ── */
     .practice-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 22px; border-bottom: 1px solid rgba(234,37,141,0.1); }
     .practice-row:last-child { border-bottom: none; }
-    .pr-dot { width: 7px; height: 7px; border-radius: 50%; background: #f6d0f6; flex-shrink: 0; margin-top: 7px; }
+    .pr-dot { width: 7px; height: 7px; border-radius: 50%; background: #FFA9DA; flex-shrink: 0; margin-top: 7px; }
     .pr-text { font-size: 14px; color: #5a3348; line-height: 1.5; }
 
     /* ── QUOTE ── */
-    .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 18px; color: #7A4A6A; line-height: 1.6; margin-bottom: 14px; }
+    .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 18px; color: #FFA9DA; line-height: 1.6; margin-bottom: 14px; }
     .quote-attr { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,0,0,0.35); font-weight: 600; }
 
     /* ── PROMPT BUILDER — single area ── */
@@ -176,14 +176,14 @@
     .prompt-custom:focus { border-color: var(--hot); }
     .prompt-custom::placeholder { color: var(--lavender); }
     .gen-btn { width: 100%; background: var(--orange); color: white; border: none; border-radius: 12px; padding: 16px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-    .gen-btn:active { background: #d47a1f; }
+    .gen-btn:active { background: #FFA9DA; }
 
     /* ── DATA ── */
     .data-row { display: flex; gap: 10px; }
     .data-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 12px; border-radius: 12px; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .data-btn-export { background: var(--pink); color: white; }
-    .data-btn-export:active { background: #d9689f; }
-    .data-btn-import { background: white; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.12); }
+    .data-btn-export:active { background: #FFA9DA; }
+    .data-btn-import { background:#F5D0F5; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.12); }
     .data-btn-import:active { background: var(--off); }
     .data-note { font-size: 11px; color: #7a5a6a; margin-top: 12px; line-height: 1.6; }
     .data-note strong { color: var(--ink); }
@@ -203,7 +203,7 @@
     .tl-chip.active .tl-wk { color: rgba(255,255,255,0.65); }
 
     /* ── YOU DID THAT button band ── */
-    .ydt-band { background: #f2ffd5; padding: 16px 22px; }
+    .ydt-band { background: #FFDAF5; padding: 16px 22px; }
     .ydt-band-btn { width: 100%; background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
     .ydt-band-btn:active { opacity: 0.85; }
 
@@ -227,12 +227,12 @@
     .modal-row-btns button { flex: 1; }
     .modal-divider { height: 1px; background: var(--blush); margin: 14px 0; }
     .mbtn-primary   { background: var(--pink); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-primary:active { background: #d9689f; }
-    .mbtn-secondary { background: #7A4A6A; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-orange    { background: #f2bdd8; color: #eb268f; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-primary:active { background: #FFA9DA; }
+    .mbtn-secondary { background: #FFA9DA; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-orange    { background: #FFA9DA; color: #eb268f; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-outline   { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger    { background: none; color: #c0392b; border: 1.5px solid #c0392b; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-danger:active { background: #c0392b; color: white; }
+    .mbtn-danger:active { background: #FFA9DA; color: white; }
     .mbtn-ghost     { background: none; color: var(--lavender); border: none; padding: 10px; font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .prompt-display { background: var(--off); border: 1.5px solid var(--blush); border-radius: 12px; padding: 16px; font-size: 13px; color: var(--ink); line-height: 1.7; white-space: pre-wrap; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
     .mgmt-reorder { display: flex; gap: 8px; margin-bottom: 10px; }
@@ -261,41 +261,10 @@
     .ydt-section-title--past { font-size: 10px; font-weight: 700; color: rgba(0,0,0,0.3); letter-spacing: 0.18em; text-transform: uppercase; border-bottom-color: rgba(0,0,0,0.06); }
 
     /* ── DONE BANNER ── */
-    .done-banner { display: none; background: var(--hot); color: #f6d0f6; text-align: center; padding: 14px 22px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
+    .done-banner { display: none; background: var(--hot); color: #FFA9DA; text-align: center; padding: 14px 22px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
 
     /* ── DIVIDER ── */
     .divider { height: 1px; background: var(--blush); }
-
-    /* ── GOOD MORNING ── */
-    .gm-band { background: #F37EB3; border-bottom: 2px solid rgba(255,255,255,0.3); padding: 18px 22px; }
-    .gm-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #F8A96C; display: block; margin-bottom: 14px; }
-    .gm-items { display: flex; flex-direction: column; gap: 0; }
-    .gm-item { cursor: pointer; user-select: none; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.35); }
-    .gm-item:last-child { border-bottom: none; }
-    .gm-check-row { display: flex; align-items: flex-start; gap: 10px; }
-    .gm-box { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.7); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
-    .gm-box.checked { background: #fff; border-color: #fff; }
-    .gm-box.checked::after { content: '✓'; color: #F37EB3; font-size: 11px; font-weight: 900; }
-    .gm-label { font-size: 13px; font-weight: 800; color: #eefbd1; text-transform: uppercase; letter-spacing: 0.07em; }
-    .gm-label.checked { color: rgba(238,251,209,0.4); text-decoration: line-through; }
-    .gm-reminder { font-size: 12px; color: #fff; font-style: italic; line-height: 1.5; margin-top: 8px; padding-left: 30px; display: none; opacity: 0.9; }
-    .gm-reminder.show { display: block; }
-    .gm-all-done { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #fff; margin-top: 14px; display: none; text-align: center; }
-    .gm-all-done.show { display: block; }
-    .gm-edit-toggle { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 0; transition: color 0.2s; }
-    .gm-edit-toggle:active { color: #fff; }
-    .gm-edit-panel { display: none; margin-top: 14px; }
-    .gm-edit-panel.open { display: block; }
-    .gm-edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .gm-edit-input { flex: 1; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.4); background: transparent; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 0; outline: none; }
-    .gm-edit-input:focus { border-color: #fff; }
-    .gm-edit-input::placeholder { color: rgba(255,255,255,0.35); }
-    .gm-edit-del { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 16px; cursor: pointer; padding: 2px 6px; }
-    .gm-edit-del:active { color: #fff; }
-    .gm-edit-add { display: flex; gap: 8px; margin-top: 10px; }
-    .gm-edit-add input { flex: 1; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; background: transparent; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; outline: none; }
-    .gm-edit-add input::placeholder { color: rgba(255,255,255,0.35); }
-    .gm-edit-add button { background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 800; padding: 8px 14px; cursor: pointer; }
 
     /* ── PRACTICES EDIT ── */
     .pr-edit-toggle { background: none; border: none; color: var(--hot); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; padding: 0; opacity: 0.5; transition: opacity 0.2s; }
@@ -404,25 +373,8 @@
 
 <!-- FULLSCREEN BUTTON -->
 
-<!-- 0. GOOD MORNING RITUAL -->
-<section class="gm-band" id="gmBand">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-    <span class="gm-title" style="margin-bottom:0;">Good Morning ✨</span>
-    <button class="gm-edit-toggle" id="gmEditBtn" onclick="toggleGmEdit()">edit</button>
-  </div>
-  <div class="gm-items" id="gmItems"></div>
-  <div class="gm-all-done" id="gmAllDone">The morning is done. The rest of the day answers to you now.</div>
-  <div class="gm-edit-panel" id="gmEditPanel">
-    <div id="gmEditList"></div>
-    <div class="gm-edit-add">
-      <input id="gmAddInput" type="text" placeholder="New morning item...">
-      <button onclick="addMorningItem()">+ Add</button>
-    </div>
-  </div>
-</section>
-
 <!-- 1. HERO -->
-<div class="band pad" style="background:#f1bcd7;">
+<div class="band pad" style="background:#FFA9DA;">
   <div style="display:flex;align-items:center;justify-content:space-between;"><span class="eyebrow eyebrow-hot" style="margin-bottom:0;">week by week · april korto quioh</span><div style="display:flex;align-items:center;gap:10px;"><button onclick="openSyncSettings()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 0;" title="Sync settings"><div id="syncDot" class="sync-dot sync-off"></div></button><button class="week-mgmt-btn" onclick="openWeekMgmt()" title="Manage this week">⋯</button></div></div>
   <span class="hero-week-num" id="heroNum">1</span>
   <span class="hero-phase" id="heroPhase" onclick="startEditTheme()" title="Tap to rename">The Floor</span>
@@ -435,7 +387,7 @@
 <div class="done-banner" id="doneBanner">✦ you did that ✓ ✦</div>
 
 <!-- 2. PROGRESS -->
-<div class="band band pad-sm" style="background:white;">
+<div class="band band pad-sm" style="background:#F5D0F5;">
   <div class="progress-row">
     <div class="ring-wrap">
       <svg viewBox="0 0 76 76">
@@ -471,7 +423,7 @@
 </div>
 
 <!-- 4. TASKS -->
-<div class="band" style="background:white;">
+<div class="band" style="background:#FFDAF5;">
   <div class="pad" style="padding-bottom:0;">
     <span class="eyebrow eyebrow-ink">This Week</span>
     <div class="mix-head mix-pink">
@@ -534,7 +486,7 @@
 </div>
 
 <!-- 9. DATA -->
-<div class="band pad" style="background:var(--lavender);">
+<div class="band pad" style="background:#FFDAF5;">
   <span class="eyebrow eyebrow-ink" style="opacity:0.6;">Your Data</span>
   <div class="mix-head mix-lav" style="margin-bottom:18px;">
     <span class="mix-sans">Save &amp;</span>
@@ -549,11 +501,11 @@
 </div>
 
 <!-- 10. TIMELINE -->
-<div class="band pad-sm" style="background:var(--mist);">
+<div class="band pad-sm" style="background:#F37EB3;">
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ v8.17</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);">HQ Mobile AKQ v5.26</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1617,114 +1569,6 @@ function fmtRange(s, e) {
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-// ─── GOOD MORNING ─────────────────────────────────────────────────────────────
-const GM_DEFAULT_ITEMS = [
-  { id:'phone', label:'No phone first' },
-  { id:'movement', label:'Movement' },
-  { id:'meds', label:'Meds' },
-  { id:'spirit', label:'Bible study or morning pages' },
-  { id:'breakfast', label:'Breakfast' }
-];
-const GM_KEY = 'bcy_morning';
-const GM_ITEMS_KEY = 'bcy_morning_items';
-
-function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-
-function loadGmItems() {
-  const v4items = gs4()?.morningItems;
-  if (v4items && v4items.length) return v4items;
-  // one-time migration from old key
-  try { const raw = JSON.parse(localStorage.getItem(GM_ITEMS_KEY)); if (raw && raw.length) return raw; } catch {}
-  return GM_DEFAULT_ITEMS.map(i => ({ ...i }));
-}
-function saveGmItems(items) {
-  const v4 = gs4() || { weekThemes:{}, weeks:{} };
-  v4.morningItems = items;
-  ss4(v4);
-}
-
-function loadMorning() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(GM_KEY));
-    if (raw && raw.date === todayStr()) return raw.states;
-  } catch {}
-  const states = {};
-  loadGmItems().forEach(it => { states[it.id] = false; });
-  return states;
-}
-function saveMorning(states) {
-  localStorage.setItem(GM_KEY, JSON.stringify({ date: todayStr(), states }));
-}
-function toggleMorningItem(id) {
-  const states = loadMorning();
-  states[id] = !states[id];
-  saveMorning(states);
-  renderMorning();
-}
-
-function renderMorning() {
-  const items = loadGmItems();
-  const states = loadMorning();
-  const container = document.getElementById('gmItems');
-  if (!container) return;
-  container.innerHTML = items.map(it => {
-    const checked = !!states[it.id];
-    return `<div class="gm-item" onclick="toggleMorningItem('${esc(it.id)}')">
-      <div class="gm-check-row">
-        <div class="gm-box${checked ? ' checked' : ''}"></div>
-        <span class="gm-label${checked ? ' checked' : ''}">${esc(it.label)}</span>
-      </div>
-    </div>`;
-  }).join('');
-  const allDoneEl = document.getElementById('gmAllDone');
-  if (allDoneEl) allDoneEl.classList.toggle('show', items.length > 0 && items.every(it => states[it.id]));
-}
-
-// ── Morning edit mode ──
-function toggleGmEdit() {
-  const panel = document.getElementById('gmEditPanel');
-  const btn = document.getElementById('gmEditBtn');
-  panel.classList.toggle('open');
-  btn.textContent = panel.classList.contains('open') ? 'done' : 'edit';
-  if (panel.classList.contains('open')) renderGmEditList();
-}
-function renderGmEditList() {
-  const items = loadGmItems();
-  document.getElementById('gmEditList').innerHTML = items.map((it, i) => {
-    return `<div class="gm-edit-item">
-      <input class="gm-edit-input" value="${esc(it.label)}" onchange="renameGmItem(${i}, this.value)" onblur="renameGmItem(${i}, this.value)">
-      <button class="gm-edit-del" onclick="removeGmItem(${i})">✕</button>
-    </div>`;
-  }).join('');
-}
-function renameGmItem(idx, val) {
-  const items = loadGmItems();
-  if (idx < items.length && val.trim()) {
-    items[idx].label = val.trim();
-    saveGmItems(items);
-    renderMorning();
-  }
-}
-function removeGmItem(idx) {
-  const items = loadGmItems();
-  items.splice(idx, 1);
-  saveGmItems(items);
-  renderMorning();
-  renderGmEditList();
-}
-function addMorningItem() {
-  const input = document.getElementById('gmAddInput');
-  const label = input.value.trim();
-  if (!label) return;
-  const items = loadGmItems();
-  const id = 'gm_' + Date.now();
-  items.push({ id, label });
-  saveGmItems(items);
-  input.value = '';
-  renderMorning();
-  renderGmEditList();
-}
-
 // ─── PRACTICES EDIT ──────────────────────────────────────────────────────────
 const PR_KEY = 'bcy_custom_practices';
 let _currentWeekId = null;
@@ -2450,7 +2294,7 @@ function openArchivedModal() {
           <div style="font-weight:700;font-size:13px;color:var(--ink);">${esc(theme)}</div>
           <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">${esc(label)} &middot; ${done} of ${tasks.length} done</div>
         </div>
-        <button onclick="unarchiveWeek('${id}')" style="background:#FFD4F4;color:var(--hot);border:none;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;">Restore</button>
+        <button onclick="unarchiveWeek('${id}')" style="background:#FFA9DA;color:var(--hot);border:none;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;">Restore</button>
       </div>`;
     }).join('');
   }
