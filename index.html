@@ -1916,13 +1916,21 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 
 
 // ─── PWA SERVICE WORKER ──────────────────────────────────────────────────────
+// IMPORTANT: bump ?v=N every deploy and match VERSION in service-worker.js.
+// Changing the URL forces the browser to refetch the SW file (the byte-compare
+// alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=32').then(reg => {
+    // Force an update check on every load
+    reg.update();
+    // If a new SW is already waiting, tell it to activate now
+    if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
     reg.addEventListener('updatefound', () => {
       const newSW = reg.installing;
       newSW.addEventListener('statechange', () => {
         // Only reload on UPDATE (old SW was already controlling) — not on first install
         if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          newSW.postMessage({ type: 'SKIP_WAITING' });
           window.location.reload();
         }
       });
