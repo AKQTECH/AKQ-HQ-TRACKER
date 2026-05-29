@@ -505,7 +505,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v33</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v34</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1920,7 +1920,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=33').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=34').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2116,7 +2116,6 @@ function applyPulledState() {
   buildTimeline();
   EI = Math.floor(Math.random() * DEFAULT_ENC.length);
   render(autoWeekId());
-  renderMorning();
 }
 
 function setSyncStatus(status) {
@@ -2199,7 +2198,6 @@ refreshAW();
 buildTimeline();
 EI = Math.floor(Math.random() * DEFAULT_ENC.length);
 render(autoWeekId());
-renderMorning();
 
 // Dropbox: handle OAuth callback (mobile page-redirect), then boot pull
 (async () => {

@@ -3,7 +3,7 @@
 // in index.html's `navigator.serviceWorker.register('service-worker.js?v=...')`
 // so the browser actually re-fetches THIS file. Otherwise iOS/Safari may keep
 // the prior SW byte-identical and the "new" deploy never takes effect.
-const VERSION = 'akq-hq-v33';
+const VERSION = 'akq-hq-v34';
 
 const ASSETS = [
   './',
