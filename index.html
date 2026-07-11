@@ -505,7 +505,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v34</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v35</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -566,7 +566,7 @@
 </div>
 
 <!-- CATEGORIES MODAL -->
-<div class="overlay" id="catsModal" onclick="bgClose(event)">
+<div class="overlay" id="catsModal" onclick="bgClose(event)" style="z-index:210;">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Manage Categories</div>
@@ -577,6 +577,24 @@
     </div>
     <div class="modal-acts">
       <button class="mbtn-primary" onclick="closeCatsModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY PICKER MODAL (on task creation) -->
+<div class="overlay" id="catPickModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Pick a category</div>
+    <div class="modal-sub" id="catPickSub">—</div>
+    <div class="modal-lbl-row">
+      <span class="modal-lbl">Category</span>
+      <button class="modal-lbl-link" onclick="openCatsModal()">Edit categories</button>
+    </div>
+    <select class="modal-select" id="catPickSel"></select>
+    <div class="modal-acts">
+      <button class="mbtn-primary" onclick="confirmAddTask()">Add task</button>
+      <button class="mbtn-ghost" onclick="cancelAddTask()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1214,6 +1232,17 @@ function saveCats(cats) {
   v4.cats = cats;
   ss4(v4);
 }
+// Categories are a set that should only ever accumulate across devices.
+// Union them on sync so a category made on one device is never clobbered
+// by the other device's last-write-wins push.
+function unionCats(a, b) {
+  const arrA = Array.isArray(a) ? a : [];
+  const arrB = Array.isArray(b) ? b : [];
+  if (!arrA.length && !arrB.length) return null;
+  const seen = new Set(); const out = [];
+  arrA.concat(arrB).forEach(c => { if (c && !seen.has(c)) { seen.add(c); out.push(c); } });
+  return out;
+}
 function buildCatSelect(selId, currentVal) {
   const sel = document.getElementById(selId);
   if (!sel) return;
@@ -1233,6 +1262,8 @@ function closeCatsModal() {
   closeModal('catsModal');
   const currentCat = document.getElementById('taskMgmtCat')?.value;
   buildCatSelect('taskMgmtCat', currentCat);
+  const pickCat = document.getElementById('catPickSel')?.value;
+  buildCatSelect('catPickSel', pickCat);
 }
 function renderCatsList() {
   const ul = document.getElementById('catsList');
@@ -1321,10 +1352,27 @@ function toggleMgmtDTL() {
 }
 
 // ─── ADD TASK ─────────────────────────────────────────────────────────────────
+let _pendingTaskText = null;
 function addTask() {
   const inp = document.getElementById('addInput');
   const text = inp.value.trim(); if (!text) return;
-  addNewItem(CW, text, 'custom'); inp.value = ''; render(CW);
+  _pendingTaskText = text;
+  document.getElementById('catPickSub').textContent = text.length > 60 ? text.slice(0,58)+'…' : text;
+  buildCatSelect('catPickSel', 'custom');
+  document.getElementById('catPickModal').classList.add('open');
+}
+function confirmAddTask() {
+  if (!_pendingTaskText) { closeModal('catPickModal'); return; }
+  const cat = document.getElementById('catPickSel').value || 'custom';
+  addNewItem(CW, _pendingTaskText, cat);
+  _pendingTaskText = null;
+  document.getElementById('addInput').value = '';
+  closeModal('catPickModal');
+  render(CW);
+}
+function cancelAddTask() {
+  _pendingTaskText = null;
+  closeModal('catPickModal');
 }
 document.getElementById('addInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
 
@@ -1920,7 +1968,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=34').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=35').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2103,7 +2151,23 @@ async function performDropboxPull() {
     if (!remote.lastModified) return false;
     const localRaw = localStorage.getItem(KEY4);
     if (localRaw) {
-      try { const local=JSON.parse(localRaw); if(local.lastModified && remote.lastModified <= local.lastModified) return false; } catch(e){}
+      try {
+        const local = JSON.parse(localRaw);
+        if (local.lastModified && remote.lastModified <= local.lastModified) {
+          // Remote is older overall — keep local, but still absorb any
+          // categories the other device added so they're never lost.
+          const merged = unionCats(local.cats, remote.cats);
+          if (merged && (!local.cats || merged.length !== local.cats.length)) {
+            local.cats = merged;
+            localStorage.setItem(KEY4, JSON.stringify(local));
+            buildCatSelect('taskMgmtCat', document.getElementById('taskMgmtCat')?.value);
+            scheduleDropboxPush();
+          }
+          return false;
+        }
+        // Remote is newer — adopt it, but union in any local-only categories.
+        remote.cats = unionCats(local.cats, remote.cats);
+      } catch(e){}
     }
     localStorage.setItem(KEY4, JSON.stringify(remote));
     applyPulledState();
@@ -2180,6 +2244,7 @@ async function dbxForcePull() {
     const txt = await DBX.downloadData();
     if (!txt) { setSyncStatus('idle'); showToast('Nothing to pull'); return; }
     const remote = JSON.parse(txt);
+    try { const local = JSON.parse(localStorage.getItem(KEY4)||'null'); if (local) remote.cats = unionCats(local.cats, remote.cats); } catch(e){}
     localStorage.setItem(KEY4, JSON.stringify(remote));
     applyPulledState();
     setSyncStatus('idle');
