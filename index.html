@@ -231,6 +231,8 @@
     .mbtn-primary:active { background: #FFA9DA; }
     .mbtn-secondary { background: #FFA9DA; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-orange    { background: #FFA9DA; color: #eb268f; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-list      { background: #ff7b9e; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-list:active { opacity: 0.85; }
     .mbtn-outline   { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger    { background: none; color: #c0392b; border: 1.5px solid #c0392b; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-danger:active { background: #FFA9DA; color: white; }
@@ -350,6 +352,7 @@
     .list-assign-btn { width: 100%; background: var(--hot); color: white; border: none; border-radius: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .ib-band { background: transparent; padding: 8px 22px 16px; }
     .ib-band-btn { background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; display: inline-block; }
+    .ib-band-btn.the-list-btn { background: #ff7b9e; color: white; }
 
     /* ── TOAST ── */
     .bcy-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--hot); color: white; padding: 12px 24px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 8px 24px rgba(234,37,141,0.3); transition: transform 0.35s cubic-bezier(0.23,1,0.32,1); z-index: 9998; pointer-events: none; white-space: nowrap; }
@@ -411,7 +414,7 @@
     </div>
   </div>
   <div class="ib-band" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
-    <button class="ib-band-btn" onclick="showTheList()"><span style="color:#eefbd1;">✦</span> THE LIST</button>
+    <button class="ib-band-btn the-list-btn" onclick="showTheList()"><span style="color:#eefbd1;">✦</span> THE LIST</button>
     <button class="ib-band-btn" onclick="showIdeaBank()"><span style="color:#eefbd1;">✦</span> Idea Bank</button>
   </div>
 </div>
@@ -512,7 +515,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v36</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v37</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -566,6 +569,7 @@
         <button class="mbtn-primary" onclick="mgmtSave()">Save changes</button>
         <button class="mbtn-orange" onclick="mgmtCarry()">→ Next Week</button>
       </div>
+      <button class="mbtn-list" onclick="moveMgmtTaskToList()">Move to THE LIST</button>
       <button class="mbtn-danger" onclick="mgmtDelete()">Delete this task</button>
       <button class="mbtn-ghost" onclick="closeModal('taskMgmtModal')">Cancel</button>
     </div>
@@ -1248,6 +1252,23 @@ function mgmtCarry() {
   const wIdx = AW.findIndex(w => w.id === CW);
   if (wIdx < 0 || wIdx >= AW.length - 1) { alert('No next week available.'); return; }
   carryForward(CW, MGMT_ID); closeModal('taskMgmtModal'); render(CW);
+}
+function moveMgmtTaskToList() {
+  if (!MGMT_ID) return;
+  const items = getItems(CW);
+  const idx = items.findIndex(it => it.id === MGMT_ID);
+  if (idx < 0) return;
+  const text = document.getElementById('taskMgmtText').value.trim() || items[idx].text;
+  const cat = document.getElementById('taskMgmtCat').value || items[idx].cat || 'admin';
+  const list = getMasterList();
+  list.unshift({ id: genId('list'), text, cat, createdAt: new Date().toISOString() });
+  items.splice(idx, 1);
+  saveItems(CW, items);
+  saveMasterList(list);
+  closeModal('taskMgmtModal');
+  render(CW);
+  if (document.getElementById('listOverlay')?.classList.contains('open')) renderTheList();
+  showToast('Moved to THE LIST');
 }
 function mgmtDelete() {
   if (!MGMT_ID) return;
@@ -2113,7 +2134,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=36').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=37').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
