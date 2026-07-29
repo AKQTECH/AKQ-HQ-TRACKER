@@ -227,10 +227,10 @@
     .modal-row-btns { display: flex; gap: 8px; }
     .modal-row-btns button { flex: 1; }
     .modal-divider { height: 1px; background: var(--blush); margin: 14px 0; }
-    .mbtn-primary   { background: var(--pink); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-primary:active { background: #FFA9DA; }
+    .mbtn-primary   { background: #e96cb5; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-primary:active { opacity: 0.85; }
     .mbtn-secondary { background: #FFA9DA; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .mbtn-orange    { background: #FFA9DA; color: #eb268f; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .mbtn-orange    { background: #e96cb5; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-list      { background: #e96cb5; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .mbtn-list:active { opacity: 0.85; }
     .mbtn-outline   { background: none; color: var(--ink); border: 1.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
@@ -239,7 +239,7 @@
     .mbtn-ghost     { background: none; color: var(--lavender); border: none; padding: 10px; font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .prompt-display { background: var(--off); border: 1.5px solid var(--blush); border-radius: 12px; padding: 16px; font-size: 13px; color: var(--ink); line-height: 1.7; white-space: pre-wrap; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
     .mgmt-reorder { display: flex; gap: 8px; margin-bottom: 10px; }
-    .mgmt-reorder button { flex: 1; background: var(--off); border: 1.5px solid var(--row-border); border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+    .mgmt-reorder button { flex: 1; background: #e96cb5; border: 1.5px solid #e96cb5; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'DM Sans', sans-serif; color: white; }
 
     /* ── YOU DID THAT overlay ── */
     .ydt-overlay { display: none; position: fixed; inset: 0; background: #f2ffd5; z-index: 300; overflow-y: auto; }
@@ -515,7 +515,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v38</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v39</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -912,6 +912,99 @@ function ss4(v4) { if (!_isFirstRender && !_skipPush) v4.lastModified = new Date
 
 function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 
+const ARCHIVED_DTL_RECOVERY = [
+  { weekId:'w17', text:'DMV tabs paid or payment plan arranged', cat:'admin' },
+  { weekId:'w17', text:'WGA dues handled', cat:'admin' },
+  { weekId:'w17', text:'write morning track', cat:'custom' },
+  { weekId:'w17', text:'Tax extension filed', cat:'admin' },
+  { weekId:'w18', text:'Business checking account — three options researched, one chosen', cat:'finance' },
+  { weekId:'w18', text:'EDD situation resolved or in process', cat:'admin' },
+  { weekId:'w18', text:'CVS card fixed', cat:'admin' },
+  { weekId:'w21', text:'New car plan for October', cat:'admin' },
+  { weekId:'w21', text:'Mailbox service set up for Palava Productions', cat:'palava' },
+  { weekId:'w21', text:'Taxes filed or on track for October', cat:'admin' }
+];
+
+function taskNorm(text) {
+  return String(text || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function weekItemsFromState(v4, weekId) {
+  const week = v4?.weeks?.[weekId];
+  if (Array.isArray(week)) return week;
+  return Array.isArray(week?.items) ? week.items : null;
+}
+
+function hasVisibleTaskText(v4, normText) {
+  const archived = new Set(v4?.archivedWeeks || []);
+  const deleted = new Set(v4?.deletedWeeks || []);
+  return Object.entries(v4?.weeks || {}).some(([weekId, week]) => {
+    if (archived.has(weekId) || deleted.has(weekId)) return false;
+    const items = Array.isArray(week) ? week : week?.items;
+    return Array.isArray(items) && items.some(item => taskNorm(item?.text) === normText);
+  });
+}
+
+function pullArchivedDTLToList(v4) {
+  if (!v4 || !v4.weeks) return false;
+  const archived = new Set(v4.archivedWeeks || []);
+  const hasSource = ARCHIVED_DTL_RECOVERY.some(recovery =>
+    (weekItemsFromState(v4, recovery.weekId) || []).some(item =>
+      item?.dtl === true && !item.done && taskNorm(item.text) === taskNorm(recovery.text)
+    )
+  );
+  const hasArchiveContext = ARCHIVED_DTL_RECOVERY.some(recovery => archived.has(recovery.weekId));
+  if (!hasSource && !hasArchiveContext) return false;
+
+  let changed = false;
+  if (!Array.isArray(v4.masterList)) { v4.masterList = []; changed = true; }
+  if (!v4.recoveries || typeof v4.recoveries !== 'object') { v4.recoveries = {}; changed = true; }
+
+  const alreadyRecovered = !!v4.recoveries.archivedDTLToListV1;
+  const seenInList = new Set(v4.masterList.map(item => taskNorm(item?.text)));
+  const recoveredAt = new Date().toISOString();
+
+  for (let i = ARCHIVED_DTL_RECOVERY.length - 1; i >= 0; i--) {
+    const recovery = ARCHIVED_DTL_RECOVERY[i];
+    const normText = taskNorm(recovery.text);
+    const items = weekItemsFromState(v4, recovery.weekId);
+    const sourceIndex = items
+      ? items.findIndex(item => item?.dtl === true && !item.done && taskNorm(item.text) === normText)
+      : -1;
+    const source = sourceIndex >= 0 ? items[sourceIndex] : null;
+    const shouldAdd = !seenInList.has(normText) && !hasVisibleTaskText(v4, normText) && (source || !alreadyRecovered);
+
+    if (shouldAdd) {
+      v4.masterList.unshift({
+        id: genId('list'),
+        text: source?.text || recovery.text,
+        cat: source?.cat || recovery.cat || 'admin',
+        createdAt: recoveredAt
+      });
+      seenInList.add(normText);
+      changed = true;
+    }
+
+    if (sourceIndex >= 0) {
+      items.splice(sourceIndex, 1);
+      changed = true;
+    }
+  }
+
+  if (!v4.recoveries.archivedDTLToListV1) {
+    v4.recoveries.archivedDTLToListV1 = recoveredAt;
+    changed = true;
+  }
+  return changed;
+}
+
+function persistRecoveredState(v4) {
+  if (!v4) return;
+  v4.lastModified = new Date().toISOString();
+  localStorage.setItem(KEY4, JSON.stringify(v4));
+  if (!_skipPush) scheduleDropboxPush();
+}
+
 function stripMoveTracking(v4) {
   let changed = false;
   Object.values(v4?.weeks || {}).forEach(week => {
@@ -935,7 +1028,10 @@ function initV4() {
       Object.entries(v4.weeks).forEach(([id,data]) => { nw[OLD_MAP[id]||id] = data; });
       v4.weeks = nw; ss4(v4);
     }
-    if (stripMoveTracking(v4)) ss4(v4);
+    let changed = false;
+    if (stripMoveTracking(v4)) changed = true;
+    if (pullArchivedDTLToList(v4)) changed = true;
+    if (changed) persistRecoveredState(v4);
     return v4;
   }
   let v3 = null;
@@ -1623,6 +1719,7 @@ function importData(event) {
     // Step 2: Validate format
     if (data.version === '4' && data.state) {
       stripMoveTracking(data.state);
+      pullArchivedDTLToList(data.state);
       ss4(data.state);
     } else if (data.version === '1' || data.tasks !== undefined) {
       const v4m = { weekThemes:{}, weeks:{} };
@@ -2134,7 +2231,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=38').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=39').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2343,7 +2440,10 @@ async function performDropboxPull() {
 
 function applyPulledState() {
   const v4 = gs4();
-  if (stripMoveTracking(v4)) ss4(v4);
+  let changed = false;
+  if (stripMoveTracking(v4)) changed = true;
+  if (pullArchivedDTLToList(v4)) changed = true;
+  if (changed) persistRecoveredState(v4);
   refreshAW();
   buildTimeline();
   EI = Math.floor(Math.random() * DEFAULT_ENC.length);
