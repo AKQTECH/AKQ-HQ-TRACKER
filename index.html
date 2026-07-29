@@ -106,7 +106,6 @@
     .task-cat { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--hot); background: #FFA9DA; padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
     .task-note-btn { display: block; background: none; border: none; font-size: 11px; font-weight: 600; color: var(--pink); cursor: pointer; padding: 4px 0 0; font-family: 'DM Sans', sans-serif; text-align: left; letter-spacing: 0.02em; }
     .task-saved-note { font-size: 11px; color: #8a6677; font-style: italic; margin-top: 4px; line-height: 1.4; background: var(--blush); border-radius: 6px; padding: 6px 8px; display: inline-block; }
-    .origin-badge { display: inline-block; background: #FFA9DA; color: var(--hot); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-top: 4px; margin-right: 4px; }
 
     /* Down the Line section */
     .dtl-section { border-top: 1px solid rgba(0,0,0,0.07); margin-top: 4px; }
@@ -210,6 +209,8 @@
     /* ── MODALS ── */
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end; backdrop-filter: blur(3px); }
     .overlay.open { display: flex; }
+    #catPickModal { z-index: 6000; }
+    #catsModal { z-index: 6100; }
     .modal { background: white; border-radius: 20px 20px 0 0; padding: 24px 22px 44px; width: 100%; max-height: 90vh; overflow-y: auto; animation: up 0.28s cubic-bezier(.4,0,.2,1); }
     @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .modal-handle { width: 36px; height: 4px; background: var(--mist); border-radius: 2px; margin: 0 auto 20px; }
@@ -342,6 +343,11 @@
     .ib-notion-btn { background: var(--ink); color: #fff; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 6px 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .ib-del-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 6px; font-size: 12px; color: rgba(0,0,0,0.4); cursor: pointer; padding: 6px 10px; }
     .ib-empty { text-align: center; padding: 40px 20px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: rgba(0,0,0,0.3); }
+    .list-card { border-left-color: var(--hot); }
+    .list-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .list-assign-row { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .list-week-select { margin-bottom: 0; }
+    .list-assign-btn { width: 100%; background: var(--hot); color: white; border: none; border-radius: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .ib-band { background: transparent; padding: 8px 22px 16px; }
     .ib-band-btn { background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; display: inline-block; }
 
@@ -404,7 +410,8 @@
       <p id="progSub"></p>
     </div>
   </div>
-  <div class="ib-band" style="text-align:right;">
+  <div class="ib-band" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+    <button class="ib-band-btn" onclick="showTheList()"><span style="color:#eefbd1;">✦</span> THE LIST</button>
     <button class="ib-band-btn" onclick="showIdeaBank()"><span style="color:#eefbd1;">✦</span> Idea Bank</button>
   </div>
 </div>
@@ -505,7 +512,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v35</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v36</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -566,7 +573,7 @@
 </div>
 
 <!-- CATEGORIES MODAL -->
-<div class="overlay" id="catsModal" onclick="bgClose(event)" style="z-index:210;">
+<div class="overlay" id="catsModal" onclick="bgClose(event)" style="z-index:6100;">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Manage Categories</div>
@@ -596,6 +603,25 @@
       <button class="mbtn-primary" onclick="confirmAddTask()">Add task</button>
       <button class="mbtn-ghost" onclick="cancelAddTask()">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- THE LIST OVERLAY -->
+<div class="ib-overlay" id="listOverlay">
+  <div class="ib-inner">
+    <button class="ib-back" onclick="closeTheList()">← Back</button>
+    <span class="ib-eyebrow">Task inbox · AKQ HQ</span>
+    <span class="ib-title-sans">The</span>
+    <span class="ib-title-serif">List.</span>
+    <div class="ib-capture">
+      <textarea class="ib-input" id="listInput" rows="3" placeholder="everything that needs doing"></textarea>
+      <button class="ib-save-btn" id="listSaveBtn" onclick="addListTask()">Add to THE LIST</button>
+    </div>
+    <div class="ib-list-header">
+      <span class="ib-list-eyebrow">Unassigned Tasks</span>
+      <span class="ib-sync-badge ib-sync-off" id="listCount">0 waiting</span>
+    </div>
+    <div id="listItems"></div>
   </div>
 </div>
 
@@ -882,6 +908,19 @@ function ss4(v4) { if (!_isFirstRender && !_skipPush) v4.lastModified = new Date
 
 function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 
+function stripMoveTracking(v4) {
+  let changed = false;
+  Object.values(v4?.weeks || {}).forEach(week => {
+    const items = Array.isArray(week) ? week : week?.items;
+    if (!Array.isArray(items)) return;
+    items.forEach(item => {
+      if ('originWeek' in item) { delete item.originWeek; changed = true; }
+      if ('originWeekLabel' in item) { delete item.originWeekLabel; changed = true; }
+    });
+  });
+  return changed;
+}
+
 function initV4() {
   let v4 = gs4();
   if (v4 && v4.weeks) {
@@ -892,6 +931,7 @@ function initV4() {
       Object.entries(v4.weeks).forEach(([id,data]) => { nw[OLD_MAP[id]||id] = data; });
       v4.weeks = nw; ss4(v4);
     }
+    if (stripMoveTracking(v4)) ss4(v4);
     return v4;
   }
   let v3 = null;
@@ -902,8 +942,8 @@ function initV4() {
     const bNotes = ((v3?.notes  || {})[w.id] || {});
     const v3Cust = ((v3?.customTasks || {})[w.id] || []);
     v4.weeks[w.id] = { items: [
-      ...w.tasks.map((t,i) => ({ id:`${w.id}_b_${i}`, text:t.text, cat:t.cat, done:!!bDone[i], note:bNotes[i]||'', builtin:true, originWeek:null, originWeekLabel:null })),
-      ...v3Cust.map((t,ci) => ({ id:genId(w.id+'_c'), text:t.text, cat:t.cat||'custom', done:!!bDone[w.tasks.length+ci], note:bNotes[w.tasks.length+ci]||'', builtin:false, originWeek:null, originWeekLabel:null }))
+      ...w.tasks.map((t,i) => ({ id:`${w.id}_b_${i}`, text:t.text, cat:t.cat, done:!!bDone[i], note:bNotes[i]||'', builtin:true })),
+      ...v3Cust.map((t,ci) => ({ id:genId(w.id+'_c'), text:t.text, cat:t.cat||'custom', done:!!bDone[w.tasks.length+ci], note:bNotes[w.tasks.length+ci]||'', builtin:false }))
     ]};
   });
   ss4(v4); return v4;
@@ -960,7 +1000,7 @@ function rescheduleItem(fromWeekId, itemId, toWeekId) {
   if (idx < 0) return;
   const [item] = fromItems.splice(idx, 1);
   item.done = false; delete item.completedAt;
-  item.originWeek = fromWeekId; item.originWeekLabel = getWeek(fromWeekId)?.label || fromWeekId;
+  delete item.originWeek; delete item.originWeekLabel;
   item.id = genId(toWeekId + '_r');
   saveItems(fromWeekId, fromItems);
   const toItems = getItems(toWeekId); toItems.push(item); saveItems(toWeekId, toItems);
@@ -972,7 +1012,7 @@ function carryForward(weekId, itemId) {
 }
 function addNewItem(weekId, text, cat) {
   const items = getItems(weekId);
-  items.push({ id:genId(weekId+'_u'), text, cat:cat||'custom', done:false, note:'', builtin:false, originWeek:null, originWeekLabel:null });
+  items.push({ id:genId(weekId+'_u'), text, cat:cat||'admin', done:false, note:'', builtin:false });
   saveItems(weekId, items);
 }
 function setItemNote(weekId, itemId, note) {
@@ -1049,7 +1089,6 @@ function render(weekId) {
     li.className = 'task-row';
     li.setAttribute('draggable', 'true');
 
-    let originHTML = item.originWeekLabel ? `<span class="origin-badge">moved from ${esc(item.originWeekLabel)}</span>` : '';
     let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '+ update status' : '+ add status note'}</button>`;
     if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
     let carryHTML = hasNextWeek ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
@@ -1059,7 +1098,6 @@ function render(weekId) {
       <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
       <div class="task-body">
         <div class="task-label">${esc(item.text)}</div>
-        ${originHTML}
         <span class="task-cat">${esc(item.cat||'task')}</span>
         ${noteHTML}
       </div>
@@ -1247,7 +1285,9 @@ function buildCatSelect(selId, currentVal) {
   const sel = document.getElementById(selId);
   if (!sel) return;
   sel.innerHTML = '';
-  getCats().forEach(c => {
+  const cats = getCats();
+  if (currentVal && !cats.includes(currentVal)) cats.unshift(currentVal);
+  cats.forEach(c => {
     const o = document.createElement('option');
     o.value = c; o.textContent = c.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
     sel.appendChild(o);
@@ -1328,7 +1368,7 @@ function addDTLTask() {
   if (!text) { textInput.style.borderColor = 'var(--hot)'; return; }
   textInput.style.borderColor = 'transparent';
   const items = getItems(CW);
-  items.push({ id: genId(CW+'_d'), text, cat: 'custom', done: false, note: '', blocker: blockerInput.value.trim(), dtl: true, builtin: false, originWeek: null, originWeekLabel: null });
+  items.push({ id: genId(CW+'_d'), text, cat: 'admin', done: false, note: '', blocker: blockerInput.value.trim(), dtl: true, builtin: false });
   saveItems(CW, items);
   textInput.value = ''; blockerInput.value = '';
   renderDTL(CW);
@@ -1352,26 +1392,39 @@ function toggleMgmtDTL() {
 }
 
 // ─── ADD TASK ─────────────────────────────────────────────────────────────────
-let _pendingTaskText = null;
+let _pendingTaskText = null, _pendingTaskMode = 'week';
+function openCategoryPick(text, mode) {
+  _pendingTaskText = text;
+  _pendingTaskMode = mode || 'week';
+  document.getElementById('catPickSub').textContent = text.length > 60 ? text.slice(0,58)+'…' : text;
+  buildCatSelect('catPickSel', 'admin');
+  document.getElementById('catPickModal').classList.add('open');
+}
 function addTask() {
   const inp = document.getElementById('addInput');
   const text = inp.value.trim(); if (!text) return;
-  _pendingTaskText = text;
-  document.getElementById('catPickSub').textContent = text.length > 60 ? text.slice(0,58)+'…' : text;
-  buildCatSelect('catPickSel', 'custom');
-  document.getElementById('catPickModal').classList.add('open');
+  openCategoryPick(text, 'week');
 }
 function confirmAddTask() {
   if (!_pendingTaskText) { closeModal('catPickModal'); return; }
-  const cat = document.getElementById('catPickSel').value || 'custom';
-  addNewItem(CW, _pendingTaskText, cat);
+  const cat = document.getElementById('catPickSel').value || 'admin';
+  if (_pendingTaskMode === 'list') {
+    addMasterListItem(_pendingTaskText, cat);
+    const listInput = document.getElementById('listInput');
+    if (listInput) listInput.value = '';
+  } else {
+    addNewItem(CW, _pendingTaskText, cat);
+    document.getElementById('addInput').value = '';
+  }
   _pendingTaskText = null;
-  document.getElementById('addInput').value = '';
+  _pendingTaskMode = 'week';
   closeModal('catPickModal');
   render(CW);
+  if (document.getElementById('listOverlay')?.classList.contains('open')) renderTheList();
 }
 function cancelAddTask() {
   _pendingTaskText = null;
+  _pendingTaskMode = 'week';
   closeModal('catPickModal');
 }
 document.getElementById('addInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
@@ -1548,14 +1601,15 @@ function importData(event) {
     }
     // Step 2: Validate format
     if (data.version === '4' && data.state) {
+      stripMoveTracking(data.state);
       ss4(data.state);
     } else if (data.version === '1' || data.tasks !== undefined) {
       const v4m = { weekThemes:{}, weeks:{} };
       WEEKS.forEach(w => {
         const bDone = ((data.tasks||{})[w.id]||{}); const bNotes = ((data.notes||{})[w.id]||{}); const v3C = ((data.customTasks||{})[w.id]||[]);
         v4m.weeks[w.id] = { items: [
-          ...w.tasks.map((t,i)=>({id:`${w.id}_b_${i}`,text:t.text,cat:t.cat,done:!!bDone[i],note:bNotes[i]||'',builtin:true,originWeek:null,originWeekLabel:null})),
-          ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false,originWeek:null,originWeekLabel:null}))
+          ...w.tasks.map((t,i)=>({id:`${w.id}_b_${i}`,text:t.text,cat:t.cat,done:!!bDone[i],note:bNotes[i]||'',builtin:true})),
+          ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false}))
         ]};
       });
       ss4(v4m);
@@ -1695,6 +1749,97 @@ function renderPracticesDisplay(practices) {
     div.innerHTML = `<div class="pr-dot"></div><span class="pr-text">${esc(p)}</span>`;
     pl.appendChild(div);
   });
+}
+
+// ─── THE LIST ────────────────────────────────────────────────────────────────
+function getMasterList() {
+  const list = gs4()?.masterList;
+  return Array.isArray(list) ? list : [];
+}
+function saveMasterList(list) {
+  const v4 = gs4() || { weekThemes:{}, weeks:{} };
+  v4.masterList = list;
+  ss4(v4);
+}
+function addListTask() {
+  const input = document.getElementById('listInput');
+  const text = input.value.trim();
+  if (!text) {
+    input.style.borderColor = 'var(--hot)';
+    input.focus();
+    setTimeout(() => { input.style.borderColor = ''; }, 1800);
+    return;
+  }
+  openCategoryPick(text, 'list');
+}
+function addMasterListItem(text, cat) {
+  const list = getMasterList();
+  list.unshift({ id: genId('list'), text, cat: cat || 'admin', createdAt: new Date().toISOString() });
+  saveMasterList(list);
+  renderTheList();
+}
+function deleteMasterListItem(id) {
+  if (!confirm('Remove this from THE LIST?')) return;
+  saveMasterList(getMasterList().filter(item => item.id !== id));
+  renderTheList();
+}
+function listWeekOptions(selectedId) {
+  const selected = selectedId || CW || autoWeekId();
+  return AW.map(w => {
+    const theme = getWeekTheme(w.id) || w.name || '';
+    const label = `${w.label}: ${fmtRange(w.start, w.end)}${theme ? ' · ' + theme : ''}`;
+    return `<option value="${esc(w.id)}"${w.id === selected ? ' selected' : ''}>${esc(label)}</option>`;
+  }).join('');
+}
+function assignMasterListItem(id) {
+  const sel = document.getElementById('listWeekSel_' + id);
+  const weekId = sel?.value;
+  if (!weekId) { showToast('Pick a week first'); return; }
+  const list = getMasterList();
+  const item = list.find(entry => entry.id === id);
+  if (!item) return;
+  addNewItem(weekId, item.text, item.cat || 'admin');
+  saveMasterList(list.filter(entry => entry.id !== id));
+  if (weekId === CW) render(CW);
+  renderTheList();
+  const w = getWeek(weekId);
+  showToast('Added to ' + (w ? `${w.label} · ${fmtRange(w.start, w.end)}` : 'week'));
+}
+function renderTheList() {
+  const list = getMasterList();
+  const count = document.getElementById('listCount');
+  if (count) count.textContent = `${list.length} waiting`;
+  const container = document.getElementById('listItems');
+  if (!container) return;
+  if (!list.length) {
+    container.innerHTML = '<div class="ib-empty">Nothing here yet. The list is clear.</div>';
+    return;
+  }
+  container.innerHTML = list.map(item => {
+    const when = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '';
+    return `<div class="ib-card list-card">
+      <div class="list-card-top">
+        <div class="ib-card-text" style="margin-bottom:0;">${esc(item.text)}</div>
+        <button class="ib-del-btn" onclick="deleteMasterListItem('${esc(item.id)}')" title="Remove">✕</button>
+      </div>
+      <div class="ib-card-meta">
+        <span class="task-cat">${esc(item.cat || 'admin')}</span>
+        ${when ? `<span class="ib-ts">${esc(when)}</span>` : ''}
+      </div>
+      <div class="list-assign-row">
+        <select class="modal-select list-week-select" id="listWeekSel_${esc(item.id)}">${listWeekOptions(CW)}</select>
+        <button class="list-assign-btn" onclick="assignMasterListItem('${esc(item.id)}')">Add to Week</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function showTheList() {
+  document.getElementById('listOverlay').classList.add('open');
+  renderTheList();
+  window.scrollTo(0,0);
+}
+function closeTheList() {
+  document.getElementById('listOverlay').classList.remove('open');
 }
 
 // ─── IDEA BANK ────────────────────────────────────────────────────────────────
@@ -1968,7 +2113,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=35').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=36').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2176,10 +2321,13 @@ async function performDropboxPull() {
 }
 
 function applyPulledState() {
+  const v4 = gs4();
+  if (stripMoveTracking(v4)) ss4(v4);
   refreshAW();
   buildTimeline();
   EI = Math.floor(Math.random() * DEFAULT_ENC.length);
   render(autoWeekId());
+  if (document.getElementById('listOverlay')?.classList.contains('open')) renderTheList();
 }
 
 function setSyncStatus(status) {
