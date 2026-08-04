@@ -364,6 +364,11 @@
     #listOverlay .ib-save-btn { width: 100%; margin: 0; background: #e96cb5; color: #fff; border-radius: 10px; }
     .list-downline-check { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; border: 1px solid rgba(233,108,181,0.24); border-radius: 10px; background: rgba(255,255,255,0.24); color: #e96cb5; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
     .list-downline-check input { width: 16px; height: 16px; accent-color: #e96cb5; }
+    .list-tabs { display: flex; gap: 8px; padding: 0 22px 16px; border-bottom: 1px solid rgba(234,37,141,0.12); }
+    .list-tab { flex: 1; min-height: 42px; border: 1px solid rgba(233,108,181,0.24); border-radius: 10px; background: rgba(255,255,255,0.24); color: #e96cb5; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .list-tab.active { background: #e96cb5; border-color: #e96cb5; color: #fff; }
+    .list-tab-count { min-width: 20px; padding: 2px 7px; border-radius: 999px; background: rgba(233,108,181,0.14); color: #e96cb5; font-size: 9px; line-height: 1.2; }
+    .list-tab.active .list-tab-count { background: rgba(255,255,255,0.22); color: #fff; }
     #listOverlay .ib-list-header { margin: 0; padding: 18px 22px 12px; border-bottom: 2px solid rgba(234,37,141,0.12); }
     #listOverlay .ib-list-eyebrow { color: rgba(0,0,0,0.35); }
     #listOverlay .ib-sync-badge { background: rgba(233,108,181,0.13); color: #e96cb5; border: none; }
@@ -524,7 +529,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v40</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v41</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -627,8 +632,12 @@
         <button class="ib-save-btn" id="listSaveBtn" onclick="addListTask()">Add to THE LIST</button>
       </div>
     </div>
+    <div class="list-tabs" role="tablist" aria-label="THE LIST views">
+      <button class="list-tab active" id="listTabTodo" role="tab" aria-selected="true" onclick="setListFilter('todo')">To Do <span class="list-tab-count" id="listTodoCount">0</span></button>
+      <button class="list-tab" id="listTabDownLine" role="tab" aria-selected="false" onclick="setListFilter('downLine')">Down the line <span class="list-tab-count" id="listDownLineCount">0</span></button>
+    </div>
     <div class="ib-list-header">
-      <span class="ib-list-eyebrow">Unassigned Tasks</span>
+      <span class="ib-list-eyebrow" id="listHeaderLabel">To Do</span>
       <span class="ib-sync-badge ib-sync-off" id="listCount">0 waiting</span>
     </div>
     <div id="listItems"></div>
@@ -1892,6 +1901,8 @@ function renderPracticesDisplay(practices) {
 }
 
 // ─── THE LIST ────────────────────────────────────────────────────────────────
+let LIST_FILTER = 'todo';
+
 function getMasterList() {
   const list = gs4()?.masterList;
   return Array.isArray(list) ? list : [];
@@ -1915,6 +1926,7 @@ function addListTask() {
 function addMasterListItem(text, cat, downLine = false) {
   const list = getMasterList();
   list.unshift({ id: genId('list'), text, cat: cat || 'admin', downLine: !!downLine, createdAt: new Date().toISOString() });
+  LIST_FILTER = downLine ? 'downLine' : 'todo';
   saveMasterList(list);
   renderTheList();
 }
@@ -1923,6 +1935,7 @@ function toggleMasterListDownLine(id) {
   const item = list.find(entry => entry.id === id);
   if (!item) return;
   item.downLine = !item.downLine;
+  LIST_FILTER = item.downLine ? 'downLine' : 'todo';
   saveMasterList(list);
   renderTheList();
 }
@@ -1953,17 +1966,49 @@ function assignMasterListItem(id) {
   const w = getWeek(weekId);
   showToast('Added to ' + (w ? `${w.label} · ${fmtRange(w.start, w.end)}` : 'week'));
 }
+function setListFilter(filter) {
+  LIST_FILTER = filter === 'downLine' ? 'downLine' : 'todo';
+  renderTheList();
+}
+function renderListTabs(todoCount, downLineCount) {
+  const todoTab = document.getElementById('listTabTodo');
+  const downLineTab = document.getElementById('listTabDownLine');
+  const todoCountEl = document.getElementById('listTodoCount');
+  const downLineCountEl = document.getElementById('listDownLineCount');
+  const isDownLine = LIST_FILTER === 'downLine';
+  if (todoTab) {
+    todoTab.classList.toggle('active', !isDownLine);
+    todoTab.setAttribute('aria-selected', isDownLine ? 'false' : 'true');
+  }
+  if (downLineTab) {
+    downLineTab.classList.toggle('active', isDownLine);
+    downLineTab.setAttribute('aria-selected', isDownLine ? 'true' : 'false');
+  }
+  if (todoCountEl) todoCountEl.textContent = todoCount;
+  if (downLineCountEl) downLineCountEl.textContent = downLineCount;
+}
 function renderTheList() {
   const list = getMasterList();
+  const todoItems = list.filter(item => !item.downLine);
+  const downLineItems = list.filter(item => !!item.downLine);
+  const isDownLineView = LIST_FILTER === 'downLine';
+  const visibleItems = isDownLineView ? downLineItems : todoItems;
+  renderListTabs(todoItems.length, downLineItems.length);
+  const header = document.getElementById('listHeaderLabel');
+  if (header) header.textContent = isDownLineView ? 'Down the line' : 'To Do';
   const count = document.getElementById('listCount');
-  if (count) count.textContent = `${list.length} waiting`;
+  if (count) count.textContent = `${visibleItems.length} waiting`;
   const container = document.getElementById('listItems');
   if (!container) return;
   if (!list.length) {
     container.innerHTML = '<div class="ib-empty">Nothing here yet. The list is clear.</div>';
     return;
   }
-  container.innerHTML = list.map(item => {
+  if (!visibleItems.length) {
+    container.innerHTML = `<div class="ib-empty">${isDownLineView ? 'No down-the-line tasks here.' : 'No regular list tasks here.'}</div>`;
+    return;
+  }
+  container.innerHTML = visibleItems.map(item => {
     const when = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '';
     const isDownLine = !!item.downLine;
     return `<div class="ib-card list-card${isDownLine ? ' list-card-later' : ''}">
@@ -2263,7 +2308,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=40').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=41').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
