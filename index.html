@@ -350,6 +350,32 @@
     .list-assign-row { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
     .list-week-select { margin-bottom: 0; }
     .list-assign-btn { width: 100%; background: var(--hot); color: white; border: none; border-radius: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    #listOverlay { background: #ffdaf5; }
+    #listOverlay .ib-inner { padding: 0 0 80px; }
+    #listOverlay .ib-back { width: 100%; margin: 0; padding: 22px 22px 12px; background: #ffa9da; color: #e96cb5; }
+    #listOverlay .ib-eyebrow { display: block; margin: 0; padding: 8px 22px 0; background: #ffa9da; color: #e96cb5; }
+    #listOverlay .ib-title-sans,
+    #listOverlay .ib-title-serif { padding-left: 22px; padding-right: 22px; background: #ffa9da; font-size: 48px; line-height: 0.88; }
+    #listOverlay .ib-title-serif { margin: 0; padding-bottom: 34px; color: #e96cb5; }
+    #listOverlay .ib-capture { margin: 0; padding: 22px 22px 24px; background: #ffdaf5; border: none; border-bottom: 1px solid rgba(234,37,141,0.14); border-radius: 0; }
+    #listOverlay .ib-input { min-height: 84px; padding: 14px 16px; background: #feeaf9; border: 1.5px solid #ffdaf5; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 16px; line-height: 1.45; }
+    #listOverlay .ib-input:focus { border-color: #e96cb5; }
+    .list-capture-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    #listOverlay .ib-save-btn { width: 100%; margin: 0; background: #e96cb5; color: #fff; border-radius: 10px; }
+    .list-downline-check { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; border: 1px solid rgba(233,108,181,0.24); border-radius: 10px; background: rgba(255,255,255,0.24); color: #e96cb5; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+    .list-downline-check input { width: 16px; height: 16px; accent-color: #e96cb5; }
+    #listOverlay .ib-list-header { margin: 0; padding: 18px 22px 12px; border-bottom: 2px solid rgba(234,37,141,0.12); }
+    #listOverlay .ib-list-eyebrow { color: rgba(0,0,0,0.35); }
+    #listOverlay .ib-sync-badge { background: rgba(233,108,181,0.13); color: #e96cb5; border: none; }
+    #listOverlay #listItems { padding: 0 22px; }
+    #listOverlay .ib-card.list-card { margin: 0; padding: 16px 0; background: transparent; border-left: none; border-bottom: 1px solid rgba(234,37,141,0.12); border-radius: 0; box-shadow: none; }
+    #listOverlay .ib-card-text { font-size: 15px; font-weight: 700; line-height: 1.45; }
+    #listOverlay .ib-card-meta { gap: 8px; margin-bottom: 0; flex-wrap: wrap; }
+    #listOverlay .task-cat { background: #ffa9da; color: #e96cb5; }
+    .list-later-chip { border: 1px solid rgba(233,108,181,0.22); background: transparent; color: rgba(0,0,0,0.38); border-radius: 999px; padding: 3px 9px; font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .list-later-chip.active { background: rgba(233,108,181,0.16); color: #e96cb5; border-color: rgba(233,108,181,0.34); }
+    #listOverlay .list-card-later .ib-card-text { color: #3c2733; }
+    #listOverlay .list-assign-btn { background: #e96cb5; color: #fff; }
     .ib-band { background: transparent; padding: 8px 22px 16px; }
     .ib-band-btn { background: #b2c0f9; color: #3b4a8c; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; display: inline-block; }
     .ib-band-btn.the-list-btn { background: #e96cb5; color: white; }
@@ -446,23 +472,6 @@
     <input class="add-input" id="addInput" type="text" placeholder="Add your own task...">
     <button class="add-btn" onclick="addTask()">+ Add</button>
   </div>
-  <div class="dtl-section" id="dtlSection">
-    <button class="dtl-header" onclick="toggleDTLPanel()">
-      <span class="dtl-label">Down the Line</span>
-      <span style="display:flex;align-items:center;gap:6px;">
-        <span class="dtl-count-badge" id="dtlCountBadge"></span>
-        <span class="dtl-toggle-indicator" id="dtlToggleInd">+</span>
-      </span>
-    </button>
-    <div class="dtl-body" id="dtlBody" style="display:none;">
-      <ul class="row-list" id="dtlList" style="margin-bottom:0;"></ul>
-      <div class="dtl-add-area">
-        <input class="dtl-add-input" id="dtlAddText" type="text" placeholder="What needs to wait...">
-        <input class="dtl-add-input" id="dtlAddBlocker" type="text" placeholder="Need X first... (optional)">
-        <button class="dtl-add-btn" onclick="addDTLTask()">+ Add to Down the Line</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- 5. PRACTICES -->
@@ -515,7 +524,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v39</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v40</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -546,15 +555,6 @@
       <button class="modal-lbl-link" onclick="openCatsModal()">Edit categories</button>
     </div>
     <select class="modal-select" id="taskMgmtCat"></select>
-    <div class="modal-divider"></div>
-    <div class="mgmt-dtl-row">
-      <span class="modal-lbl" style="margin-bottom:0;">Down the line?</span>
-      <button class="mgmt-dtl-btn" id="taskMgmtDTLBtn" onclick="toggleMgmtDTL()">No</button>
-    </div>
-    <div id="taskMgmtBlockerRow" style="display:none;margin-top:8px;">
-      <span class="modal-lbl">Need X first (blocker note)</span>
-      <input class="modal-input" id="taskMgmtBlocker" type="text" placeholder="What needs to happen first...">
-    </div>
     <div class="modal-divider"></div>
     <div class="mgmt-reorder">
       <button onclick="mgmtMoveUp()">↑ Move Up</button>
@@ -619,7 +619,13 @@
     <span class="ib-title-serif">List.</span>
     <div class="ib-capture">
       <textarea class="ib-input" id="listInput" rows="3" placeholder="everything that needs doing"></textarea>
-      <button class="ib-save-btn" id="listSaveBtn" onclick="addListTask()">Add to THE LIST</button>
+      <div class="list-capture-actions">
+        <label class="list-downline-check" for="listDownLine">
+          <input type="checkbox" id="listDownLine">
+          <span>Down the line</span>
+        </label>
+        <button class="ib-save-btn" id="listSaveBtn" onclick="addListTask()">Add to THE LIST</button>
+      </div>
     </div>
     <div class="ib-list-header">
       <span class="ib-list-eyebrow">Unassigned Tasks</span>
@@ -945,6 +951,35 @@ function hasVisibleTaskText(v4, normText) {
   });
 }
 
+function hasActiveWeeklyTaskText(v4, normText) {
+  const archived = new Set(v4?.archivedWeeks || []);
+  const deleted = new Set(v4?.deletedWeeks || []);
+  return Object.entries(v4?.weeks || {}).some(([weekId, week]) => {
+    if (archived.has(weekId) || deleted.has(weekId)) return false;
+    const items = Array.isArray(week) ? week : week?.items;
+    return Array.isArray(items) && items.some(item => item && !item.done && !item.dtl && taskNorm(item.text) === normText);
+  });
+}
+
+function normalizeMasterListDownLine(v4) {
+  if (!Array.isArray(v4?.masterList)) return false;
+  const recoveredNorms = new Set(ARCHIVED_DTL_RECOVERY.map(item => taskNorm(item.text)));
+  let changed = false;
+  v4.masterList.forEach(item => {
+    if (!item || typeof item !== 'object') return;
+    if (item.dtl === true) {
+      item.downLine = true;
+      delete item.dtl;
+      changed = true;
+    }
+    if (recoveredNorms.has(taskNorm(item.text)) && item.downLine !== true) {
+      item.downLine = true;
+      changed = true;
+    }
+  });
+  return changed;
+}
+
 function pullArchivedDTLToList(v4) {
   if (!v4 || !v4.weeks) return false;
   const archived = new Set(v4.archivedWeeks || []);
@@ -979,6 +1014,8 @@ function pullArchivedDTLToList(v4) {
         id: genId('list'),
         text: source?.text || recovery.text,
         cat: source?.cat || recovery.cat || 'admin',
+        downLine: true,
+        blocker: source?.blocker || '',
         createdAt: recoveredAt
       });
       seenInList.add(normText);
@@ -995,6 +1032,46 @@ function pullArchivedDTLToList(v4) {
     v4.recoveries.archivedDTLToListV1 = recoveredAt;
     changed = true;
   }
+  return changed;
+}
+
+function pullWeeklyDTLToList(v4) {
+  if (!v4 || !v4.weeks) return false;
+  let changed = false;
+  if (!Array.isArray(v4.masterList)) { v4.masterList = []; changed = true; }
+  const seenInList = new Set(v4.masterList.map(item => taskNorm(item?.text)));
+  const movedAt = new Date().toISOString();
+
+  Object.entries(v4.weeks).forEach(([weekId, week]) => {
+    const items = Array.isArray(week) ? week : week?.items;
+    if (!Array.isArray(items)) return;
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      if (!item || item.dtl !== true || item.done) continue;
+      const normText = taskNorm(item.text);
+      if (normText && !seenInList.has(normText) && !hasActiveWeeklyTaskText(v4, normText)) {
+        v4.masterList.unshift({
+          id: genId('list'),
+          text: item.text,
+          cat: item.cat || 'admin',
+          downLine: true,
+          blocker: item.blocker || '',
+          createdAt: item.createdAt || movedAt
+        });
+        seenInList.add(normText);
+      }
+      items.splice(i, 1);
+      changed = true;
+    }
+  });
+  return changed;
+}
+
+function routeDownLineTasksToList(v4) {
+  let changed = false;
+  if (pullArchivedDTLToList(v4)) changed = true;
+  if (pullWeeklyDTLToList(v4)) changed = true;
+  if (normalizeMasterListDownLine(v4)) changed = true;
   return changed;
 }
 
@@ -1030,7 +1107,7 @@ function initV4() {
     }
     let changed = false;
     if (stripMoveTracking(v4)) changed = true;
-    if (pullArchivedDTLToList(v4)) changed = true;
+    if (routeDownLineTasksToList(v4)) changed = true;
     if (changed) persistRecoveredState(v4);
     return v4;
   }
@@ -1238,9 +1315,6 @@ function render(weekId) {
     tl.appendChild(li);
   });
 
-  // Down the Line section
-  renderDTL(weekId);
-
   // Practices (editable)
   renderPracticesDisplay(getCurrentPractices(w));
   // Close edit panel when switching weeks
@@ -1315,15 +1389,6 @@ function openTaskMgmt(itemId, e) {
   document.getElementById('taskMgmtSub').textContent = item.text.length > 60 ? item.text.slice(0,58)+'…' : item.text;
   document.getElementById('taskMgmtText').value = item.text;
   buildCatSelect('taskMgmtCat', item.cat || 'custom');
-  // DTL state
-  const isDTL = !!item.dtl;
-  const dtlBtn = document.getElementById('taskMgmtDTLBtn');
-  const blockerRow = document.getElementById('taskMgmtBlockerRow');
-  dtlBtn.textContent = isDTL ? 'Yes' : 'No';
-  dtlBtn.dataset.dtl = isDTL ? 'true' : 'false';
-  dtlBtn.classList.toggle('active', isDTL);
-  blockerRow.style.display = isDTL ? 'block' : 'none';
-  document.getElementById('taskMgmtBlocker').value = item.blocker || '';
   const sel = document.getElementById('taskReschedSel');
   sel.innerHTML = '<option value="">— pick a week —</option>';
   AW.forEach(w => { if (w.id !== CW) { const o = document.createElement('option'); o.value = w.id; o.textContent = `${w.label}: ${w.name || 'Unnamed'}`; sel.appendChild(o); } });
@@ -1334,9 +1399,7 @@ function mgmtSave() {
   const text = document.getElementById('taskMgmtText').value.trim();
   const cat  = document.getElementById('taskMgmtCat').value;
   if (!text) { document.getElementById('taskMgmtText').style.borderColor = 'var(--hot)'; return; }
-  const isDTL = document.getElementById('taskMgmtDTLBtn').dataset.dtl === 'true';
-  const blocker = isDTL ? document.getElementById('taskMgmtBlocker').value.trim() : '';
-  editItem(CW, MGMT_ID, text, cat, isDTL, blocker);
+  editItem(CW, MGMT_ID, text, cat, false, '');
   const toWeek = document.getElementById('taskReschedSel').value;
   if (toWeek) { rescheduleItem(CW, MGMT_ID, toWeek); }
   closeModal('taskMgmtModal'); render(CW);
@@ -1357,7 +1420,7 @@ function moveMgmtTaskToList() {
   const text = document.getElementById('taskMgmtText').value.trim() || items[idx].text;
   const cat = document.getElementById('taskMgmtCat').value || items[idx].cat || 'admin';
   const list = getMasterList();
-  list.unshift({ id: genId('list'), text, cat, createdAt: new Date().toISOString() });
+  list.unshift({ id: genId('list'), text, cat, downLine: !!items[idx].dtl, blocker: items[idx].blocker || '', createdAt: new Date().toISOString() });
   items.splice(idx, 1);
   saveItems(CW, items);
   saveMasterList(list);
@@ -1448,65 +1511,21 @@ function deleteCat(cat) {
 }
 
 // ─── DOWN THE LINE ────────────────────────────────────────────────────────────
-let DTL_OPEN = false;
-function toggleDTLPanel() {
-  DTL_OPEN = !DTL_OPEN;
-  document.getElementById('dtlBody').style.display = DTL_OPEN ? 'block' : 'none';
-  document.getElementById('dtlToggleInd').textContent = DTL_OPEN ? '−' : '+';
-}
-function renderDTL(weekId) {
-  const dtlItems = getItems(weekId).filter(it => it.dtl && !it.done);
-  const badge = document.getElementById('dtlCountBadge');
-  if (badge) { badge.textContent = dtlItems.length; badge.style.display = dtlItems.length > 0 ? 'inline-block' : 'none'; }
-  const list = document.getElementById('dtlList');
-  if (!list) return;
-  list.innerHTML = '';
-  dtlItems.forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'dtl-item';
-    const catBadge = item.cat ? `<span class="task-cat" style="margin-top:4px;">${esc(item.cat)}</span>` : '';
-    const blockerEl = item.blocker ? `<div class="dtl-blocker">Need: ${esc(item.blocker)}</div>` : '';
-    li.innerHTML = `
-      <div class="dtl-text">
-        <div class="dtl-task-text">${esc(item.text)}</div>
-        ${catBadge}${blockerEl}
-      </div>
-      <div class="dtl-item-actions">
-        <button class="dtl-activate-btn" onclick="activateDTLItem('${esc(item.id)}')">Move to active</button>
-        <button class="dtl-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
-      </div>`;
-    list.appendChild(li);
-  });
-}
-function addDTLTask() {
-  const textInput = document.getElementById('dtlAddText');
-  const blockerInput = document.getElementById('dtlAddBlocker');
-  const text = textInput.value.trim();
-  if (!text) { textInput.style.borderColor = 'var(--hot)'; return; }
-  textInput.style.borderColor = 'transparent';
-  const items = getItems(CW);
-  items.push({ id: genId(CW+'_d'), text, cat: 'admin', done: false, note: '', blocker: blockerInput.value.trim(), dtl: true, builtin: false });
-  saveItems(CW, items);
-  textInput.value = ''; blockerInput.value = '';
-  renderDTL(CW);
-}
+function toggleDTLPanel() { showTheList(); }
+function renderDTL() {}
+function addDTLTask() { showTheList(); }
 function activateDTLItem(itemId) {
   const items = getItems(CW);
   const item = items.find(it => it.id === itemId);
   if (!item) return;
-  item.dtl = false; delete item.blocker;
-  saveItems(CW, items); render(CW);
+  const list = getMasterList();
+  list.unshift({ id: genId('list'), text: item.text, cat: item.cat || 'admin', downLine: true, blocker: item.blocker || '', createdAt: new Date().toISOString() });
+  saveMasterList(list);
+  saveItems(CW, items.filter(entry => entry.id !== itemId));
+  render(CW);
+  renderTheList();
 }
-function toggleMgmtDTL() {
-  const btn = document.getElementById('taskMgmtDTLBtn');
-  const row = document.getElementById('taskMgmtBlockerRow');
-  const isDTL = btn.dataset.dtl === 'true';
-  const nowDTL = !isDTL;
-  btn.dataset.dtl = nowDTL ? 'true' : 'false';
-  btn.textContent = nowDTL ? 'Yes' : 'No';
-  btn.classList.toggle('active', nowDTL);
-  row.style.display = nowDTL ? 'block' : 'none';
-}
+function toggleMgmtDTL() {}
 
 // ─── ADD TASK ─────────────────────────────────────────────────────────────────
 let _pendingTaskText = null, _pendingTaskMode = 'week';
@@ -1526,9 +1545,12 @@ function confirmAddTask() {
   if (!_pendingTaskText) { closeModal('catPickModal'); return; }
   const cat = document.getElementById('catPickSel').value || 'admin';
   if (_pendingTaskMode === 'list') {
-    addMasterListItem(_pendingTaskText, cat);
+    const downLine = !!document.getElementById('listDownLine')?.checked;
+    addMasterListItem(_pendingTaskText, cat, downLine);
     const listInput = document.getElementById('listInput');
     if (listInput) listInput.value = '';
+    const listDownLine = document.getElementById('listDownLine');
+    if (listDownLine) listDownLine.checked = false;
   } else {
     addNewItem(CW, _pendingTaskText, cat);
     document.getElementById('addInput').value = '';
@@ -1719,7 +1741,7 @@ function importData(event) {
     // Step 2: Validate format
     if (data.version === '4' && data.state) {
       stripMoveTracking(data.state);
-      pullArchivedDTLToList(data.state);
+      routeDownLineTasksToList(data.state);
       ss4(data.state);
     } else if (data.version === '1' || data.tasks !== undefined) {
       const v4m = { weekThemes:{}, weeks:{} };
@@ -1890,9 +1912,17 @@ function addListTask() {
   }
   openCategoryPick(text, 'list');
 }
-function addMasterListItem(text, cat) {
+function addMasterListItem(text, cat, downLine = false) {
   const list = getMasterList();
-  list.unshift({ id: genId('list'), text, cat: cat || 'admin', createdAt: new Date().toISOString() });
+  list.unshift({ id: genId('list'), text, cat: cat || 'admin', downLine: !!downLine, createdAt: new Date().toISOString() });
+  saveMasterList(list);
+  renderTheList();
+}
+function toggleMasterListDownLine(id) {
+  const list = getMasterList();
+  const item = list.find(entry => entry.id === id);
+  if (!item) return;
+  item.downLine = !item.downLine;
   saveMasterList(list);
   renderTheList();
 }
@@ -1935,13 +1965,15 @@ function renderTheList() {
   }
   container.innerHTML = list.map(item => {
     const when = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '';
-    return `<div class="ib-card list-card">
+    const isDownLine = !!item.downLine;
+    return `<div class="ib-card list-card${isDownLine ? ' list-card-later' : ''}">
       <div class="list-card-top">
         <div class="ib-card-text" style="margin-bottom:0;">${esc(item.text)}</div>
         <button class="ib-del-btn" onclick="deleteMasterListItem('${esc(item.id)}')" title="Remove">✕</button>
       </div>
       <div class="ib-card-meta">
         <span class="task-cat">${esc(item.cat || 'admin')}</span>
+        <button class="list-later-chip${isDownLine ? ' active' : ''}" onclick="toggleMasterListDownLine('${esc(item.id)}')" aria-pressed="${isDownLine ? 'true' : 'false'}">${isDownLine ? 'Down the line' : 'Mark for later'}</button>
         ${when ? `<span class="ib-ts">${esc(when)}</span>` : ''}
       </div>
       <div class="list-assign-row">
@@ -2231,7 +2263,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=39').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=40').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2442,7 +2474,7 @@ function applyPulledState() {
   const v4 = gs4();
   let changed = false;
   if (stripMoveTracking(v4)) changed = true;
-  if (pullArchivedDTLToList(v4)) changed = true;
+  if (routeDownLineTasksToList(v4)) changed = true;
   if (changed) persistRecoveredState(v4);
   refreshAW();
   buildTimeline();
