@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#FFA9DA">
@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="Content-Security-Policy" content="connect-src https://api.dropboxapi.com https://content.dropboxapi.com https://api.dropbox.com https://www.dropbox.com https://api.notion.com https://*.workers.dev;">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M15 52 L38 75 L85 25' stroke='%23EFFBD5' stroke-width='13' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
-  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
@@ -408,7 +408,40 @@
     .sync-off { background:rgba(0,0,0,0.15); }
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
   </style>
-</head>
+<style>
+/* HQ v44: comfortable controls and focused task views */
+select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23d90060' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
+.hq-view-controls { display:flex;gap:8px;flex-wrap:wrap;margin:20px 22px; }
+.hq-view-controls button,.hq-later,.hq-dialog button { font:800 11px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid #d90060;border-radius:10px;padding:12px;background:#f6d0f6;color:#d90060;min-height:44px; }
+.hq-view-controls button[aria-pressed=true],.hq-dialog button.hq-primary {background:#d90060;color:#f6d0f6;}
+.hq-list-items {padding-bottom:32px!important;}
+.hq-task {display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid #d90060;color:#d90060;background:#f6d0f6;}
+.hq-task-name {font:400 16px/1.6 'DM Sans',sans-serif;overflow-wrap:anywhere;cursor:pointer;min-width:0;}
+.hq-category {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;overflow-wrap:anywhere;max-width:160px;}
+.hq-view-cards {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;padding-top:16px!important;}
+.hq-view-cards .hq-task {border:1px solid #d90060;border-radius:14px;padding:22px;grid-template-columns:1fr;align-content:start;min-height:190px;}
+.hq-view-cards .hq-task-name {min-height:60px;}
+.hq-view-cards .hq-later {justify-self:start;}
+.hq-dialog {margin:auto;width:min(520px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:26px;border:1px solid #d90060;border-radius:18px;background:#f6d0f6;color:#d90060;font:400 16px/1.6 'DM Sans',sans-serif;}
+.hq-dialog::backdrop{background:rgba(0,0,0,.3)}
+.hq-dialog h2{font-size:20px;overflow-wrap:anywhere;margin-bottom:18px;}
+.hq-dialog label{display:block;font-size:13px;margin-bottom:8px;}
+.hq-dialog select{width:100%;padding:14px;background-color:#f6d0f6;color:#d90060;border:1px solid #d90060;border-radius:10px;font:400 16px 'DM Sans';}
+.hq-dialog-actions {display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.hq-dialog button:disabled,button:disabled{opacity:.45;cursor:not-allowed;}
+.hq-backups summary{cursor:pointer;font:800 11px 'DM Sans';letter-spacing:.08em;text-transform:uppercase;padding:12px 0;}
+.hq-backups .data-row{margin-top:14px;}
+.hq-side-toggle{position:fixed;left:10px;bottom:12px;z-index:100;background:#f6d0f6;color:#d90060;border:1px solid #d90060;border-radius:10px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer;}
+body.hq-side-hidden{grid-template-columns:0 minmax(0,1fr);}
+body.hq-side-hidden .sidebar{display:none;}
+.sidebar{padding-bottom:70px;}
+@media(max-width:700px){
+ .hq-task{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:16px 0;}.hq-task-name{grid-column:1/-1;}.hq-category{max-width:130px;}.hq-later{font-size:10px;}.hq-view-cards .hq-task{grid-template-columns:1fr;}
+ .ib-overlay{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);-webkit-overflow-scrolling:touch;}
+ input,textarea,select{font-size:16px!important;} .modal{max-height:90dvh;overflow:auto;}.modal-row-btns{flex-wrap:wrap;} .modal-row-btns button{min-height:44px;}
+ .list-assign-row{display:grid;grid-template-columns:minmax(0,1fr);}.add-input{min-width:0;}.task-text{overflow-wrap:anywhere;}
+}
+</style></head>
 <body>
 
 <!-- FULLSCREEN BUTTON -->
@@ -479,31 +512,6 @@
   </div>
 </div>
 
-<!-- 5. PRACTICES -->
-<div class="band" style="background:var(--blush);">
-  <div class="pad" style="padding-bottom:0;">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
-      <div>
-        <span class="eyebrow eyebrow-hot">Alongside The Tasks</span>
-        <div class="mix-head mix-pink">
-          <span class="mix-sans">The Real</span>
-          <span class="mix-serif">Work.</span>
-        </div>
-      </div>
-      <button class="pr-edit-toggle" onclick="togglePrEdit()">edit</button>
-    </div>
-  </div>
-  <div id="practiceList"></div>
-  <div class="pr-edit-panel" id="prEditPanel">
-    <div id="prEditList"></div>
-    <div class="pr-edit-add">
-      <input id="prAddInput" type="text" placeholder="Add a practice...">
-      <button onclick="addPractice()">+ Add</button>
-    </div>
-  </div>
-  <div style="height:22px;"></div>
-</div>
-
 <!-- 8. YOU DID THAT button -->
 <div class="ydt-band">
   <button class="ydt-band-btn" onclick="showYouDidThat()"><span style="color:#eefbd1;">✦</span> You Did That</button>
@@ -511,17 +519,12 @@
 
 <!-- 9. DATA -->
 <div class="band pad" style="background:#FFDAF5;">
-  <span class="eyebrow eyebrow-ink" style="opacity:0.6;">Your Data</span>
-  <div class="mix-head mix-lav" style="margin-bottom:18px;">
-    <span class="mix-sans">Save &amp;</span>
-    <span class="mix-serif">Transfer.</span>
-  </div>
-  <div class="data-row">
-    <button class="data-btn data-btn-export" onclick="exportData()">↓ Export JSON</button>
-    <button class="data-btn data-btn-import" onclick="document.getElementById('importInput').click()">↑ Load JSON</button>
+  <details class="hq-backups"><summary>Backup &amp; restore</summary><div class="data-row">
+    <button class="data-btn data-btn-export" onclick="exportData()">Download backup</button>
+    <button class="data-btn data-btn-import" onclick="document.getElementById('importInput').click()">Restore backup</button>
     <input type="file" id="importInput" accept=".json" onchange="importData(event)">
   </div>
-  <div class="import-success" id="importSuccess">✓ Data loaded successfully</div>
+  <div class="import-success" id="importSuccess">✓ Data loaded successfully</div></details>
 </div>
 
 <!-- 10. TIMELINE -->
@@ -529,7 +532,7 @@
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v42</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v44</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -640,7 +643,7 @@
       <span class="ib-list-eyebrow" id="listHeaderLabel">To Do</span>
       <span class="ib-sync-badge ib-sync-off" id="listCount">0 waiting</span>
     </div>
-    <div id="listItems"></div>
+    <div class="hq-view-controls" role="group" aria-label="Task layout"><button id="hqCompact" onclick="hqSetView('compact')">Compact list</button><button id="hqCards" onclick="hqSetView('cards')">Notecards</button></div><div id="listItems"></div>
   </div>
 </div>
 
@@ -1951,9 +1954,9 @@ function listWeekOptions(selectedId) {
   }).join('');
 }
 function assignMasterListItem(id) {
-  const sel = document.getElementById('listWeekSel_' + id);
+  const sel = document.getElementById('hqTaskWeek');
   const weekId = sel?.value;
-  if (!weekId) { showToast('Pick a week first'); return; }
+  if (!weekId || !AW.some(w => w.id === weekId)) { showToast('Pick a week first'); return; }
   const list = getMasterList();
   const item = list.find(entry => entry.id === id);
   if (!item) return;
@@ -1961,6 +1964,7 @@ function assignMasterListItem(id) {
   saveMasterList(list.filter(entry => entry.id !== id));
   if (weekId === CW) render(CW);
   renderTheList();
+  document.getElementById('hqTaskDialog').close();
   const w = getWeek(weekId);
   showToast('Added to ' + (w ? `${w.label} · ${fmtRange(w.start, w.end)}` : 'week'));
 }
@@ -2006,25 +2010,20 @@ function renderTheList() {
     container.innerHTML = `<div class="ib-empty">${isDownLineView ? 'No down-the-line tasks here.' : 'No regular list tasks here.'}</div>`;
     return;
   }
-  container.innerHTML = visibleItems.map(item => {
-    const when = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '';
-    const isDownLine = !!item.downLine;
-    return `<div class="ib-card list-card${isDownLine ? ' list-card-later' : ''}">
-      <div class="list-card-top">
-        <div class="ib-card-text" style="margin-bottom:0;">${esc(item.text)}</div>
-        <button class="ib-del-btn" onclick="deleteMasterListItem('${esc(item.id)}')" title="Remove">✕</button>
-      </div>
-      <div class="ib-card-meta">
-        <span class="task-cat">${esc(item.cat || 'admin')}</span>
-        <button class="list-later-chip${isDownLine ? ' active' : ''}" onclick="toggleMasterListDownLine('${esc(item.id)}')" aria-pressed="${isDownLine ? 'true' : 'false'}">${isDownLine ? 'Down the line' : 'Mark for later'}</button>
-        ${when ? `<span class="ib-ts">${esc(when)}</span>` : ''}
-      </div>
-      <div class="list-assign-row">
-        <select class="modal-select list-week-select" id="listWeekSel_${esc(item.id)}">${listWeekOptions(CW)}</select>
-        <button class="list-assign-btn" onclick="assignMasterListItem('${esc(item.id)}')">Add to Week</button>
-      </div>
-    </div>`;
-  }).join('');
+  container.className = 'hq-list-items hq-view-' + hqView;
+  container.replaceChildren();
+  visibleItems.forEach(item => {
+    const card = document.createElement('article'); card.className = 'hq-task';
+    const name = document.createElement('div'); name.className = 'hq-task-name'; name.textContent = item.text;
+    name.tabIndex = 0; name.setAttribute('role','button'); name.setAttribute('aria-label',item.text + ' — open task');
+    name.ondblclick = () => hqOpenTask(item.id);
+    name.onclick = () => { if (matchMedia('(pointer: coarse)').matches) hqOpenTask(item.id); };
+    name.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hqOpenTask(item.id); } };
+    const cat = document.createElement('span'); cat.className = 'hq-category'; cat.textContent = item.cat || 'admin';
+    const later = document.createElement('button'); later.className = 'hq-later'; later.textContent = item.downLine ? 'Move to To Do' : 'Mark for later';
+    later.setAttribute('aria-pressed', String(!!item.downLine)); later.onclick = () => toggleMasterListDownLine(item.id);
+    card.append(name,cat,later); container.append(card);
+  });
 }
 function showTheList() {
   document.getElementById('listOverlay').classList.add('open');
@@ -2306,7 +2305,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=42').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=44').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2780,5 +2779,30 @@ function saveNewWeek() {
 }
 
 </script>
-</body>
+<dialog id="hqTaskDialog" class="hq-dialog" aria-labelledby="hqTaskTitle"><h2 id="hqTaskTitle"></h2><label for="hqTaskWeek">Choose a week when you’re ready</label><select id="hqTaskWeek"></select><div class="hq-dialog-actions"><button class="hq-primary" id="hqAssign">Add to week</button><button onclick="document.getElementById('hqTaskDialog').close()">Cancel</button><button id="hqDelete">Remove task</button></div></dialog><script>
+let hqView = localStorage.getItem('hq-list-view') === 'cards' ? 'cards' : 'compact';
+function hqSetView(view) {
+ hqView = view === 'cards' ? 'cards' : 'compact'; localStorage.setItem('hq-list-view',hqView);
+ document.getElementById('hqCompact').setAttribute('aria-pressed',String(hqView === 'compact'));
+ document.getElementById('hqCards').setAttribute('aria-pressed',String(hqView === 'cards'));
+ renderTheList();
+}
+function hqOpenTask(id) {
+ const item = getMasterList().find(t => t.id === id); if (!item) return;
+ const dialog = document.getElementById('hqTaskDialog');
+ document.getElementById('hqTaskTitle').textContent = item.text;
+ const select = document.getElementById('hqTaskWeek'); select.innerHTML = '<option value="">Choose a week…</option>' + listWeekOptions(CW); select.value = '';
+ const assign = document.getElementById('hqAssign'); assign.disabled = true;
+ select.onchange = () => assign.disabled = !select.value;
+ assign.onclick = () => assignMasterListItem(id);
+ document.getElementById('hqDelete').onclick = () => { deleteMasterListItem(id); if (!getMasterList().some(t => t.id === id)) dialog.close(); };
+ dialog.showModal();
+}
+document.getElementById('hqTaskDialog').addEventListener('click',e => {if(e.target===e.currentTarget){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
+hqSetView(hqView);
+const hqInput = document.getElementById('listInput');
+const hqSave = document.getElementById('listSaveBtn');
+function hqValidate() {hqSave.disabled = !hqInput.value.trim();}
+hqInput.addEventListener('input',hqValidate); new MutationObserver(hqValidate).observe(document.getElementById('listItems'),{childList:true});hqValidate();
+</script></body>
 </html>

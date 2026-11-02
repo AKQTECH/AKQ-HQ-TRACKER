@@ -3,14 +3,13 @@
 // in index.html's `navigator.serviceWorker.register('service-worker.js?v=...')`
 // so the browser actually re-fetches THIS file. Otherwise iOS/Safari may keep
 // the prior SW byte-identical and the "new" deploy never takes effect.
-const VERSION = 'akq-hq-v42';
+const VERSION = 'akq-hq-v44';
 
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png',
-  './relay.html'
+  './icon.jpg'
 ];
 
 // ─── INSTALL: cache all app assets ────────────────────────────────────────────
