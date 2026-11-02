@@ -409,39 +409,40 @@
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
   </style>
 <style>
-/* HQ v44: comfortable controls and focused task views */
-select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23d90060' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
-.hq-view-controls { display:flex;gap:8px;flex-wrap:wrap;margin:20px 22px; }
-.hq-view-controls button,.hq-later,.hq-dialog button { font:800 11px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid #d90060;border-radius:10px;padding:12px;background:#f6d0f6;color:#d90060;min-height:44px; }
-.hq-view-controls button[aria-pressed=true],.hq-dialog button.hq-primary {background:#d90060;color:#f6d0f6;}
-.hq-list-items {padding-bottom:32px!important;}
-.hq-task {display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid #d90060;color:#d90060;background:#f6d0f6;}
-.hq-task-name {font:400 16px/1.6 'DM Sans',sans-serif;overflow-wrap:anywhere;cursor:pointer;min-width:0;}
-.hq-category {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;overflow-wrap:anywhere;max-width:160px;}
-.hq-view-cards {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;padding-top:16px!important;}
-.hq-view-cards .hq-task {border:1px solid #d90060;border-radius:14px;padding:22px;grid-template-columns:1fr;align-content:start;min-height:190px;}
-.hq-view-cards .hq-task-name {min-height:60px;}
-.hq-view-cards .hq-later {justify-self:start;}
-.hq-dialog {margin:auto;width:min(520px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:26px;border:1px solid #d90060;border-radius:18px;background:#f6d0f6;color:#d90060;font:400 16px/1.6 'DM Sans',sans-serif;}
-.hq-dialog::backdrop{background:rgba(0,0,0,.3)}
-.hq-dialog h2{font-size:20px;overflow-wrap:anywhere;margin-bottom:18px;}
-.hq-dialog label{display:block;font-size:13px;margin-bottom:8px;}
-.hq-dialog select{width:100%;padding:14px;background-color:#f6d0f6;color:#d90060;border:1px solid #d90060;border-radius:10px;font:400 16px 'DM Sans';}
-.hq-dialog-actions {display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
-.hq-dialog button:disabled,button:disabled{opacity:.45;cursor:not-allowed;}
+/* HQ v45: comfortable controls and focused task views */
+select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23e96cb5' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
+.hq-view-controls {display:flex;gap:8px;flex-wrap:wrap;margin:16px 22px;}
+.hq-view-controls button {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(233,108,181,.24);border-radius:10px;padding:9px 14px;background:transparent;color:#e96cb5;min-height:36px;}
+.hq-view-controls button[aria-pressed=true]{background:#e96cb5;color:#fff;}
+.hq-list-items {min-width:0;max-width:100%;padding-bottom:32px!important;}
+.hq-task-name {min-width:0;max-width:100%;overflow-wrap:anywhere;white-space:normal;cursor:pointer;margin-bottom:0!important;color:var(--ink);}
+.list-card-top {min-width:0;}.list-card-top .hq-task-name{flex:1;}.list-card-top .ib-del-btn{flex-shrink:0;}
+.list-assign-row[hidden]{display:none!important;}
+.list-assign-row{min-width:0;}.list-assign-row select{width:100%;min-width:0;}
+.hq-view-cards {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:18px;padding-top:18px!important;}
+.hq-view-cards .ib-card.list-card{min-width:0;max-width:100%;border:1px solid rgba(234,37,141,.12)!important;border-radius:10px!important;padding:20px!important;background:transparent!important;}
+.hq-view-cards .list-assign-row{grid-template-columns:minmax(0,1fr);}
+button:disabled{opacity:.45;cursor:not-allowed;}
 .hq-backups summary{cursor:pointer;font:800 11px 'DM Sans';letter-spacing:.08em;text-transform:uppercase;padding:12px 0;}
 .hq-backups .data-row{margin-top:14px;}
-.hq-side-toggle{position:fixed;left:10px;bottom:12px;z-index:100;background:#f6d0f6;color:#d90060;border:1px solid #d90060;border-radius:10px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer;}
+.hq-side-toggle{position:fixed;left:10px;bottom:12px;z-index:100;background:#ffdaf5;color:#e96cb5;border:1px solid #e96cb5;border-radius:10px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer;}
 body.hq-side-hidden{grid-template-columns:0 minmax(0,1fr);}
 body.hq-side-hidden .sidebar{display:none;}
 .sidebar{padding-bottom:70px;}
 @media(max-width:700px){
- .hq-task{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:16px 0;}.hq-task-name{grid-column:1/-1;}.hq-category{max-width:130px;}.hq-later{font-size:10px;}.hq-view-cards .hq-task{grid-template-columns:1fr;}
  .ib-overlay{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);-webkit-overflow-scrolling:touch;}
  input,textarea,select{font-size:16px!important;} .modal{max-height:90dvh;overflow:auto;}.modal-row-btns{flex-wrap:wrap;} .modal-row-btns button{min-height:44px;}
  .list-assign-row{display:grid;grid-template-columns:minmax(0,1fr);}.add-input{min-width:0;}.task-text{overflow-wrap:anywhere;}
 }
-</style></head>
+</style><style>
+#listOverlay{overflow-x:hidden;}
+#listOverlay .ib-inner{width:100%;min-width:0;box-sizing:border-box;}
+#listOverlay .ib-card.list-card{min-width:0;max-width:100%;}
+#listOverlay .ib-card-meta{flex-wrap:wrap;}
+#listOverlay .ib-card-text{white-space:normal;overflow-wrap:anywhere;}
+#listOverlay .list-assign-row{max-width:100%;}
+@media(max-width:700px){#listOverlay .ib-card-meta{gap:8px;}#listOverlay .list-later-chip{min-height:36px;}#listOverlay .list-assign-row{grid-template-columns:minmax(0,1fr);}}
+</style><style>.week-phase,.week-phase-input,.hero-phase,.hero-phase-input{font-family:'DM Sans',sans-serif;font-weight:800;font-style:normal;overflow-wrap:anywhere;}</style></head>
 <body>
 
 <!-- FULLSCREEN BUTTON -->
@@ -532,7 +533,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v44</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v45</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -643,7 +644,7 @@ body.hq-side-hidden .sidebar{display:none;}
       <span class="ib-list-eyebrow" id="listHeaderLabel">To Do</span>
       <span class="ib-sync-badge ib-sync-off" id="listCount">0 waiting</span>
     </div>
-    <div class="hq-view-controls" role="group" aria-label="Task layout"><button id="hqCompact" onclick="hqSetView('compact')">Compact list</button><button id="hqCards" onclick="hqSetView('cards')">Notecards</button></div><div id="listItems"></div>
+    <div class="hq-view-controls" role="group" aria-label="Task layout"><button id="hqCompact" onclick="hqSetView('compact')">List</button><button id="hqCards" onclick="hqSetView('cards')">Notecards</button></div><div id="listItems"></div>
   </div>
 </div>
 
@@ -1954,7 +1955,7 @@ function listWeekOptions(selectedId) {
   }).join('');
 }
 function assignMasterListItem(id) {
-  const sel = document.getElementById('hqTaskWeek');
+  const sel = document.getElementById('listWeekSel_' + id);
   const weekId = sel?.value;
   if (!weekId || !AW.some(w => w.id === weekId)) { showToast('Pick a week first'); return; }
   const list = getMasterList();
@@ -1964,7 +1965,6 @@ function assignMasterListItem(id) {
   saveMasterList(list.filter(entry => entry.id !== id));
   if (weekId === CW) render(CW);
   renderTheList();
-  document.getElementById('hqTaskDialog').close();
   const w = getWeek(weekId);
   showToast('Added to ' + (w ? `${w.label} · ${fmtRange(w.start, w.end)}` : 'week'));
 }
@@ -2013,16 +2013,29 @@ function renderTheList() {
   container.className = 'hq-list-items hq-view-' + hqView;
   container.replaceChildren();
   visibleItems.forEach(item => {
-    const card = document.createElement('article'); card.className = 'hq-task';
-    const name = document.createElement('div'); name.className = 'hq-task-name'; name.textContent = item.text;
-    name.tabIndex = 0; name.setAttribute('role','button'); name.setAttribute('aria-label',item.text + ' — open task');
-    name.ondblclick = () => hqOpenTask(item.id);
-    name.onclick = () => { if (matchMedia('(pointer: coarse)').matches) hqOpenTask(item.id); };
-    name.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hqOpenTask(item.id); } };
-    const cat = document.createElement('span'); cat.className = 'hq-category'; cat.textContent = item.cat || 'admin';
-    const later = document.createElement('button'); later.className = 'hq-later'; later.textContent = item.downLine ? 'Move to To Do' : 'Mark for later';
+    const card = document.createElement('article'); card.className = 'ib-card list-card' + (item.downLine ? ' list-card-later' : '');
+    const top = document.createElement('div'); top.className = 'list-card-top';
+    const name = document.createElement('div'); name.className = 'ib-card-text hq-task-name'; name.textContent = item.text;
+    name.tabIndex = 0; name.setAttribute('role','button'); name.setAttribute('aria-expanded','false');
+    name.setAttribute('aria-label',item.text + ' — assign to a week');
+    const remove = document.createElement('button'); remove.className = 'ib-del-btn'; remove.textContent = '✕'; remove.title = 'Remove'; remove.setAttribute('aria-label','Remove ' + item.text); remove.onclick = () => deleteMasterListItem(item.id);
+    top.append(name,remove);
+    const meta = document.createElement('div'); meta.className = 'ib-card-meta';
+    const cat = document.createElement('span'); cat.className = 'task-cat'; cat.textContent = item.cat || 'admin';
+    const later = document.createElement('button'); later.className = 'list-later-chip' + (item.downLine ? ' active' : ''); later.textContent = item.downLine ? 'Down the line' : 'Mark for later';
     later.setAttribute('aria-pressed', String(!!item.downLine)); later.onclick = () => toggleMasterListDownLine(item.id);
-    card.append(name,cat,later); container.append(card);
+    meta.append(cat,later);
+    if(item.createdAt) {const when = document.createElement('span'); when.className = 'ib-ts'; when.textContent = new Date(item.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}); meta.append(when);}
+    const assignment = document.createElement('div'); assignment.className = 'list-assign-row'; assignment.hidden = true;
+    const select = document.createElement('select'); select.className = 'modal-select list-week-select'; select.id = 'listWeekSel_' + item.id; select.setAttribute('aria-label','Assign ' + item.text + ' to a week');
+    select.innerHTML = '<option value="">Choose a week…</option>' + listWeekOptions(CW); select.value = '';
+    const assign = document.createElement('button'); assign.className = 'list-assign-btn'; assign.textContent = 'Add to Week'; assign.disabled = true;
+    select.onchange = () => assign.disabled = !select.value; assign.onclick = () => assignMasterListItem(item.id);
+    assignment.append(select,assign);
+    const toggle = () => {assignment.hidden = !assignment.hidden; name.setAttribute('aria-expanded',String(!assignment.hidden));};
+    name.onclick = toggle;
+    name.onkeydown = e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();toggle();}};
+    card.append(top,meta,assignment); container.append(card);
   });
 }
 function showTheList() {
@@ -2305,7 +2318,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=44').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=45').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2779,7 +2792,7 @@ function saveNewWeek() {
 }
 
 </script>
-<dialog id="hqTaskDialog" class="hq-dialog" aria-labelledby="hqTaskTitle"><h2 id="hqTaskTitle"></h2><label for="hqTaskWeek">Choose a week when you’re ready</label><select id="hqTaskWeek"></select><div class="hq-dialog-actions"><button class="hq-primary" id="hqAssign">Add to week</button><button onclick="document.getElementById('hqTaskDialog').close()">Cancel</button><button id="hqDelete">Remove task</button></div></dialog><script>
+<script>
 let hqView = localStorage.getItem('hq-list-view') === 'cards' ? 'cards' : 'compact';
 function hqSetView(view) {
  hqView = view === 'cards' ? 'cards' : 'compact'; localStorage.setItem('hq-list-view',hqView);
@@ -2787,18 +2800,6 @@ function hqSetView(view) {
  document.getElementById('hqCards').setAttribute('aria-pressed',String(hqView === 'cards'));
  renderTheList();
 }
-function hqOpenTask(id) {
- const item = getMasterList().find(t => t.id === id); if (!item) return;
- const dialog = document.getElementById('hqTaskDialog');
- document.getElementById('hqTaskTitle').textContent = item.text;
- const select = document.getElementById('hqTaskWeek'); select.innerHTML = '<option value="">Choose a week…</option>' + listWeekOptions(CW); select.value = '';
- const assign = document.getElementById('hqAssign'); assign.disabled = true;
- select.onchange = () => assign.disabled = !select.value;
- assign.onclick = () => assignMasterListItem(id);
- document.getElementById('hqDelete').onclick = () => { deleteMasterListItem(id); if (!getMasterList().some(t => t.id === id)) dialog.close(); };
- dialog.showModal();
-}
-document.getElementById('hqTaskDialog').addEventListener('click',e => {if(e.target===e.currentTarget){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
 hqSetView(hqView);
 const hqInput = document.getElementById('listInput');
 const hqSave = document.getElementById('listSaveBtn');
