@@ -377,7 +377,7 @@
     #listOverlay .ib-card-text { font-size: 15px; font-weight: 700; line-height: 1.45; }
     #listOverlay .ib-card-meta { gap: 8px; margin-bottom: 0; flex-wrap: wrap; }
     #listOverlay .task-cat { background: #ffa9da; color: #e96cb5; }
-    .list-later-chip { border: 2px solid rgba(233,108,181,0.34); background: rgba(233,108,181,0.16); color: #e96cb5; border-radius: 999px; cursor: pointer; }
+    .list-later-chip { border: 1px solid rgba(233,108,181,0.34); background: rgba(233,108,181,0.16); color: #e96cb5; border-radius: 999px; cursor: pointer; }
     .list-later-chip.active { background: rgba(233,108,181,0.16); color: #e96cb5; border-color: rgba(233,108,181,0.34); }
     #listOverlay .list-card-later .ib-card-text { color: #3c2733; }
     #listOverlay .list-assign-btn { background: #e96cb5; color: #fff; }
@@ -409,7 +409,7 @@
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
   </style>
 <style>
-/* HQ v47: comfortable controls and focused task views */
+/* HQ v48: comfortable controls and focused task views */
 select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23e96cb5' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
 .hq-view-controls {display:flex;gap:8px;flex-wrap:wrap;margin:16px 22px;}
 .hq-view-controls button {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(233,108,181,.24);border-radius:10px;padding:9px 14px;background:transparent;color:#e96cb5;min-height:36px;}
@@ -441,11 +441,11 @@ body.hq-side-hidden .sidebar{display:none;}
 #listOverlay .ib-card-meta{flex-wrap:wrap;}
 #listOverlay .ib-card-text{white-space:normal;overflow-wrap:anywhere;}
 #listOverlay .list-assign-row{max-width:100%;}
-@media(max-width:700px){#listOverlay .ib-card-meta{gap:8px;}#listOverlay .list-later-chip{min-height:36px;}#listOverlay .list-assign-row{grid-template-columns:minmax(0,1fr);}}
+@media(max-width:700px){#listOverlay .ib-card-meta{gap:8px;}#listOverlay .list-later-chip{min-height:18px;}#listOverlay .list-assign-row{grid-template-columns:minmax(0,1fr);}}
 </style><style>.week-phase,.week-phase-input,.hero-phase,.hero-phase-input{font-family:'DM Sans',sans-serif;font-weight:800;font-style:normal;overflow-wrap:anywhere;}</style><style>
 #listOverlay .ib-card-meta{display:flex;align-items:center;gap:8px;}
-#listOverlay .task-cat,#listOverlay .list-later-chip{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:36px;min-height:36px;margin:0;padding:0 14px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:800;line-height:1;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;border-radius:999px;vertical-align:middle;flex-shrink:0;}
-#listOverlay .task-cat{border:2px solid transparent;}
+#listOverlay .task-cat,#listOverlay .list-later-chip{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:18px;min-height:18px;margin:0;padding:0 8px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:800;line-height:1;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;border-radius:999px;vertical-align:middle;flex-shrink:0;}
+#listOverlay .task-cat{border:1px solid transparent;}
 #listOverlay .ib-ts{align-self:center;}
 </style></head>
 <body>
@@ -538,7 +538,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v47</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v48</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2323,7 +2323,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=47').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=48').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
