@@ -409,7 +409,7 @@
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
   </style>
 <style>
-/* HQ v48: comfortable controls and focused task views */
+/* HQ v49: comfortable controls and focused task views */
 select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23e96cb5' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
 .hq-view-controls {display:flex;gap:8px;flex-wrap:wrap;margin:16px 22px;}
 .hq-view-controls button {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(233,108,181,.24);border-radius:10px;padding:9px 14px;background:transparent;color:#e96cb5;min-height:36px;}
@@ -447,6 +447,14 @@ body.hq-side-hidden .sidebar{display:none;}
 #listOverlay .task-cat,#listOverlay .list-later-chip{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:18px;min-height:18px;margin:0;padding:0 8px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:800;line-height:1;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;border-radius:999px;vertical-align:middle;flex-shrink:0;}
 #listOverlay .task-cat{border:1px solid transparent;}
 #listOverlay .ib-ts{align-self:center;}
+</style><style>
+.list-task-editor[hidden]{display:none!important;}
+.list-task-editor{margin-top:16px;min-width:0;}
+.list-rename-input{display:block;width:100%;min-width:0;padding:10px 12px;margin:6px 0 10px;border:1px solid rgba(233,108,181,.34);border-radius:10px;background:#feeaf9;color:var(--ink);font:400 16px/1.5 'DM Sans',sans-serif;}
+.list-rename-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.list-rename-actions .list-assign-btn{width:auto;min-height:36px;}
+.list-editor-cancel{background:transparent!important;color:#e96cb5!important;border:1px solid rgba(233,108,181,.34);}
+.hq-view-cards .list-task-editor{grid-column:1/-1;}
 </style></head>
 <body>
 
@@ -538,7 +546,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v48</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v49</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1946,6 +1954,16 @@ function toggleMasterListDownLine(id) {
   saveMasterList(list);
   renderTheList();
 }
+function renameMasterListItem(id, text, refresh = true) {
+  const value = text.trim();
+  if (!value) { showToast('Enter a task name'); return false; }
+  const list = getMasterList();
+  const item = list.find(entry => entry.id === id);
+  if (!item) { showToast('This task is no longer in THE LIST'); return false; }
+  if (item.text !== value) { item.text = value; saveMasterList(list); }
+  if (refresh) { renderTheList(); showToast('Task renamed'); }
+  return true;
+}
 function deleteMasterListItem(id) {
   if (!confirm('Remove this from THE LIST?')) return;
   saveMasterList(getMasterList().filter(item => item.id !== id));
@@ -2022,7 +2040,7 @@ function renderTheList() {
     const top = document.createElement('div'); top.className = 'list-card-top';
     const name = document.createElement('div'); name.className = 'ib-card-text hq-task-name'; name.textContent = item.text;
     name.tabIndex = 0; name.setAttribute('role','button'); name.setAttribute('aria-expanded','false');
-    name.setAttribute('aria-label',item.text + ' — assign to a week');
+    name.setAttribute('aria-label',item.text + ' — rename or assign to a week'); name.title = 'Double-click to rename or assign to a week';
     const remove = document.createElement('button'); remove.className = 'ib-del-btn'; remove.textContent = '✕'; remove.title = 'Remove'; remove.setAttribute('aria-label','Remove ' + item.text); remove.onclick = () => deleteMasterListItem(item.id);
     top.append(name,remove);
     const meta = document.createElement('div'); meta.className = 'ib-card-meta';
@@ -2031,16 +2049,29 @@ function renderTheList() {
     later.setAttribute('aria-pressed', String(!!item.downLine)); later.onclick = () => toggleMasterListDownLine(item.id);
     meta.append(cat,later);
     if(item.createdAt) {const when = document.createElement('span'); when.className = 'ib-ts'; when.textContent = new Date(item.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}); meta.append(when);}
-    const assignment = document.createElement('div'); assignment.className = 'list-assign-row'; assignment.hidden = true;
+    const editor = document.createElement('div'); editor.className = 'list-task-editor'; editor.hidden = true;
+    const label = document.createElement('label'); label.className = 'modal-lbl'; label.textContent = 'Task name'; label.htmlFor = 'listRename_' + item.id;
+    const rename = document.createElement('input'); rename.className = 'modal-input list-rename-input'; rename.id = label.htmlFor; rename.type = 'text'; rename.value = item.text;
+    const actions = document.createElement('div'); actions.className = 'list-rename-actions';
+    const save = document.createElement('button'); save.className = 'list-assign-btn'; save.textContent = 'Save name'; save.disabled = true;
+    const cancel = document.createElement('button'); cancel.className = 'list-assign-btn list-editor-cancel'; cancel.textContent = 'Cancel';
+    const assignment = document.createElement('div'); assignment.className = 'list-assign-row';
     const select = document.createElement('select'); select.className = 'modal-select list-week-select'; select.id = 'listWeekSel_' + item.id; select.setAttribute('aria-label','Assign ' + item.text + ' to a week');
     select.innerHTML = '<option value="">Choose a week…</option>' + listWeekOptions(CW); select.value = '';
     const assign = document.createElement('button'); assign.className = 'list-assign-btn'; assign.textContent = 'Add to Week'; assign.disabled = true;
-    select.onchange = () => assign.disabled = !select.value; assign.onclick = () => assignMasterListItem(item.id);
-    assignment.append(select,assign);
-    const toggle = () => {assignment.hidden = !assignment.hidden; name.setAttribute('aria-expanded',String(!assignment.hidden));};
-    name.onclick = toggle;
-    name.onkeydown = e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();toggle();}};
-    card.append(top,meta,assignment); container.append(card);
+    const validate = () => { save.disabled = !rename.value.trim() || rename.value.trim() === item.text; assign.disabled = !select.value || !rename.value.trim(); };
+    rename.oninput = validate; select.onchange = validate;
+    save.onclick = () => { if (!save.disabled) renameMasterListItem(item.id,rename.value); };
+    assign.onclick = () => { if (!assign.disabled && renameMasterListItem(item.id,rename.value,false)) assignMasterListItem(item.id); };
+    const close = () => {editor.hidden = true; name.setAttribute('aria-expanded','false'); rename.value = item.text; select.value = ''; validate(); name.focus();};
+    const open = () => {editor.hidden = false; name.setAttribute('aria-expanded','true'); rename.focus();};
+    cancel.onclick = close;
+    rename.onkeydown = e => {if(e.key === 'Enter'){e.preventDefault();save.click();}else if(e.key === 'Escape'){e.preventDefault();close();}};
+    name.ondblclick = open;
+    name.onclick = () => {if(matchMedia('(pointer: coarse)').matches) open();};
+    name.onkeydown = e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();editor.hidden ? open() : close();}};
+    actions.append(save,cancel); assignment.append(select,assign); editor.append(label,rename,actions,assignment);
+    card.append(top,meta,editor); container.append(card);
   });
 }
 function showTheList() {
@@ -2323,7 +2354,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=48').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=49').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
