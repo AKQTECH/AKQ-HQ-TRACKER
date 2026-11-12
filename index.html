@@ -409,7 +409,7 @@
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
   </style>
 <style>
-/* HQ v50: comfortable controls and focused task views */
+/* HQ v51: comfortable controls and focused task views */
 select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23e96cb5' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
 .hq-view-controls {display:flex;gap:8px;flex-wrap:wrap;margin:16px 22px;}
 .hq-view-controls button {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(233,108,181,.24);border-radius:10px;padding:9px 14px;background:transparent;color:#e96cb5;min-height:36px;}
@@ -455,6 +455,11 @@ body.hq-side-hidden .sidebar{display:none;}
 .list-rename-actions .list-assign-btn{width:auto;min-height:36px;}
 .list-editor-cancel{background:transparent!important;color:#e96cb5!important;border:1px solid rgba(233,108,181,.34);}
 .hq-view-cards .list-task-editor{grid-column:1/-1;}
+</style><style>
+.hq-task-heading{display:flex;align-items:center;gap:6px;min-width:0;}.hq-task-heading .task-label{min-width:0;overflow-wrap:anywhere;}
+.hq-check-toggle{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:28px;height:28px;padding:0;background:transparent;border:0;color:#e96cb5;cursor:pointer;border-radius:6px;}.hq-check-toggle[aria-expanded="true"] svg{transform:rotate(180deg);}.hq-check-toggle:focus-visible{outline:2px solid #e96cb5;}
+.hq-check-panel{padding:8px 0 4px;min-width:0;}.hq-check-panel[hidden]{display:none!important;}.hq-check-row{display:flex;align-items:flex-start;gap:9px;margin:7px 0;font:400 14px/1.6 'DM Sans',sans-serif;color:var(--ink);overflow-wrap:anywhere;}.hq-check-row input{flex-shrink:0;accent-color:#e96cb5;margin-top:5px;}.hq-check-row input:checked+span{text-decoration:line-through;opacity:.55;}
+.hq-check-dialog{box-sizing:border-box;width:min(440px,calc(100% - 32px));max-height:85dvh;overflow:auto;padding:24px;border:1px solid rgba(233,108,181,.34);border-radius:16px;background:#feeaf9;color:#111;font-family:'DM Sans',sans-serif;}.hq-check-dialog::backdrop{background:rgba(0,0,0,.25);}.hq-check-dialog h2{margin:0 0 10px;font-size:18px;overflow-wrap:anywhere;}.hq-check-dialog textarea{box-sizing:border-box;width:100%;min-height:150px;margin:12px 0;padding:12px;border:1px solid rgba(233,108,181,.34);border-radius:8px;background:white;font:400 16px/1.6 'DM Sans',sans-serif;}.hq-check-dialog p{font-size:13px;}.hq-check-dialog button{font:800 11px 'DM Sans',sans-serif;padding:10px 16px;border:1px solid rgba(233,108,181,.34);border-radius:9px;background:#ffdaf5;color:#e96cb5;cursor:pointer;}.hq-check-dialog button:disabled{opacity:.4;}.hq-check-dialog .hq-check-actions{display:flex;gap:8px;}
 </style></head>
 <body>
 
@@ -546,7 +551,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v50</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v51</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -951,6 +956,7 @@ function hqParse(raw) {
   if (state.customWeeks !== undefined && (!Array.isArray(state.customWeeks) || state.customWeeks.some(w=>!w || typeof w.id!=='string' || typeof w.start!=='string' || typeof w.end!=='string'))) throw Error('Invalid custom weeks. Existing tasks were kept.');
   if (state.weekThemes !== undefined && (!state.weekThemes || typeof state.weekThemes!=='object' || Array.isArray(state.weekThemes))) throw Error('Invalid week themes. Existing tasks were kept.');
   if (state.cats !== undefined && !Array.isArray(state.cats)) throw Error('Invalid categories. Existing tasks were kept.');
+  for(const task of groups.flat()) if(task.checklist!==undefined && (!Array.isArray(task.checklist) || task.checklist.some(row=>!row || typeof row.id!=='string' || typeof row.text!=='string' || !row.text.trim() || typeof row.done!=='boolean') || new Set(task.checklist.map(row=>row.id)).size!==task.checklist.length)) throw Error('Invalid checklist. Existing tasks were kept.');
   const ids=groups.flat().map(t=>t.id);
   if (new Set(ids).size!==ids.length) throw Error('Duplicate task IDs. Existing tasks were kept.');
   return state;
@@ -1079,6 +1085,70 @@ async function performDropboxPull(review=false) {
 }
 async function dbxForcePush() { if (!DBX.isConnected()) {showToast('Connect Dropbox first');return false;} return hqPush(true); }
 async function dbxForcePull() { if (!DBX.isConnected()) {showToast('Connect Dropbox first');return false;} return performDropboxPull(true); }
+
+var hqChecklistEdit = null;
+function hqFindTask(state, scope, id) {
+  return (scope === 'list' ? state.masterList || [] : state.weeks?.[scope]?.items || []).find(t => t.id === id);
+}
+function hqChecklistLines(text, previous=[]) {
+  const remaining=previous.slice();
+  return text.split('\n').map(line=>line.trim().replace(/^[-*]\s+/, '')).filter(Boolean).map(text=>{
+    const i=remaining.findIndex(row=>row.text===text);
+    return i<0 ? {id:genId('check'),text,done:false} : remaining.splice(i,1)[0];
+  });
+}
+function hqSaveChecklist(scope,id,text,expected) {
+  const state=gs4(), task=state && hqFindTask(state,scope,id);
+  if(!task) throw Error('This task has moved or been removed. Reopen it to edit notes.');
+  if(expected!==undefined && JSON.stringify(task.checklist||[])!==expected) throw Error('These notes changed on another device. Reopen them before editing.');
+  task.checklist=hqChecklistLines(text,task.checklist||[]);
+  ss4(state);
+}
+function hqCheckItem(scope,id,rowId,done) {
+  const state=gs4(), task=state && hqFindTask(state,scope,id);
+  const row=task?.checklist?.find(row=>row.id===rowId);
+  if(!row) throw Error('This checklist changed. Reopen the task.');
+  row.done=done;ss4(state);
+}
+function hqOpenChecklist(scope,id) {
+  const task=hqFindTask(gs4()||{},scope,id);if(!task)return;
+  const modal=document.getElementById('hqChecklistModal');
+  hqChecklistEdit={scope,id,expected:JSON.stringify(task.checklist||[])};
+  document.getElementById('hqChecklistTitle').textContent=task.text;
+  const input=document.getElementById('hqChecklistInput');input.value=(task.checklist||[]).map(row=>row.text).join('\n');
+  document.getElementById('hqChecklistSave').disabled=true;
+  document.getElementById('hqChecklistError').textContent='';
+  input.oninput=()=>{document.getElementById('hqChecklistSave').disabled=input.value.trim()===(task.checklist||[]).map(row=>row.text).join('\n');};
+  modal.showModal();input.focus();
+}
+function hqSubmitChecklist() {
+  if(!hqChecklistEdit)return;
+  try {
+    const {scope,id,expected}=hqChecklistEdit;
+    hqSaveChecklist(scope,id,document.getElementById('hqChecklistInput').value,expected);
+    document.getElementById('hqChecklistModal').close();hqChecklistEdit=null;
+    if(scope==='list') renderTheList();else render(CW);
+  } catch(error) {document.getElementById('hqChecklistError').textContent=error.message;}
+}
+function hqMountChecklist(host,title,task,scope) {
+  const rows=Array.isArray(task.checklist)?task.checklist:[];
+  if(!rows.length)return;
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='hq-check-toggle';
+  toggle.setAttribute('aria-label','Checklist for '+task.text);toggle.setAttribute('aria-expanded','false');toggle.title='Show checklist';
+  toggle.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>';
+  const panel=document.createElement('div');panel.className='hq-check-panel';panel.hidden=true;panel.id='checklist_'+scope+'_'+task.id;
+  toggle.setAttribute('aria-controls',panel.id);
+  toggle.onclick=e=>{e.stopPropagation();panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));toggle.title=panel.hidden?'Show checklist':'Hide checklist';};
+  rows.forEach(row=>{
+    const label=document.createElement('label');label.className='hq-check-row';
+    const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!row.done;
+    const text=document.createElement('span');text.textContent=row.text;
+    cb.onchange=()=>{try{hqCheckItem(scope,task.id,row.id,cb.checked);}catch(error){cb.checked=!cb.checked;showToast(error.message);}};
+    label.append(cb,text);panel.append(label);
+  });
+  title.insertAdjacentElement('afterend',toggle);host.append(panel);
+  panel.addEventListener('dragstart',e=>e.stopPropagation());
+}
 
 const KEY4 = 'bcy_v4';
 
@@ -1430,7 +1500,7 @@ function render(weekId) {
       <div class="task-drag-handle" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 10 14" fill="none"><circle cx="3" cy="2.5" r="1.5" fill="currentColor"/><circle cx="7" cy="2.5" r="1.5" fill="currentColor"/><circle cx="3" cy="7" r="1.5" fill="currentColor"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/><circle cx="3" cy="11.5" r="1.5" fill="currentColor"/><circle cx="7" cy="11.5" r="1.5" fill="currentColor"/></svg></div>
       <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
       <div class="task-body">
-        <div class="task-label">${esc(item.text)}</div>
+        <div class="hq-task-heading"><div class="task-label">${esc(item.text)}</div></div>
         <span class="task-cat">${esc(item.cat||'task')}</span>
         ${noteHTML}
       </div>
@@ -1438,6 +1508,10 @@ function render(weekId) {
         ${carryHTML}
         <button class="task-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
       </div>`;
+
+    const notes=document.createElement('button');notes.className='task-note-btn';notes.textContent=(item.checklist||[]).length?'edit notes':'+ add notes';notes.onclick=()=>hqOpenChecklist(weekId,item.id);
+    li.querySelector('.task-body').append(notes);
+    hqMountChecklist(li.querySelector('.task-body'),li.querySelector('.task-label'),item,weekId);
 
     li.addEventListener('dragstart', e => {
       _dragId = item.id;
@@ -2120,8 +2194,11 @@ function assignMasterListItem(id) {
   const list = getMasterList();
   const item = list.find(entry => entry.id === id);
   if (!item) return;
-  addNewItem(weekId, item.text, item.cat || 'admin');
-  saveMasterList(list.filter(entry => entry.id !== id));
+  const state=gs4();
+  if(!state.weeks[weekId])state.weeks[weekId]={items:[]};
+  state.weeks[weekId].items.push({...item,done:false,builtin:false,downLine:false});
+  state.masterList=state.masterList.filter(entry=>entry.id!==id);
+  ss4(state);
   if (weekId === CW) render(CW);
   renderTheList();
   const w = getWeek(weekId);
@@ -2207,7 +2284,8 @@ function renderTheList() {
     name.onclick = () => {if(matchMedia('(pointer: coarse)').matches) open();};
     name.onkeydown = e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();editor.hidden ? open() : close();}};
     actions.append(save,cancel); assignment.append(select,assign); editor.append(label,rename,actions,assignment);
-    card.append(top,meta,editor); container.append(card);
+    const notes=document.createElement('button');notes.type='button';notes.className='task-note-btn';notes.textContent=(item.checklist||[]).length?'edit notes':'+ add notes';notes.onclick=()=>hqOpenChecklist('list',item.id);
+    card.append(top,meta,notes,editor); hqMountChecklist(card,name,item,'list'); container.append(card);
   });
 }
 function showTheList() {
@@ -2490,7 +2568,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=50').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=51').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2905,5 +2983,5 @@ const hqInput = document.getElementById('listInput');
 const hqSave = document.getElementById('listSaveBtn');
 function hqValidate() {hqSave.disabled = !hqInput.value.trim();}
 hqInput.addEventListener('input',hqValidate); new MutationObserver(hqValidate).observe(document.getElementById('listItems'),{childList:true});hqValidate();
-</script></body>
+</script><dialog id="hqChecklistModal" class="hq-check-dialog" aria-labelledby="hqChecklistTitle"><h2 id="hqChecklistTitle"></h2><label for="hqChecklistInput">Notes / checklist</label><p>One item per line. Clear all lines to remove the checklist.</p><textarea id="hqChecklistInput" placeholder="Hair cut&#10;Laundry"></textarea><p id="hqChecklistError" role="alert"></p><div class="hq-check-actions"><button id="hqChecklistSave" onclick="hqSubmitChecklist()" disabled>Save notes</button><button onclick="document.getElementById('hqChecklistModal').close();hqChecklistEdit=null">Cancel</button></div></dialog></body>
 </html>
