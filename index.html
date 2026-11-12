@@ -409,7 +409,7 @@
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
   </style>
 <style>
-/* HQ v49: comfortable controls and focused task views */
+/* HQ v50: comfortable controls and focused task views */
 select { appearance:none!important; -webkit-appearance:none!important; padding-right:48px!important; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23e96cb5' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E")!important; background-repeat:no-repeat!important; background-position:right 18px center!important; min-width:0; max-width:100%; }
 .hq-view-controls {display:flex;gap:8px;flex-wrap:wrap;margin:16px 22px;}
 .hq-view-controls button {font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(233,108,181,.24);border-radius:10px;padding:9px 14px;background:transparent;color:#e96cb5;min-height:36px;}
@@ -533,7 +533,7 @@ body.hq-side-hidden .sidebar{display:none;}
 
 <!-- 9. DATA -->
 <div class="band pad" style="background:#FFDAF5;">
-  <details class="hq-backups"><summary>Backup &amp; restore</summary><div class="data-row">
+  <details class="hq-backups"><summary>Backup &amp; restore</summary><button class="data-btn" onclick="downloadRecoveryCopies()">Download recovery copies</button><div class="data-row">
     <button class="data-btn data-btn-export" onclick="exportData()">Download backup</button>
     <button class="data-btn data-btn-import" onclick="document.getElementById('importInput').click()">Restore backup</button>
     <input type="file" id="importInput" accept=".json" onchange="importData(event)">
@@ -546,7 +546,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v49</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v50</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -735,8 +735,8 @@ body.hq-side-hidden .sidebar{display:none;}
     <div class="modal-acts">
       <button id="dbxConnectBtn" class="mbtn-primary" onclick="dbxConnect()">Connect Dropbox</button>
       <button id="dbxDisconnectBtn" class="mbtn-ghost" onclick="dbxDisconnect()" style="color:#e74c3c;display:none;">Disconnect Dropbox</button>
-      <button class="mbtn-secondary" onclick="dbxForcePush()" style="background:var(--blush);color:var(--hot);">Force Push</button>
-      <button class="mbtn-secondary" onclick="dbxForcePull()" style="background:var(--blush);color:var(--hot);">Force Pull</button>
+      <button class="mbtn-secondary" onclick="dbxForcePush()" style="background:var(--blush);color:var(--hot);">Review upload</button>
+      <button class="mbtn-secondary" onclick="dbxForcePull()" style="background:var(--blush);color:var(--hot);">Review download</button>
       <button class="mbtn-ghost" onclick="dbxReset()" style="font-size:11px;color:#ccc;">Reset connection</button>
       <button class="mbtn-ghost" onclick="closeModal('syncModal')">Done</button>
     </div>
@@ -937,10 +937,153 @@ function refreshAW() {
 }
 
 // ─── V4 STATE SYSTEM ──────────────────────────────────────────────────────────
+// HQ v50: conservative sync, local recovery, immutable Dropbox snapshots.
+var hqSync = { ready:false, busy:false, base:localStorage.getItem('hq-sync-base-v50'), issue:localStorage.getItem('hq-restore-pending-v50') ? 'Backup restored locally. Review upload or download before syncing.' : '' };
+function hqParse(raw) {
+  const state = JSON.parse(raw);
+  if (!state || typeof state !== 'object' || !state.weeks || Array.isArray(state.weeks) || typeof state.weeks !== 'object') throw Error('Invalid task data. Existing tasks were kept.');
+  const groups = Object.values(state.weeks).map(w => w && w.items);
+  if (state.masterList !== undefined) groups.push(state.masterList);
+  if (groups.some(items => !Array.isArray(items) || items.some(t => !t || typeof t.id !== 'string' || typeof t.text !== 'string' || !t.text.trim()))) throw Error('Invalid tasks. Existing tasks were kept.');
+  for (const key of ['archivedWeeks','deletedWeeks']) {
+    if (state[key] !== undefined && (!Array.isArray(state[key]) || state[key].some(id=>typeof id!=='string'))) throw Error('Invalid week settings. Existing tasks were kept.');
+  }
+  if (state.customWeeks !== undefined && (!Array.isArray(state.customWeeks) || state.customWeeks.some(w=>!w || typeof w.id!=='string' || typeof w.start!=='string' || typeof w.end!=='string'))) throw Error('Invalid custom weeks. Existing tasks were kept.');
+  if (state.weekThemes !== undefined && (!state.weekThemes || typeof state.weekThemes!=='object' || Array.isArray(state.weekThemes))) throw Error('Invalid week themes. Existing tasks were kept.');
+  if (state.cats !== undefined && !Array.isArray(state.cats)) throw Error('Invalid categories. Existing tasks were kept.');
+  const ids=groups.flat().map(t=>t.id);
+  if (new Set(ids).size!==ids.length) throw Error('Duplicate task IDs. Existing tasks were kept.');
+  return state;
+}
+function hqTasks(state) {
+  return [...Object.values(state.weeks).flatMap(w => w.items), ...(state.masterList || [])];
+}
+function hqMissing(before, after) {
+  const remaining = hqTasks(after).slice();
+  const unmatched = [];
+  for (const task of hqTasks(before)) {
+    const index=remaining.findIndex(t=>t.id===task.id);
+    if(index>=0) remaining.splice(index,1); else unmatched.push(task);
+  }
+  let missing=0;
+  for (const task of unmatched) {
+    const index=remaining.findIndex(t=>t.text===task.text);
+    if(index>=0) remaining.splice(index,1); else missing++;
+  }
+  return missing;
+}
+function hqHidden(before,after) {
+  const oldHidden=new Set([...(before.archivedWeeks||[]),...(before.deletedWeeks||[])]);
+  return new Set([...(after.archivedWeeks||[]),...(after.deletedWeeks||[])].filter(id=>!oldHidden.has(id))).size;
+}
+function hqAccept(raw,review) {
+  localStorage.setItem('hq-sync-base-v50',raw===null ? '' : raw);
+  if(review) localStorage.removeItem('hq-restore-pending-v50');
+  hqSync.base=raw;hqSync.ready=true;hqSync.issue='';
+}
+function hqBackup(raw, reason) {
+  if (raw === null) return;
+  const key = 'hq-recovery-v50';
+  const copies = JSON.parse(localStorage.getItem(key) || '[]');
+  if (!Array.isArray(copies)) throw Error('Recovery storage is unreadable. Save paused.');
+  if (copies[0]?.raw === raw) return;
+  copies.unshift({at:new Date().toISOString(), reason, raw});
+  // Retain the latest 20 recovery copies. Never clear originals to free space.
+  localStorage.setItem(key, JSON.stringify(copies.slice(0,20)));
+}
+function hqWrite(raw, reason='Before local save') {
+  hqParse(raw);
+  const previous = localStorage.getItem(KEY4);
+  if (previous === raw) return;
+  hqBackup(previous, reason);
+  if (previous !== null) hqParse(previous); // Never silently replace corrupt local data.
+  localStorage.setItem(KEY4, raw);
+}
+function hqIssue(error) {
+  const message = error.message || String(error);
+  const changed = hqSync.issue !== message;
+  hqSync.issue = message;
+  setSyncStatus('error');
+  if (changed) showToast(message);
+}
+function downloadRecoveryCopies() {
+  const raw = localStorage.getItem('hq-recovery-v50');
+  if (!raw) { showToast('No recovery copies yet'); return; }
+  const url = URL.createObjectURL(new Blob([raw], {type:'application/json'}));
+  const a = document.createElement('a'); a.href=url; a.download='HQ-recovery-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function scheduleDropboxPush() {
+  if (!DBX.isConnected()) return;
+  clearTimeout(_dbxPushTimer);
+  _dbxPushTimer = setTimeout(()=>{_dbxPushTimer=null; hqPush(false);},2000);
+}
+async function hqPush(review=false) {
+  if (!DBX.isConnected() || hqSync.busy) return false;
+  if (!review && (!hqSync.ready || localStorage.getItem('hq-restore-pending-v50'))) return false;
+  hqSync.busy=true;
+  try {
+    const raw=localStorage.getItem(KEY4), local=hqParse(raw);
+    const snapshot=await DBX.readSnapshot();
+    if (localStorage.getItem(KEY4)!==raw) throw Error('Tasks changed during sync. Retry sync.');
+    let remote=null, unreadable=false;
+    if (snapshot.raw!==null) {
+      try {remote=hqParse(snapshot.raw);}
+      catch(error) {if (!review) throw error; unreadable=true;}
+    }
+    if (unreadable && !hqTasks(local).length) throw Error('Restore a nonempty backup before replacing unreadable Dropbox data.');
+    if (snapshot.raw===raw) {hqAccept(raw,review);setSyncStatus('idle');return true;}
+    if (!review && snapshot.raw!==hqSync.base) throw Error('Dropbox changed on another device. Sync paused; review the copies.');
+    if (remote && hqTasks(remote).length && !hqTasks(local).length) throw Error('An empty task list cannot replace Dropbox tasks.');
+    const missing=remote ? hqMissing(remote,local) : 0;
+    const hidden=remote ? hqHidden(remote,local) : 0;
+    if (!review && hidden) throw Error('Sync paused: '+hidden+' weeks would become hidden. Review before replacing.');
+    if (!review && missing) throw Error('Sync paused: '+missing+' Dropbox tasks are missing here. Review before replacing.');
+    if (review && !confirm('Save this device’s '+hqTasks(local).length+' tasks to Dropbox? '+(unreadable ? 'The current Dropbox file is unreadable; its exact contents will be preserved. ' : remote ? missing+' Dropbox tasks would be removed from the current copy. ' : '')+hidden+' weeks would become hidden. Dated snapshots will be kept before replacement.')) return false;
+    setSyncStatus('syncing');
+    await DBX.commitSnapshot(raw,snapshot);
+    hqAccept(raw,review);setSyncStatus('idle');
+    if (localStorage.getItem(KEY4)!==raw) scheduleDropboxPush();
+    return true;
+  } catch(e) {hqIssue(e);return false;} finally {hqSync.busy=false;}
+}
+async function performDropboxPull(review=false) {
+  if (!DBX.isConnected() || hqSync.busy) return false;
+  if (!review && localStorage.getItem('hq-restore-pending-v50')) return false;
+  hqSync.busy=true;
+  const before=localStorage.getItem(KEY4);
+  try {
+    const snapshot=await DBX.readSnapshot();
+    if (localStorage.getItem(KEY4)!==before) throw Error('Tasks changed during sync. Your edits were kept.');
+    if (snapshot.raw===null) { hqSync.ready=true;hqSync.base=null; return false; }
+    const remote=hqParse(snapshot.raw), local=before===null ? null : hqParse(before);
+    if (before===snapshot.raw) {hqAccept(before,review);setSyncStatus('idle');return true;}
+    const missing=local ? hqMissing(local,remote) : 0;
+    const hidden=local ? hqHidden(local,remote) : 0;
+    if (local && hqTasks(local).length && !hqTasks(remote).length) throw Error('Empty Dropbox data blocked. Your tasks were kept.');
+    if (!review) {
+      if (hqSync.base && before!==hqSync.base) {
+        if (snapshot.raw===hqSync.base) {hqSync.ready=true;scheduleDropboxPush();return false;}
+        throw Error('Both copies changed. Sync paused to protect your edits.');
+      }
+      if (hidden) throw Error('Sync paused: '+hidden+' local weeks would become hidden.');
+      if (missing) throw Error('Sync paused: Dropbox is missing '+missing+' tasks from this device.');
+      if (!hqSync.ready && local && hqTasks(local).length && before!==hqSync.base) throw Error('Different saved copies found. Review sync before replacing either copy.');
+    } else if (!confirm('Load '+hqTasks(remote).length+' tasks from Dropbox? '+missing+' local tasks would be removed and '+hidden+' weeks would become hidden. A local recovery copy will be kept.')) return false;
+    hqWrite(snapshot.raw,'Before Dropbox pull');
+    hqAccept(snapshot.raw,review);
+    _skipPush=true;
+    try { applyPulledState(); } finally {_skipPush=false;}
+    setSyncStatus('idle');return true;
+  } catch(e) {hqIssue(e);return false;} finally {hqSync.busy=false;}
+}
+async function dbxForcePush() { if (!DBX.isConnected()) {showToast('Connect Dropbox first');return false;} return hqPush(true); }
+async function dbxForcePull() { if (!DBX.isConnected()) {showToast('Connect Dropbox first');return false;} return performDropboxPull(true); }
+
 const KEY4 = 'bcy_v4';
 
 function gs4() { try { return JSON.parse(localStorage.getItem(KEY4)) || null; } catch { return null; } }
-function ss4(v4) { if (!_isFirstRender && !_skipPush) v4.lastModified = new Date().toISOString(); localStorage.setItem(KEY4, JSON.stringify(v4)); if (!_isFirstRender && !_skipPush) scheduleDropboxPush(); }
+function ss4(v4) { if (!_isFirstRender && !_skipPush) v4.lastModified = new Date().toISOString(); try { hqWrite(JSON.stringify(v4)); } catch(error) { hqIssue(error); throw error; } if (!_isFirstRender && !_skipPush) scheduleDropboxPush(); }
 
 function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 
@@ -1104,7 +1247,7 @@ function routeDownLineTasksToList(v4) {
 function persistRecoveredState(v4) {
   if (!v4) return;
   v4.lastModified = new Date().toISOString();
-  localStorage.setItem(KEY4, JSON.stringify(v4));
+  hqWrite(JSON.stringify(v4));
   if (!_skipPush) scheduleDropboxPush();
 }
 
@@ -1123,20 +1266,7 @@ function stripMoveTracking(v4) {
 
 function initV4() {
   let v4 = gs4();
-  if (v4 && v4.weeks) {
-    // One-time migration: old system had w1=Mar31 (now w14), w2=Apr7 (now w15), etc.
-    if (v4.weeks['w1'] && !v4.weeks['w14'] && !v4.weeks['w15']) {
-      const OLD_MAP = {w1:'w14',w2:'w15',w3:'w16',w4:'w17',w5:'w18',w6:'w19',w7:'w20',w8:'w21',w9:'w22',w11:'w24',w13:'w26',w14:'w27',w16:'w29',w19:'w32',w23:'w36'};
-      const nw = {};
-      Object.entries(v4.weeks).forEach(([id,data]) => { nw[OLD_MAP[id]||id] = data; });
-      v4.weeks = nw; ss4(v4);
-    }
-    let changed = false;
-    if (stripMoveTracking(v4)) changed = true;
-    if (routeDownLineTasksToList(v4)) changed = true;
-    if (changed) persistRecoveredState(v4);
-    return v4;
-  }
+  if (v4 && v4.weeks) { hqParse(JSON.stringify(v4)); return v4; }
   let v3 = null;
   try { v3 = JSON.parse(localStorage.getItem('bcy_v3')); } catch {}
   v4 = { weekThemes: {}, weeks: {} };
@@ -1764,12 +1894,18 @@ function importData(event) {
       alert("Couldn't read that file — it may be corrupted. Try exporting a fresh copy.");
       return;
     }
+    if (hqSync.busy) { alert('Sync is in progress. Wait until it finishes, then restore your backup.'); return; }
     // Step 2: Validate format
-    if (data.version === '4' && data.state) {
-      stripMoveTracking(data.state);
-      routeDownLineTasksToList(data.state);
-      ss4(data.state);
-    } else if (data.version === '1' || data.tasks !== undefined) {
+    if (data && ((data.version === '4' && data.state) || data.weeks)) {
+      data = {state:data.state || data};
+      try {
+        hqParse(JSON.stringify(data.state));
+        if (!confirm('Restore '+hqTasks(data.state).length+' tasks from this backup? Your current local copy will be preserved. Dropbox replacement requires a separate review.')) return;
+        localStorage.setItem('hq-restore-pending-v50','true'); hqSync.ready=false; clearTimeout(_dbxPushTimer); ss4(data.state);
+        hqSync.issue='Backup restored locally. Review upload to save it to Dropbox.'; setSyncStatus('error');
+      }
+      catch(error) { alert(error.message); return; }
+    } else if (data && (data.version === '1' || data.tasks !== undefined)) {
       const v4m = { weekThemes:{}, weeks:{} };
       WEEKS.forEach(w => {
         const bDone = ((data.tasks||{})[w.id]||{}); const bNotes = ((data.notes||{})[w.id]||{}); const v3C = ((data.customTasks||{})[w.id]||[]);
@@ -1778,7 +1914,7 @@ function importData(event) {
           ...v3C.map((t,ci)=>({id:genId(w.id+'_c'),text:t.text,cat:t.cat||'custom',done:!!bDone[w.tasks.length+ci],note:bNotes[w.tasks.length+ci]||'',builtin:false}))
         ]};
       });
-      ss4(v4m);
+      try { hqParse(JSON.stringify(v4m)); if (!confirm('Restore this older backup? A local recovery copy will be kept.')) return; localStorage.setItem('hq-restore-pending-v50','true'); hqSync.ready=false; clearTimeout(_dbxPushTimer); ss4(v4m); hqSync.issue='Backup restored locally. Review upload to save it to Dropbox.'; setSyncStatus('error'); } catch(error) { alert(error.message); return; }
     } else { alert("This doesn't look like an AKQ HQ file."); return; }
     // Step 3: Refresh app state (outside parse try/catch — errors here are real bugs)
     initV4();
@@ -2354,7 +2490,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=49').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=50').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
@@ -2462,40 +2598,39 @@ const DBX = (() => {
     if(!r.ok){const txt=await r.text();throw new Error(`DBX ${endpoint} ${r.status}: ${txt}`);}
     return r.json();
   }
-  async function uploadPath(path,content) {
-    await refreshIfNeeded();
-    const arg={path,mode:{'.tag':'overwrite'},autorename:false,mute:true,strict_conflict:false};
-    const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Dropbox-API-Arg':JSON.stringify(arg),'Content-Type':'application/octet-stream'},body:typeof content==='string'?new Blob([content]):content});
-    if(!r.ok){const txt=await r.text();throw new Error(`DBX upload ${r.status}: ${txt}`);}
-    return r.json();
-  }
-  async function getPathById(id) { try{const m=await apiCall('/files/get_metadata',{path:id});return m.path_display||null;}catch(e){return null;} }
-  async function uploadSmart(content) {
-    let path=AKQ_PATH;
-    if(st.fileId){const cur=await getPathById(st.fileId);if(cur)path=cur;}
-    const res=await uploadPath(path,content);
-    st.fileId=res.id; localStorage.setItem(KEY_FILEID,res.id); return res;
-  }
-  async function downloadPath(path) {
+  async function getPathById(id) { try {const m=await apiCall('/files/get_metadata',{path:id}); if(!m.path_display) throw Error('Dropbox file path is missing. Sync paused.'); return m.path_display;} catch(e) {if(String(e.message).includes('not_found')) return null; throw e;} }
+  async function disconnect() { try{await apiCall('/auth/token/revoke',null);}catch(e){} clearTokens(); }
+  async function readSnapshot() {
+    // This is the only sync reference. Never follow an old file ID into a backup.
+    const path=AKQ_PATH;
     await refreshIfNeeded();
     const r=await fetch('https://content.dropboxapi.com/2/files/download',{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Dropbox-API-Arg':JSON.stringify({path})}});
-    if(r.status===409){
-      const body=await r.json().catch(()=>({}));
-      const tag=(body?.error?.['.tag']||body?.error_summary||'');
-      if(tag.includes('not_found')) return null;
-      throw new Error('DBX 409: '+JSON.stringify(body));
-    }
-    if(!r.ok){const txt=await r.text();throw new Error(`DBX download ${r.status}: ${txt}`);}
-    return r.text();
+    if(r.status===409){const body=await r.json();if(JSON.stringify(body).includes('not_found'))return {raw:null,rev:null,path};throw Error('Dropbox download failed; sync paused.');}
+    if(!r.ok)throw Error('Dropbox download failed; sync paused.');
+    const metadata=JSON.parse(r.headers.get('Dropbox-API-Result')||'null');
+    if(!metadata?.rev)throw Error('Dropbox revision missing; sync paused.');
+    return {raw:await r.text(),rev:metadata.rev,path};
   }
-  async function downloadData() {
-    let txt=null;
-    if(st.fileId){const p=await getPathById(st.fileId);if(p)txt=await downloadPath(p);}
-    if(!txt) txt=await downloadPath(AKQ_PATH);
-    return txt;
+  async function writeRevision(path,raw,mode) {
+    await refreshIfNeeded();
+    const r=await fetch('https://content.dropboxapi.com/2/files/upload',{method:'POST',headers:{'Authorization':'Bearer '+st.accessToken,'Dropbox-API-Arg':JSON.stringify({path,mode,autorename:false,mute:true,strict_conflict:true}),'Content-Type':'application/octet-stream'},body:new Blob([raw])});
+    if(!r.ok)throw Error(r.status===409?'Dropbox changed during save. Current cloud copy was kept; review sync.':'Dropbox save failed. Current cloud copy was not replaced.');
+    return r.json();
   }
-  async function disconnect() { try{await apiCall('/auth/token/revoke',null);}catch(e){} clearTokens(); }
-  return {load,isConfigured,isConnected,account,startOAuth,handleCallback,completeOAuthFromCode,uploadSmart,downloadData,disconnect};
+  async function commitSnapshot(raw,previous) {
+    hqParse(raw);
+    const folder=previous.path.slice(0,previous.path.lastIndexOf('/'))+'/HQ Snapshots';
+    try {await apiCall('/files/create_folder_v2',{path:folder,autorename:false});}
+    catch(e) {if(!String(e.message).includes('conflict'))throw e;}
+    const stamp=new Date().toISOString().replace(/[:.]/g,'-')+'-'+crypto.randomUUID();
+    // Immutable files: fail rather than overwrite an existing snapshot.
+    if(previous.raw!==null)await writeRevision(folder+'/'+stamp+'-before.json',previous.raw,{'.tag':'add'});
+    await writeRevision(folder+'/'+stamp+'-saved.json',raw,{'.tag':'add'});
+    const result=await writeRevision(previous.path,raw,previous.rev?{'.tag':'update',update:previous.rev}:{'.tag':'add'});
+    st.fileId=result.id;saveTokens();return result;
+  }
+
+  return {readSnapshot,commitSnapshot,load,isConfigured,isConnected,account,startOAuth,handleCallback,completeOAuthFromCode,disconnect};
 })();
 DBX.load();
 
@@ -2513,60 +2648,11 @@ let _isFirstRender = true;
 let _skipPush = false;
 let _dbxPushTimer = null;
 
-function scheduleDropboxPush() {
-  if (!DBX.isConnected()) return;
-  clearTimeout(_dbxPushTimer);
-  _dbxPushTimer = setTimeout(async () => {
-    _dbxPushTimer = null;
-    try {
-      setSyncStatus('syncing');
-      const raw = localStorage.getItem(KEY4);
-      if (!raw) { setSyncStatus('idle'); return; }
-      await DBX.uploadSmart(raw);
-      setSyncStatus('idle');
-    } catch(e) { console.warn('Auto-push failed:', e); setSyncStatus('error'); }
-  }, 2000);
-}
 
-async function performDropboxPull() {
-  if (!DBX.isConnected()) return false;
-  try {
-    const txt = await DBX.downloadData();
-    if (!txt) return false;
-    const remote = JSON.parse(txt);
-    if (!remote.lastModified) return false;
-    const localRaw = localStorage.getItem(KEY4);
-    if (localRaw) {
-      try {
-        const local = JSON.parse(localRaw);
-        if (local.lastModified && remote.lastModified <= local.lastModified) {
-          // Remote is older overall — keep local, but still absorb any
-          // categories the other device added so they're never lost.
-          const merged = unionCats(local.cats, remote.cats);
-          if (merged && (!local.cats || merged.length !== local.cats.length)) {
-            local.cats = merged;
-            localStorage.setItem(KEY4, JSON.stringify(local));
-            buildCatSelect('taskMgmtCat', document.getElementById('taskMgmtCat')?.value);
-            scheduleDropboxPush();
-          }
-          return false;
-        }
-        // Remote is newer — adopt it, but union in any local-only categories.
-        remote.cats = unionCats(local.cats, remote.cats);
-      } catch(e){}
-    }
-    localStorage.setItem(KEY4, JSON.stringify(remote));
-    applyPulledState();
-    return true;
-  } catch(e) { console.warn('DBX pull failed:', e); setSyncStatus('error'); showToast('Pull failed: ' + (e.message || e).toString().substring(0, 80)); return false; }
-}
+
+
 
 function applyPulledState() {
-  const v4 = gs4();
-  let changed = false;
-  if (stripMoveTracking(v4)) changed = true;
-  if (routeDownLineTasksToList(v4)) changed = true;
-  if (changed) persistRecoveredState(v4);
   refreshAW();
   buildTimeline();
   EI = Math.floor(Math.random() * DEFAULT_ENC.length);
@@ -2575,13 +2661,14 @@ function applyPulledState() {
 }
 
 function setSyncStatus(status) {
+  if (hqSync.issue && status==='idle') status='error';
   const dot = document.getElementById('syncDot');
   const msg = document.getElementById('dbxSyncMsg');
   if (dot) dot.className = 'sync-dot sync-' + status;
   if (msg) {
     if (status==='syncing') msg.textContent='Syncing...';
     else if (status==='idle') msg.textContent='Up to date';
-    else if (status==='error') msg.textContent='Sync error — try Force Push';
+    else if (status==='error') msg.textContent=hqSync.issue || 'Sync paused — your existing copies were kept';
     else msg.textContent='';
   }
 }
@@ -2604,7 +2691,7 @@ function updateSyncUI() {
 function openSyncSettings() {
   updateSyncUI();
   const msg = document.getElementById('dbxSyncMsg');
-  if (msg) msg.textContent = DBX.isConnected() ? 'Up to date' : 'Not connected';
+  if (msg) msg.textContent = hqSync.issue || (DBX.isConnected() ? 'Connected to Dropbox' : 'Not connected');
   document.getElementById('syncModal').classList.add('open');
 }
 
@@ -2617,32 +2704,9 @@ async function dbxDisconnect() {
   showToast('Dropbox disconnected');
 }
 
-async function dbxForcePush() {
-  if (!DBX.isConnected()) { showToast('Not connected to Dropbox'); return; }
-  try {
-    setSyncStatus('syncing');
-    const raw = localStorage.getItem(KEY4);
-    if (!raw) { setSyncStatus('idle'); return; }
-    await DBX.uploadSmart(raw);
-    setSyncStatus('idle');
-    showToast('Pushed to Dropbox');
-  } catch(e) { setSyncStatus('error'); showToast('Push failed — check connection'); }
-}
 
-async function dbxForcePull() {
-  if (!DBX.isConnected()) { showToast('Not connected to Dropbox'); return; }
-  try {
-    setSyncStatus('syncing');
-    const txt = await DBX.downloadData();
-    if (!txt) { setSyncStatus('idle'); showToast('Nothing to pull'); return; }
-    const remote = JSON.parse(txt);
-    try { const local = JSON.parse(localStorage.getItem(KEY4)||'null'); if (local) remote.cats = unionCats(local.cats, remote.cats); } catch(e){}
-    localStorage.setItem(KEY4, JSON.stringify(remote));
-    applyPulledState();
-    setSyncStatus('idle');
-    showToast('Pulled from Dropbox');
-  } catch(e) { setSyncStatus('error'); showToast('Pull failed: ' + (e.message || e).toString().substring(0, 80)); console.error('Force pull error:', e); }
-}
+
+
 
 function dbxReset() {
   localStorage.removeItem('akq_hq_dbx_fileid');
