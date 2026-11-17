@@ -468,7 +468,7 @@ body.hq-side-hidden .sidebar{display:none;}
 #taskMgmtModal .modal-row-btns{display:flex;flex-wrap:wrap;gap:8px;}
 #taskMgmtModal .mbtn-danger{background:transparent!important;border-color:#e96cb5!important;}
 #taskMgmtModal .modal-select,#taskMgmtModal .modal-input{box-sizing:border-box;max-width:100%;}
-</style><style>.hq-mobile-hero{padding-top:calc(20px + env(safe-area-inset-top, 0px));}.hq-mobile-sync{background:none;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;}</style></head>
+</style><style>.hq-mobile-hero{padding-top:calc(20px + env(safe-area-inset-top, 0px));}.hq-mobile-sync{background:none;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;}</style><style>.hq-task-locations{margin:0 0 16px;padding:12px;border:1px solid rgba(233,108,181,.3);border-radius:12px;font:400 13px/1.5 'DM Sans',sans-serif;color:#111}.hq-task-locations[hidden]{display:none}.hq-task-locations button{margin:8px 6px 0 0;padding:7px 10px;border:1px solid #e96cb5;border-radius:999px;background:transparent;color:#d90060;font:800 10px 'DM Sans',sans-serif;cursor:pointer}.hq-task-locations p{margin:8px 0 0}</style></head>
 <body>
 
 <!-- FULLSCREEN BUTTON -->
@@ -532,7 +532,7 @@ body.hq-side-hidden .sidebar{display:none;}
       <span class="mix-serif">Done.</span>
     </div>
   </div>
-  <ul class="row-list" id="taskList"></ul>
+  <div id="hqTaskLocations" class="hq-task-locations" hidden></div><ul class="row-list" id="taskList"></ul>
   <div class="add-row">
     <input class="add-input" id="addInput" type="text" placeholder="Add your own task...">
     <button class="add-btn" onclick="addTask()">+ Add</button>
@@ -559,7 +559,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v52</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v53</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -1353,7 +1353,7 @@ function initV4() {
     const bNotes = ((v3?.notes  || {})[w.id] || {});
     const v3Cust = ((v3?.customTasks || {})[w.id] || []);
     v4.weeks[w.id] = { items: [
-      ...w.tasks.map((t,i) => ({ id:`${w.id}_b_${i}`, text:t.text, cat:t.cat, done:!!bDone[i], note:bNotes[i]||'', builtin:true })),
+      ...(v3 ? w.tasks : []).map((t,i) => ({ id:`${w.id}_b_${i}`, text:t.text, cat:t.cat, done:!!bDone[i], note:bNotes[i]||'', builtin:true })),
       ...v3Cust.map((t,ci) => ({ id:genId(w.id+'_c'), text:t.text, cat:t.cat||'custom', done:!!bDone[w.tasks.length+ci], note:bNotes[w.tasks.length+ci]||'', builtin:false }))
     ]};
   });
@@ -1445,6 +1445,25 @@ function autoWeekId() {
   return today > last ? AW[AW.length-1].id : AW[0].id;
 }
 
+function hqShowTaskLocations(weekId) {
+  const state=gs4(); const host=document.getElementById('hqTaskLocations'); if(!host || !state) return;
+  host.replaceChildren();
+  const current=(state.weeks?.[weekId]?.items || []).filter(t=>!t.done&&!t.dtl).length;
+  const list=Array.isArray(state.masterList)?state.masterList.length:0;
+  const archived=new Set(state.archivedWeeks||[]), deleted=new Set(state.deletedWeeks||[]);
+  const active=AW.filter(w=>w.id!==weekId).map(w=>({week:w,count:(state.weeks?.[w.id]?.items||[]).filter(t=>!t.done&&!t.dtl).length})).filter(x=>x.count);
+  const archiveCount=Object.entries(state.weeks||{}).filter(([id])=>archived.has(id)).reduce((n,[,w])=>n+(w.items||[]).filter(t=>!t.done).length,0);
+  const deletedCount=Object.entries(state.weeks||{}).filter(([id])=>deleted.has(id)&&!archived.has(id)).reduce((n,[,w])=>n+(w.items||[]).filter(t=>!t.done).length,0);
+  if(current || (!list && !active.length && !archiveCount && !deletedCount)) {host.hidden=true;return;}
+  host.hidden=false;
+  const heading=document.createElement('div');heading.textContent='No tasks in this week. Your other tasks:';host.append(heading);
+  function button(label,click){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=click;host.append(b);}
+  if(list)button('THE LIST · '+list,()=>showTheList());
+  active.forEach(({week,count})=>button(week.label+' · '+count,()=>render(week.id)));
+  if(archiveCount)button('Archived weeks · '+archiveCount,()=>openArchivedModal());
+  if(deletedCount){const note=document.createElement('p');note.textContent=deletedCount+' tasks are in weeks marked deleted.';host.append(note);}
+}
+
 // ─── RENDER ───────────────────────────────────────────────────────────────────
 function render(weekId) {
   CW = weekId;
@@ -1460,6 +1479,8 @@ function render(weekId) {
   const pct = total > 0 ? done/total : 0;
   const wIdx = AW.findIndex(wk => wk.id === weekId);
   const hasNextWeek = wIdx < AW.length - 1;
+
+  hqShowTaskLocations(weekId);
 
   // Hero
   document.getElementById('heroNum').textContent = 'Week ' + w.num;
@@ -2572,7 +2593,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=52').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=53').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
