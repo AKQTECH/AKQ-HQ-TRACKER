@@ -460,14 +460,22 @@ body.hq-side-hidden .sidebar{display:none;}
 .hq-check-toggle{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:28px;height:28px;padding:0;background:transparent;border:0;color:#e96cb5;cursor:pointer;border-radius:6px;}.hq-check-toggle[aria-expanded="true"] svg{transform:rotate(180deg);}.hq-check-toggle:focus-visible{outline:2px solid #e96cb5;}
 .hq-check-panel{padding:8px 0 4px;min-width:0;}.hq-check-panel[hidden]{display:none!important;}.hq-check-row{display:flex;align-items:flex-start;gap:9px;margin:7px 0;font:400 14px/1.6 'DM Sans',sans-serif;color:var(--ink);overflow-wrap:anywhere;}.hq-check-row input{flex-shrink:0;accent-color:#e96cb5;margin-top:5px;}.hq-check-row input:checked+span{text-decoration:line-through;opacity:.55;}
 .hq-check-dialog{box-sizing:border-box;width:min(440px,calc(100% - 32px));max-height:85dvh;overflow:auto;padding:24px;border:1px solid rgba(233,108,181,.34);border-radius:16px;background:#feeaf9;color:#111;font-family:'DM Sans',sans-serif;}.hq-check-dialog::backdrop{background:rgba(0,0,0,.25);}.hq-check-dialog h2{margin:0 0 10px;font-size:18px;overflow-wrap:anywhere;}.hq-check-dialog textarea{box-sizing:border-box;width:100%;min-height:150px;margin:12px 0;padding:12px;border:1px solid rgba(233,108,181,.34);border-radius:8px;background:white;font:400 16px/1.6 'DM Sans',sans-serif;}.hq-check-dialog p{font-size:13px;}.hq-check-dialog button{font:800 11px 'DM Sans',sans-serif;padding:10px 16px;border:1px solid rgba(233,108,181,.34);border-radius:9px;background:#ffdaf5;color:#e96cb5;cursor:pointer;}.hq-check-dialog button:disabled{opacity:.4;}.hq-check-dialog .hq-check-actions{display:flex;gap:8px;}
-</style></head>
+</style><style>.hq-task-heading{flex-wrap:wrap;column-gap:12px;row-gap:4px;}.hq-task-heading .task-cat{margin:0;align-self:center;flex-shrink:0;}.hq-check-panel{padding-top:4px;}.task-drag-handle{align-self:flex-start;margin-top:4px;}.task-body{min-width:0;}.list-task-editor>.task-note-btn{margin-top:12px;}</style><style>
+#taskMgmtModal .modal{max-height:90dvh;overflow:auto;}
+#taskMgmtModal .mgmt-reorder{justify-content:flex-start;flex-wrap:wrap;}
+#taskMgmtModal .mgmt-reorder button,#taskMgmtModal .modal-acts button,#taskMgmtModal .task-note-btn{flex:0 1 auto;width:auto;min-height:32px;margin:0;padding:6px 12px;border:1px solid transparent;border-radius:999px;background:#ffa9da;color:#e96cb5;font:800 10px/1.2 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+#taskMgmtModal .modal-acts{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;}
+#taskMgmtModal .modal-row-btns{display:flex;flex-wrap:wrap;gap:8px;}
+#taskMgmtModal .mbtn-danger{background:transparent!important;border-color:#e96cb5!important;}
+#taskMgmtModal .modal-select,#taskMgmtModal .modal-input{box-sizing:border-box;max-width:100%;}
+</style><style>.hq-mobile-hero{padding-top:calc(20px + env(safe-area-inset-top, 0px));}.hq-mobile-sync{background:none;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;}</style></head>
 <body>
 
 <!-- FULLSCREEN BUTTON -->
 
 <!-- 1. HERO -->
-<div class="band pad" style="background:#FFA9DA;">
-  <div style="display:flex;align-items:center;justify-content:space-between;"><span class="eyebrow eyebrow-hot" style="margin-bottom:0;">week by week · april korto quioh</span><div style="display:flex;align-items:center;gap:10px;"><button onclick="openSyncSettings()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 0;" title="Sync settings"><div id="syncDot" class="sync-dot sync-off"></div></button><button class="week-mgmt-btn" onclick="openWeekMgmt()" title="Manage this week">⋯</button></div></div>
+<div class="band pad hq-mobile-hero" style="background:#FFA9DA;">
+  <div style="display:flex;align-items:center;justify-content:space-between;"><span class="eyebrow eyebrow-hot" style="margin-bottom:0;">week by week · april korto quioh</span><div style="display:flex;align-items:center;gap:10px;"><button onclick="openSyncSettings()" aria-label="Sync settings" class="hq-mobile-sync" title="Sync settings"><div id="syncDot" class="sync-dot sync-off"></div></button><button class="week-mgmt-btn" onclick="openWeekMgmt()" title="Manage this week">⋯</button></div></div>
   <span class="hero-week-num" id="heroNum">1</span>
   <span class="hero-phase" id="heroPhase" onclick="startEditTheme()" title="Tap to rename">The Floor</span>
   <input class="hero-phase-input" id="heroPhaseInput" onblur="saveEditTheme()" onkeydown="themeKeydown(event)">
@@ -551,7 +559,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v51</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v52</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -581,7 +589,7 @@ body.hq-side-hidden .sidebar{display:none;}
       <span class="modal-lbl">Category</span>
       <button class="modal-lbl-link" onclick="openCatsModal()">Edit categories</button>
     </div>
-    <select class="modal-select" id="taskMgmtCat"></select>
+    <select class="modal-select" id="taskMgmtCat"></select><div class="modal-row-btns" style="margin:12px 0;gap:8px"><button class="task-note-btn" onclick="document.getElementById('taskMgmtModal').classList.remove('open');hqOpenChecklist(CW,MGMT_ID)">Checklist notes</button><button class="task-note-btn" onclick="document.getElementById('taskMgmtModal').classList.remove('open');openStatusModal(MGMT_ID,event)">Status note</button></div>
     <div class="modal-divider"></div>
     <div class="mgmt-reorder">
       <button onclick="mgmtMoveUp()">↑ Move Up</button>
@@ -1398,15 +1406,15 @@ function moveItemDown(weekId, itemId) {
   if (idx < 0 || idx >= items.length - 1) return; [items[idx], items[idx+1]] = [items[idx+1], items[idx]]; saveItems(weekId, items);
 }
 function rescheduleItem(fromWeekId, itemId, toWeekId) {
-  if (!toWeekId || fromWeekId === toWeekId) return;
-  const fromItems = getItems(fromWeekId); const idx = fromItems.findIndex(it => it.id === itemId);
-  if (idx < 0) return;
-  const [item] = fromItems.splice(idx, 1);
-  item.done = false; delete item.completedAt;
-  delete item.originWeek; delete item.originWeekLabel;
-  item.id = genId(toWeekId + '_r');
-  saveItems(fromWeekId, fromItems);
-  const toItems = getItems(toWeekId); toItems.push(item); saveItems(toWeekId, toItems);
+  if (!toWeekId || fromWeekId === toWeekId || !AW.some(w => w.id === toWeekId)) return;
+  const state=gs4(); const source=state?.weeks?.[fromWeekId]?.items;
+  if (!Array.isArray(source)) return;
+  const index=source.findIndex(item=>item.id===itemId); if(index<0)return;
+  if(!state.weeks[toWeekId])state.weeks[toWeekId]={items:[]};
+  if(!Array.isArray(state.weeks[toWeekId].items))return;
+  const [item]=source.splice(index,1);
+  item.done=false;delete item.completedAt;delete item.originWeek;delete item.originWeekLabel;
+  state.weeks[toWeekId].items.push(item);ss4(state);
 }
 function carryForward(weekId, itemId) {
   const wIdx = AW.findIndex(w => w.id === weekId);
@@ -1492,16 +1500,14 @@ function render(weekId) {
     li.className = 'task-row';
     li.setAttribute('draggable', 'true');
 
-    let noteHTML = `<button class="task-note-btn" onclick="openStatusModal('${esc(item.id)}',event)">${item.note ? '+ update status' : '+ add status note'}</button>`;
-    if (item.note) noteHTML += `<div class="task-saved-note">${esc(item.note)}</div>`;
+    const noteHTML = item.note ? `<div class="task-saved-note">${esc(item.note)}</div>` : '';
     let carryHTML = hasNextWeek ? `<button class="task-carry-btn" onclick="handleCarry('${esc(item.id)}',event)">→</button>` : '';
 
     li.innerHTML = `
       <div class="task-drag-handle" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 10 14" fill="none"><circle cx="3" cy="2.5" r="1.5" fill="currentColor"/><circle cx="7" cy="2.5" r="1.5" fill="currentColor"/><circle cx="3" cy="7" r="1.5" fill="currentColor"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/><circle cx="3" cy="11.5" r="1.5" fill="currentColor"/><circle cx="7" cy="11.5" r="1.5" fill="currentColor"/></svg></div>
       <div class="task-cb" onclick="toggleItemDone('${esc(weekId)}','${esc(item.id)}',event.clientX,event.clientY)"><span class="cb-check">✓</span></div>
       <div class="task-body">
-        <div class="hq-task-heading"><div class="task-label">${esc(item.text)}</div></div>
-        <span class="task-cat">${esc(item.cat||'task')}</span>
+        <div class="hq-task-heading"><div class="task-label">${esc(item.text)}</div><span class="task-cat">${esc(item.cat||'task')}</span></div>
         ${noteHTML}
       </div>
       <div class="task-actions">
@@ -1509,8 +1515,6 @@ function render(weekId) {
         <button class="task-mgmt-btn" onclick="openTaskMgmt('${esc(item.id)}',event)">⋯</button>
       </div>`;
 
-    const notes=document.createElement('button');notes.className='task-note-btn';notes.textContent=(item.checklist||[]).length?'edit notes':'+ add notes';notes.onclick=()=>hqOpenChecklist(weekId,item.id);
-    li.querySelector('.task-body').append(notes);
     hqMountChecklist(li.querySelector('.task-body'),li.querySelector('.task-label'),item,weekId);
 
     li.addEventListener('dragstart', e => {
@@ -2253,7 +2257,7 @@ function renderTheList() {
     const top = document.createElement('div'); top.className = 'list-card-top';
     const name = document.createElement('div'); name.className = 'ib-card-text hq-task-name'; name.textContent = item.text;
     name.tabIndex = 0; name.setAttribute('role','button'); name.setAttribute('aria-expanded','false');
-    name.setAttribute('aria-label',item.text + ' — rename or assign to a week'); name.title = 'Double-click to rename or assign to a week';
+    name.setAttribute('aria-label',item.text + ' — rename or assign to a week'); name.title = 'Double-click to edit task, notes or week';
     const remove = document.createElement('button'); remove.className = 'ib-del-btn'; remove.textContent = '✕'; remove.title = 'Remove'; remove.setAttribute('aria-label','Remove ' + item.text); remove.onclick = () => deleteMasterListItem(item.id);
     top.append(name,remove);
     const meta = document.createElement('div'); meta.className = 'ib-card-meta';
@@ -2285,7 +2289,7 @@ function renderTheList() {
     name.onkeydown = e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();editor.hidden ? open() : close();}};
     actions.append(save,cancel); assignment.append(select,assign); editor.append(label,rename,actions,assignment);
     const notes=document.createElement('button');notes.type='button';notes.className='task-note-btn';notes.textContent=(item.checklist||[]).length?'edit notes':'+ add notes';notes.onclick=()=>hqOpenChecklist('list',item.id);
-    card.append(top,meta,notes,editor); hqMountChecklist(card,name,item,'list'); container.append(card);
+    editor.append(notes); card.append(top,meta,editor); hqMountChecklist(card,name,item,'list'); container.append(card);
   });
 }
 function showTheList() {
@@ -2568,7 +2572,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=51').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=52').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
