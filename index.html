@@ -559,7 +559,7 @@ body.hq-side-hidden .sidebar{display:none;}
   <span class="eyebrow eyebrow-ink" style="margin-bottom:12px;">Navigate the Year</span>
   <div class="tl-scroll" id="tlScroll"></div>
 </div>
-<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v53</div>
+<div style="text-align:left;padding:10px 16px 20px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(234,37,141,0.3);background:#ffa9da;">HQ Mobile AKQ v54</div>
 
 <!-- STATUS MODAL -->
 <div class="overlay" id="statusModal" onclick="bgClose(event)">
@@ -2593,7 +2593,7 @@ function closeIdeaBank() { document.getElementById('ibOverlay').classList.remove
 // Changing the URL forces the browser to refetch the SW file (the byte-compare
 // alone is not enough on iOS standalone PWAs).
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js?v=53').then(reg => {
+  navigator.serviceWorker.register('service-worker.js?v=54').then(reg => {
     // Force an update check on every load
     reg.update();
     // If a new SW is already waiting, tell it to activate now
